@@ -55,7 +55,7 @@
 
                 <div class="form-group fullinput">
                     <label for="anhdaidien">Tệp file ảnh đại diện</label>
-                    <input  style="width: 810px"  type="file" id="anhdaidien" name="anhdaidien" accept="image/*">
+                    <input  style="width: 100%"  type="file" id="anhdaidien" name="anhdaidien" accept="image/*">
                 </div>
 
                 <div class="form-actions">
