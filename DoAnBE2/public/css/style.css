@@ -236,7 +236,133 @@ animation: zoombox .1s forwards ease-in;
 .add-song .btn:hover {
     opacity: 0.9;
 }
+/********************** user *********************/
+.add-user {
+    margin:35px auto;
+    padding: 20px 0 90px 150px;
+    background-color: #fff;
+    max-width: 90%;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(87, 115, 255, 0.1);
+}
+/*.song-list .title {*/
+/*    margin-top: 10px;*/
+/*    color: #0020c2;*/
+/*    margin-bottom: 5px;*/
+/*}*/
 
+
+.notee {
+    margin-top: 20px;
+    margin-left: -100px;
+    color: #e74c3c;
+    font-size: 15px;
+    margin-bottom: 50px;
+
+}
+
+.add-user form .form-group {
+    position: relative;
+    left: 100px;
+    margin-bottom: 15px;
+    width: 40%;
+    height: 40%;
+}
+.add-user form .form-groupp {
+    position: relative;
+    left: 100px;
+    margin-bottom: 15px;
+    width: 81%;
+    height: 40%;
+}
+
+
+.add-user form label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+.add-user form input[type="text"],
+.add-user form select,
+.add-user form input[type="file"] {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.add-user form input[type="file"] {
+    padding: 6px;
+    background-color: #f9f9f9;
+}
+
+.add-user .form-actions {
+    position: relative;
+    left: 65%;
+    margin-top: 20px;
+    margin-right: 200px;
+    display: flex;
+    gap: 10px;
+
+
+}
+
+
+.add-user .btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.add-user .btn.primary {
+    background-color: #5773ff;
+    color: white;
+}
+
+.add-user .btn:hover {
+    opacity: 0.9;
+}
+.add-user form input[type="email"]
+{
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+.add-user form input[type="password"]
+{
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Viền đỏ cho các trường bị lỗi */
+input.is-invalid, select.is-invalid {
+    border: 1px solid red;
+}
+
+/* Chữ đỏ nhỏ dưới các trường bị lỗi */
+.text-danger {
+    color: red;
+    font-size: 0.875rem;
+    margin-top: 5px;
+}
+/* Ví dụ CSS */
+.btn.delete {
+    color: red;
+    border: 1px solid red;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.btn.delete:hover {
+    background-color: red;
+    color: white;
+}
 
 /************************css trang list************************/
 .song-list {
@@ -316,6 +442,10 @@ animation: zoombox .1s forwards ease-in;
 
 .status.active {
     background-color: #28a745;
+    color: #fff;
+}
+.status.inactive {
+    background-color: #6c757d;
     color: #fff;
 }
 

@@ -14,21 +14,30 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id('user_id'); // Primary key (user_id)
             $table->string('username', 100); // Tên người dùng
-            $table->string('password', 255); // Mật khẩu
-            $table->string('email', 100)->nullable()->default(null); // Email (cho phép null, mặc định là null)
+            $table->text('password'); // Mật khẩu
+            $table->string('email', 100)->unique(); // Email (không cho phép null, phải là duy nhất)
             $table->enum('role', ['User', 'Admin', 'Vip'])->default('User'); // Vai trò (mặc định là User)
             $table->enum('status', ['active', 'inactive'])->default('active'); // Trạng thái (mặc định là active)
-            $table->tinyInteger('is_active')->default(1)->notNull(); // Trạng thái hoạt động (mặc định là 1)
-            $table->string('avatar')->nullable(); // Cột để lưu ảnh đại diện
+            $table->boolean('is_active')->default(true); // Trạng thái hoạt động (mặc định là 1)
+            $table->string('avatar', 255)->nullable(); // Cột để lưu ảnh đại diện
             $table->timestamps(); // created_at, updated_at
         });
+
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();
-            $table->foreignId('user_id')->nullable()->index();
+            $table->unsignedBigInteger('user_id')->nullable()->index();
+            $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade'); // Khóa ngoại
             $table->string('ip_address', 45)->nullable();
             $table->text('user_agent')->nullable();
             $table->longText('payload');
             $table->integer('last_activity')->index();
+        });
+
+        Schema::create('password_reset_tokens', function (Blueprint $table) {
+            $table->id();
+            $table->string('email')->unique();  // Đảm bảo email là duy nhất
+            $table->string('token');
+            $table->timestamp('created_at')->nullable();
         });
     }
 
@@ -37,8 +46,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
-        Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
+        Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('users');
     }
 };
