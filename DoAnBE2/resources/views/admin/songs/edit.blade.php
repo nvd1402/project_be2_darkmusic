@@ -22,13 +22,13 @@
                 <div class="form-row">
                     <div class="form-group half">
                         <label for="tenbaihat">Tên bài hát (*)</label>
-                        <input type="text" id="tenbaihat" name="tenbaihat" placeholder="Hiện thị lại thông tin bài hát" required>
+                        <input type="text" id="tenbaihat" name="tenbaihat" placeholder="" value="{{ $song->tenbaihat }}" required>
                     </div>
 
                     <div class="form-group half">
                         <label for="nghesi">Nghệ sĩ (*)</label>
-                        <select id="nghesi" name="nghesi" required>
-                            <option value="">-- Chọn nghệ sĩ --</option>
+                        <select id="nghesi" name="nghesi"required>
+                            <option value="{{ $song->nghesi }}"></option>
                             <option value="1">Jack 97</option>
                             <option value="2">Jisoo</option>
                             <option value="3">Sơn Tùng MTP</option>

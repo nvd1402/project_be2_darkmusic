@@ -12,8 +12,7 @@
 
     <main>
         <!--include file header-->
-    @include('admin.partials.header')
-
+        @include('admin.partials.header')
 
         <!--content-->
         <div>
@@ -38,41 +37,42 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Thiên Lý Ơi</td>
-                    <td>Jack 97</td>
-                    <td>Nhạc trẻ</td>
-                    <td><img class="avatar" src="" alt="avatar"></td>
-                    <td>thienlyoi.mp3</td>
-                    <td>
-                        <a href="{{ route('admin.songs.edit') }}" class="btn edit">Sửa</a>
-                        <a href="#" class="btn delete">Xóa</a>
-                        <span class="status active">Hoạt động</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>Flower</td>
-                    <td>Jisoo</td>
-                    <td>Kpop</td>
-                    <td><img class="avatar" src="" alt="avatar"></td>
-                    <td>flower.mp3</td>
-                    <td>
-                        <a href="#" class="btn edit">Sửa</a>
-                        <a href="#" class="btn delete">Xóa</a>
-                        <span class="status disabled">Vô hiệu hóa</span>
-                    </td>
-                </tr>
+                @foreach($songs as $song)
+                    <tr>
+                        <td>{{ $song->id }}</td>
+                        <td>{{ $song->tenbaihat }}</td>
+                        <td>{{ $song->nghesi }}</td>
+                        <td>{{ $song->theloai }}</td>
+                        <td>
+                            @if($song->anh_daidien)
+                                <img src="{{ asset('storage/' . $song->anh_daidien) }}" width="50" alt="avatar">
+                            @else
+                                Không có ảnh
+                            @endif
+                        </td>
+                        <td>
+                            {{ basename($song->file_amthanh) }}
+                        </td>
+                        <td>
+                            <!-- Sửa -->
+                            <a href="{{ route('admin.songs.edit', $song->id) }}" class="btn edit">Sửa</a>
+
+                            <!-- Xóa -->
+                            <form action="{{ route('admin.songs.destroy', $song->id) }}" method="POST" style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn delete" onclick="return confirm('Bạn có chắc chắn muốn xóa bài hát này?')">Xóa</button>
+                            </form>
+
+                            <span class="status active">Hoạt động</span>
+                        </td>
+                    </tr>
+                @endforeach
                 </tbody>
             </table>
         </section>
     </main>
 </div>
-
-</div>
-
-
 
 <script src="{{ asset('js/script.js') }}"></script>
 </body>

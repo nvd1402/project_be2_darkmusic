@@ -1,49 +1,108 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\User;
+use App\Models\Song;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller
 {
     public $data = [];
-//dashboard
+
+    // Dashboard
     public function adminindex()
     {
         return view('admin.dashboard', $this->data);
     }
 
-
-//song
+    // Song
     public function createsong()
     {
         return view('admin.songs.create', $this->data);
     }
 
+    public function storesong(Request $request)
+    {
+        $validated = $request->validate([
+            'tenbaihat' => 'required|string|max:255',
+            'nghesi' => 'required|string|max:255',
+            'theloai' => 'required|string|max:100',
+            'file_amthanh' => 'required|file|mimes:mp3,wav,ogg',
+            'anh_daidien' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+        ]);
+
+        $song = new Song();
+        $song->tenbaihat = $validated['tenbaihat'];
+        $song->nghesi = $validated['nghesi'];
+        $song->theloai = $validated['theloai'];
+
+        if ($request->hasFile('file_amthanh')) {
+            $pathAudio = $request->file('file_amthanh')->store('songs/audio', 'public');
+            $song->file_amthanh = $pathAudio;
+        }
+
+        if ($request->hasFile('anhdaidien')) {
+            $pathImage = $request->file('anhdaidien')->store('songs/images', 'public');
+            $song->anh_daidien = $pathImage;
+        }
+
+        $song->save();
+
+        return redirect()->route('admin.songs.index')->with('success', 'Thêm bài hát thành công!');
+    }
+
     public function indexsong()
     {
+        $this->data['songs'] = Song::all();
         return view('admin.songs.index', $this->data);
     }
 
-    function editsong(){
-
+    public function editsong($id)
+    {
+        $this->data['song'] = Song::findOrFail($id);
         return view('admin.songs.edit', $this->data);
     }
 
 
-//user
-    public function indexuser(){
+    public function deletesong($id)
+    {
+        $song = Song::findOrFail($id);
+
+        if ($song->file_amthanh && Storage::disk('public')->exists($song->file_amthanh)) {
+            Storage::disk('public')->delete($song->file_amthanh);
+        }
+
+        if ($song->anhdaidien && Storage::disk('public')->exists($song->anhdaidien)) {
+            Storage::disk('public')->delete($song->anhdaidien);
+        }
+
+        $song->delete();
+
+        return redirect()->route('admin.songs.index')->with('success', 'Xóa bài hát thành công!');
+    }
+
+    // User
+    public function indexuser()
+    {
         return view('admin.users.index', $this->data);
     }
-    public function createuser(){
+
+    public function createuser()
+    {
         return view('admin.users.create', $this->data);
     }
-    public function edituser(){
+
+    public function edituser($id)
+    {
+        $this->data['user'] = User::findOrFail($id);
         return view('admin.users.edit', $this->data);
     }
 
-    //doanh thu
-    public function revenue(){
+    // Doanh thu
+    public function revenue()
+    {
         return view('admin.revenue.index', $this->data);
     }
-  }
+}

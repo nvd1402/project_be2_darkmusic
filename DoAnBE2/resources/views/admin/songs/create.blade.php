@@ -17,7 +17,7 @@
         </div>
         <section class="add-song">
             <p class="note">Lưu ý: Những trường hợp (*) là trường hợp bắt buộc.</p>
-            <form action="" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('admin.songs.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="form-row">
                     <div class="form-group half">
