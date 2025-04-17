@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
-
+use App\Http\Controllers\UserController;
 //admin
 Route::get('/admin/dashboard', [AdminController::class, 'adminindex']) -> name('admin.dashboard');;
 
@@ -12,10 +12,24 @@ Route::get('/admin/songs/index', [AdminController::class, 'indexsong']) -> name(
 Route::get('/admin/songs/edit', [AdminController::class, 'editsong']) -> name('admin.songs.edit');
 
 //user
-Route::get('/admin/users/index', [AdminController::class, 'indexuser']) -> name('admin.users.index');
-Route::get('/admin/users/create', [AdminController::class, 'createuser']) -> name('admin.users.create');
-Route::get('/admin/users/edit', [AdminController::class, 'edituser']) -> name('admin.users.edit');
+// Route cho việc hiển thị danh sách người dùng
+Route::get('/admin/users/index', [UserController::class, 'index'])->name('admin.users.index');
+
+// Route cho việc hiển thị form tạo người dùng
+Route::get('/admin/users/create', [UserController::class, 'create'])->name('admin.users.create');
+
+// Route cho việc lưu người dùng mới
+Route::post('admin/users', [UserController::class, 'store'])->name('admin.users.store');
+
+Route::get('admin/users/edit/{id}', [UserController::class, 'edit'])->name('admin.users.edit');
+
+Route::put('admin/users/update/{id}', [UserController::class, 'update'])->name('admin.users.update');
+
+// web.php
+Route::delete('/admin/users/{id}', [UserController::class, 'destroy'])->name('admin.users.destroy');
+Route::get('/admin/users/search', [UserController::class, 'search'])->name('admin.users.search');
 
 
 //doanh thu
 Route::get('/admin/revenue/index', [AdminController::class, 'revenue']) -> name('admin.revenue.index');
+
