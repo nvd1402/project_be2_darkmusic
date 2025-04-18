@@ -20,7 +20,8 @@
             </li>
             <li>
                 <i class='bx bxs-album'></i>
-                <a href="#">Quản lý thể loại</a>
+                <a href="{{ route('admin.categories.index') }}">Quản lý thể loại</a>
+             
             </li>
             <li>
                 <i class='bx bxs-microphone'></i>
