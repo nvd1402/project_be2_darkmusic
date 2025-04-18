@@ -21,6 +21,8 @@
         </div>
         <section class="song-list">
             <h2 class="title" style="margin-top: -50px">Danh sách người dùng</h2>
+
+
             <div class="add-btn">
                 <a href="{{ route('admin.users.create') }}">Thêm mới</a>
             </div>
@@ -37,39 +39,37 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>NguyenVanA</td>
-                    <td>a@gmail.com</td>
-                    <td><img class="avatar" src="" alt="avatar"></td>
-                    <td>Admin</td>
-                    <td>
-                        <a href="{{ route('admin.users.edit') }}" class="btn edit">Sửa</a>
-                        <a href="#" class="btn delete">Xóa</a>
-                        <span class="status active">Hoạt động</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>NguyenVanB</td>
-                    <td>b@gmail.com</td>
-                    <td><img class="avatar" src="" alt="avatar"></td>
-                    <td>Vip</td>
-                    <td>
-                        <a href="#" class="btn edit">Sửa</a>
-                        <a href="#" class="btn delete">Xóa</a>
-                        <span class="status active">Hoạt động</span>
-                    </td>
-                </tr>
+                @foreach($users as $user)
+                    <tr>
+                        <td>{{ $user->user_id }}</td>
+                        <td>{{ $user->username }}</td>
+                        <td>{{ $user->email }}</td>
+                        <td><img class="avatar" src="{{ asset('storage/' . $user->avatar) }}" alt="avatar"></td>
+                        <td>{{ $user->role }}</td>
+                        <td>
+                            <a href="{{ route('admin.users.edit', ['id' => $user->user_id]) }}" class="btn edit">Sửa</a>
+
+                            <!-- Form xác nhận xóa -->
+                            <form action="{{ route('admin.users.destroy', ['id' => $user->user_id]) }}" method="POST" style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn delete" onclick="return confirm('Bạn có chắc chắn muốn xóa người dùng này không?');">Xóa</button>
+
+
+                            </form>
+
+                            <span class="status {{ $user->status }}">
+        {{ $user->status == 'active' ? 'Hoạt động' : 'Vô hiệu hóa' }}
+    </span>
+                        </td>
+                    </tr>
+                @endforeach
                 </tbody>
             </table>
+
         </section>
     </main>
 </div>
-
-</div>
-
-
 
 <script src="{{ asset('js/script.js') }}"></script>
 </body>
