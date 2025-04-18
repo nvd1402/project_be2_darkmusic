@@ -20,8 +20,6 @@ return new class extends Migration
             $table->string('anh_daidien')->nullable();
             $table->timestamps();
         });
-
-        Schema::create();
     }
 
     /**
