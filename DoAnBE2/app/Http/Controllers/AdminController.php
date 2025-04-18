@@ -55,15 +55,57 @@ class AdminController extends Controller
 
     public function indexsong()
     {
-        $this->data['songs'] = Song::all();
-        return view('admin.songs.index', $this->data);
+        $this->data['songs'] = Song::all(); // Lấy tất cả bài hát
+        return view('admin.songs.index', $this->data); // Truyền vào view
     }
+
 
     public function editsong($id)
     {
         $this->data['song'] = Song::findOrFail($id);
         return view('admin.songs.edit', $this->data);
     }
+
+
+    public function updatesong(Request $request, $id)
+    {
+        // Validate dữ liệu từ form
+        $validated = $request->validate([
+            'tenbaihat' => 'required|string|max:255',
+            'nghesi' => 'required|string|max:255',
+            'theloai' => 'required|string|max:100',
+            'file_amthanh' => 'nullable|file|mimes:mp3,wav,ogg',
+            'anh_daidien' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+        ]);
+
+        // Tìm bài hát theo ID
+        $song = Song::findOrFail($id);
+        $song->tenbaihat = $request->tenbaihat;
+        $song->nghesi = $request->nghesi;
+        $song->theloai = $request->theloai;
+
+        // Kiểm tra nếu có file âm thanh mới
+        if ($request->hasFile('file_amthanh')) {
+            if ($song->file_amthanh && Storage::disk('public')->exists($song->file_amthanh)) {
+                Storage::disk('public')->delete($song->file_amthanh);
+            }
+            $song->file_amthanh = $request->file('file_amthanh')->store('songs/audio', 'public');
+        }
+
+        // Kiểm tra nếu có ảnh đại diện mới
+        if ($request->hasFile('anh_daidien')) {
+            $avatarPath = $request->file('anh_daidien')->store('songs/images', 'public');
+            $song->anh_daidien = $avatarPath;
+        }
+
+        // Lưu bài hát với dữ liệu mới
+        $song->save();
+
+        // Quay lại trang danh sách bài hát
+        return redirect()->route('admin.songs.index')->with('success', 'Cập nhật bài hát thành công!');
+    }
+
+
 
 
     public function deletesong($id)

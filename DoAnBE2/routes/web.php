@@ -10,7 +10,13 @@ Route::get('/admin/dashboard', [AdminController::class, 'adminindex']) -> name('
 Route::get('/admin/songs/create', [AdminController::class, 'createsong']) -> name('admin.songs.create');
 Route::post('/admin/songs/store', [AdminController::class, 'storesong']) -> name('admin.songs.store');
 Route::get('/admin/songs/index', [AdminController::class, 'indexsong']) -> name('admin.songs.index');
-Route::get('/admin/songs/{id}/edit', [AdminController::class, 'editsong'])->name('admin.songs.edit');
+// Route GET cho việc chỉnh sửa bài hát
+Route::get('/admin/songs/edit/{id}', [AdminController::class, 'editsong'])->name('admin.songs.edit');
+
+// Route PUT cho việc cập nhật bài hát
+Route::put('/admin/songs/edit/{id}', [AdminController::class, 'updatesong'])->name('admin.songs.update');
+
+
 // Song Routes
 Route::delete('/admin/songs/{id}', [AdminController::class, 'deletesong'])->name('admin.songs.destroy');
 

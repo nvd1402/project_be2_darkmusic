@@ -1,9 +1,7 @@
 <?php
-
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Model;
-
+use HasFactory;
 class Song extends Model
 {
     protected $table = 'songs';
@@ -15,4 +13,5 @@ class Song extends Model
         'file_amthanh',
         'anh_daidien',
     ];
+
 }
