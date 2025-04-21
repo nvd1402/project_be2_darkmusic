@@ -1,5 +1,5 @@
 <?php
-
+use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
@@ -42,4 +42,14 @@ Route::get('/admin/users/search', [UserController::class, 'search'])->name('admi
 
 //doanh thu
 Route::get('/admin/revenue/index', [AdminController::class, 'revenue']) -> name('admin.revenue.index');
+Route::get('/admin/categories/index', [CategoryController::class, 'index']) -> name('admin.categories.index');
+
+
+Route::resource('categories', CategoryController::class);
+
+Route::get('/admin/categories/search', [CategoryController::class, 'search'])->name('admin.categories.search');
+
+
+
+
 
