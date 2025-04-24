@@ -3,30 +3,32 @@
 namespace App\Http\Controllers;
 
 use App\Models\Artist;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class ArtistController extends Controller
 {
     public function indexArtist()
     {
-        $artists = Artist::all();
+        $artists = Artist::with('category')->get();
         return view('admin.artist.index', ['artists' => $artists]);
     }
     public function createArtist()
     {
-        return view('admin.artist.create');
+        $categories = Category::all();
+        return view('admin.artist.create', compact('categories'));
     }
     public function postArtist(Request $request)
     {
         $request->validate([
             'name_artist' => 'required|min:3|max:50|string',
-            'name_genre' => 'required'
+            'category_id' => 'required|exists:categories,id'
         ]);
 
         $data = $request->all();
         $check = Artist::create([
             'name_artist' => $data['name_artist'],
-            'genre' => $data['name_genre']
+            'category_id' => $data['category_id']
         ]);
 
         return redirect()->route('admin.artist.index')->with('Đăng ký thành công!');
@@ -36,8 +38,12 @@ class ArtistController extends Controller
     {
         $artist_id = $request->get('id');
         $artist = Artist::find($artist_id);
+        $categories = Category::all();
 
-        return view('admin.artist.update', ['artist' => $artist]);
+        return view('admin.artist.update', [
+            'artist' => $artist,
+            'categories' => $categories
+        ]);
     }
     public function postUpdateArtist(Request $request)
     {
@@ -45,15 +51,15 @@ class ArtistController extends Controller
 
         $request->validate([
             'name_artist' => 'required|min:3|max:50|string',
-            'name_genre' => 'required',
+            'category_id' => 'required',
         ]);
 
         $artist = Artist::find($input['id']);
         $artist->name_artist = $input['name_artist'];
-        $artist->genre = $input['name_genre'];
+        $artist->category_id = $input['category_id'];
         $artist->save();
 
-        return redirect()->route('admin.artist.index');
+        return redirect()->route('admin.artist.index')->with('success', 'Đã cập nhật thành công!');;
     }
 
     public function deleteArtist(Request $request)

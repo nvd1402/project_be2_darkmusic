@@ -24,12 +24,12 @@
                         required>
                 </div>
                 <div class="form-group mb-3">
-                    <label for="name_genre">Chọn thể loại âm nhạc</label>
-                    <select id="name_genre" name="name_genre" required>
+                    <label for="category_id">Chọn thể loại âm nhạc</label>
+                    <select id="category_id" name="category_id" required>
                         <option value="" style="display: none;">Chọn thể loại âm nhạc</option>
-                        <option value="1">Nhạc trẻ</option>
-                        <option value="2">Kpop</option>
-                        <option value="3">Rap Việt</option>
+                        @foreach ( $categories as $category )
+                            <option value="{{ $category->id }}">{{ $category->tentheloai }}</option>
+                        @endforeach
                     </select>
                 </div>
                 <div class="d-grid mx-auto">

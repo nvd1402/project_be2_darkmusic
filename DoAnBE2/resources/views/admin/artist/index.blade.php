@@ -36,7 +36,7 @@
                     <tr>
                         <td>{{ $artist->id }}</td>
                         <td>{{ $artist->name_artist }}</td>
-                        <td>{{ $artist->genre }}</td>
+                        <td>{{ $artist->category->tentheloai ?? 'Không có danh mục' }}</td>
                         <td><a href={{ route('admin.artist.update',['id'=> $artist->id]) }} class="link--artist">Sửa</a> |
                             <a href={{ route('admin.artist.delete',['id' => $artist->id]) }} class="link--artist">Xoá</a> </td>
                     </tr>
