@@ -10,6 +10,7 @@
 /* news */
 
 /* General Styles */
+
 .news-list {
     margin-top: 20px;
     background-color: #fff;
@@ -894,8 +895,8 @@ body {
     transition: all 0.3s ease;
 }
 
-.container main header .search {
-    margin-right: 35px;
+.container main .search {
+    margin-right: 20%;
     display: flex;
     align-items: center;
     gap: 6px;
@@ -906,7 +907,7 @@ body {
     border-radius: 8px;
 }
 
-.container main header .search input {
+.container main header input {
     width: 100%;
     background-color: transparent;
     border: none;
