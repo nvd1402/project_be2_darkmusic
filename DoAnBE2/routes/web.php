@@ -20,6 +20,8 @@ Route::post('/admin/songs/store', [AdminController::class, 'storesong'])->name('
 Route::get('/admin/songs/index', [AdminController::class, 'indexsong'])->name('admin.songs.index');
 // Route GET cho việc chỉnh sửa bài hát
 Route::get('/admin/songs/edit/{id}', [AdminController::class, 'editsong'])->name('admin.songs.edit');
+Route::get('/admin/songs/search', [AdminController::class, 'search'])->name('admin.songs.search');
+
 
 // Route PUT cho việc cập nhật bài hát
 Route::put('/admin/songs/edit/{id}', [AdminController::class, 'updatesong'])->name('admin.songs.update');
