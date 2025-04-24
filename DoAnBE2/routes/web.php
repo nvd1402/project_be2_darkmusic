@@ -3,6 +3,8 @@ use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
+
+use App\Http\Controllers\NewsController;
 //admin
 Route::get('/admin/dashboard', [AdminController::class, 'adminindex']) -> name('admin.dashboard');;
 
@@ -42,12 +44,22 @@ Route::get('/admin/users/search', [UserController::class, 'search'])->name('admi
 
 //doanh thu
 Route::get('/admin/revenue/index', [AdminController::class, 'revenue']) -> name('admin.revenue.index');
+
 Route::get('/admin/categories/index', [CategoryController::class, 'index']) -> name('admin.categories.index');
 
 
 Route::resource('categories', CategoryController::class);
 
-Route::get('/admin/categories/search', [CategoryController::class, 'search'])->name('admin.categories.search');
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('news', NewsController::class);
+    
+});
+Route::get('admin/news/create', [NewsController::class, 'create'])->name('admin.news.create');
+
+
+
+
 
 
 
