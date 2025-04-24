@@ -21,7 +21,7 @@
 
             <section class="category-list">
                 <div class="category-list-header">
-                    <h2 class="title">Danh sách thể loại  </h2>
+                    <h2 class="title">Danh sách thể loại </h2>
                     <div class="add-btn">
                         <a href="{{ route('categories.create') }}">Thêm mới</a>
                     </div>

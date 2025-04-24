@@ -23,7 +23,9 @@
                 <h3>Thêm thể loại</h3>
                 <form action="{{ route('categories.store') }}" method="POST">
                     @csrf
-                    <label for="category-name">Tên thể loại</label>
+                    <p>Lưu ý những trường hợp có (*) là bắt buộc phải điền</p>
+                    
+                    <label for="category-name">Tên thể loại(*)</label>
                     <input type="text" id="category-name" name="tentheloai" placeholder="Nhập tên thể loại" required>
                     <button type="submit">Thêm</button>
                 </form>
