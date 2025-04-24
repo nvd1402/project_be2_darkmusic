@@ -1,4 +1,5 @@
 <header>
+<<<<<<< Updated upstream
     <div class="nav-links">
         <button class="menu-btn" id="menu-open">
             <i class='bx bx-menu'></i>
@@ -23,5 +24,7 @@
 
     </div>
 
+=======
+>>>>>>> Stashed changes
     <div class="userimg"></div>
 </header>

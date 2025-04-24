@@ -6,8 +6,6 @@
     box-sizing: border-box;
     font-family: 'Roboto', sans-serif;
 }
-
-
 /* news */
 
 /* General Styles */
@@ -18,7 +16,7 @@
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-  
+
 
 .add-btn {
     margin-left: auto;
@@ -887,7 +885,7 @@ body{
 }
 
 .container main header .search{
-    margin-right: 35px;
+    margin-right: 25%;
     display: flex;
     align-items: center;
     gap: 6px;
