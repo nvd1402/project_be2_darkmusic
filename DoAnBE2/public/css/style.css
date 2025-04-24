@@ -882,7 +882,7 @@ body{
     transition: all 0.3s ease;
 }
 
-.container main header .search{
+.container main  .search{
     margin-right: 25%;
     display: flex;
     align-items: center;
