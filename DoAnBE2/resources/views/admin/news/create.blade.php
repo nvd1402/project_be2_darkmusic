@@ -32,28 +32,36 @@
                     </div>
                 @endif
 
-                <form action="{{ route('admin.news.store') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <p>Lưu ý những trường hợp có (*) là bắt buộc phải điền</p>
-                    <br>
-                    <!-- Tiêu đề -->
-                    <label for="tieude">Tiêu đề(*)</label>
-                    <input type="text" id="tieude" name="tieude" placeholder="Nhập tiêu đề tin tức" value="{{ old('tieude') }}" required>
+                <!-- resources/views/admin/news/create.blade.php -->
+<form action="{{ route('admin.news.store') }}" method="POST" enctype="multipart/form-data">
+    @csrf
+    <label for="tieude">Tiêu đề(*)</label>
+    <input type="text" id="tieude" name="tieude" placeholder="Nhập tiêu đề tin tức" value="{{ old('tieude') }}" required>
+    @if ($errors->has('tieude'))
+        <div class="text-danger">{{ $errors->first('tieude') }}</div>
+    @endif
 
-                    <!-- Nội dung -->
-                    <label for="noidung">Nội dung(*)</label>
-                    <textarea id="noidung" name="noidung" placeholder="Nhập nội dung tin tức" required>{{ old('noidung') }}</textarea>
+    <label for="noidung">Nội dung(*)</label>
+    <textarea id="noidung" name="noidung" placeholder="Nhập nội dung tin tức" required>{{ old('noidung') }}</textarea>
+    @if ($errors->has('noidung'))
+        <div class="text-danger">{{ $errors->first('noidung') }}</div>
+    @endif
 
-                    <!-- Đơn vị đăng -->
-                    <label for="donvidang">Đơn vị đăng(*)</label>
-                    <input type="text" id="donvidang" name="donvidang" placeholder="Nhập đơn vị đăng tin" value="{{ old('donvidang') }}" required>
+    <label for="donvidang">Đơn vị đăng(*)</label>
+    <input type="text" id="donvidang" name="donvidang" placeholder="Nhập đơn vị đăng tin" value="{{ old('donvidang') }}" required>
+    @if ($errors->has('donvidang'))
+        <div class="text-danger">{{ $errors->first('donvidang') }}</div>
+    @endif
 
-                    <!-- Hình ảnh -->
-                    <label for="hinhanh">Hình ảnh</label>
-                    <input type="file" id="hinhanh" name="hinhanh">
+    <label for="hinhanh">Hình ảnh</label>
+    <input type="file" id="hinhanh" name="hinhanh">
+    @if ($errors->has('hinhanh'))
+        <div class="text-danger">{{ $errors->first('hinhanh') }}</div>
+    @endif
 
-                    <button type="submit">Thêm mới</button>
-                </form>
+    <button type="submit">Thêm mới</button>
+</form>
+
             </section>
         </main>
     </div>

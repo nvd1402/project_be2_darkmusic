@@ -24,9 +24,14 @@
                 <form action="{{ route('categories.store') }}" method="POST">
                     @csrf
                     <p>Lưu ý những trường hợp có (*) là bắt buộc phải điền</p>
-                    
+<br>
                     <label for="category-name">Tên thể loại(*)</label>
-                    <input type="text" id="category-name" name="tentheloai" placeholder="Nhập tên thể loại" required>
+                    <input type="text" id="category-name" name="tentheloai" placeholder="Nhập tên thể loại" value="{{ old('tentheloai') }}" required>
+
+                    @if ($errors->has('tentheloai'))
+                        <div class="text-danger">{{ $errors->first('tentheloai') }}</div>
+                    @endif
+
                     <button type="submit">Thêm</button>
                 </form>
             </section>
