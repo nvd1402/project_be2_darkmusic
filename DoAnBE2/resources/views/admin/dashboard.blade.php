@@ -57,7 +57,7 @@
                 </div>
             </a>
             <!-- box 5-->
-            <a href="#" class="boxPageAdmin">
+            <a href="{{ route('admin.artist.index') }}" class="boxPageAdmin">
                 <div class="admininfo">
                     <i class="bi bi-person-bounding-box icon"></i>
                     <h2>Nghệ sĩ</h2>
