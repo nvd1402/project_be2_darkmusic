@@ -20,7 +20,8 @@
             </li>
             <li>
                 <i class='bx bxs-album'></i>
-                <a href="#">Quản lý thể loại</a>
+                <a href="{{ route('admin.categories.index') }}">Quản lý thể loại</a>
+             
             </li>
             <li>
                 <i class='bx bxs-microphone'></i>
@@ -31,8 +32,9 @@
                 <a href="#">Quản lý album</a>
             </li>
             <li>
-                <i class='bx bx-undo'></i>
-                <a href="#">Quản lý tin tức</a>
+               
+            <i class='bx bxs-album'></i>
+                <a href="{{ route('admin.news.index') }}">Quản lý tin tức</a>
             </li>
             <li>
                 <i class='bx bxs-photo-album'></i>

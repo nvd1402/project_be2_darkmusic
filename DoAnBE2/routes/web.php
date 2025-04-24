@@ -1,10 +1,15 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ArtistController;
 use App\Http\Controllers\UserController;
 use App\Models\Artist;
+
+
+
+use App\Http\Controllers\NewsController;
 
 //admin
 Route::get('/admin/dashboard', [AdminController::class, 'adminindex'])->name('admin.dashboard');;
@@ -13,7 +18,13 @@ Route::get('/admin/dashboard', [AdminController::class, 'adminindex'])->name('ad
 Route::get('/admin/songs/create', [AdminController::class, 'createsong'])->name('admin.songs.create');
 Route::post('/admin/songs/store', [AdminController::class, 'storesong'])->name('admin.songs.store');
 Route::get('/admin/songs/index', [AdminController::class, 'indexsong'])->name('admin.songs.index');
-Route::get('/admin/songs/{id}/edit', [AdminController::class, 'editsong'])->name('admin.songs.edit');
+// Route GET cho việc chỉnh sửa bài hát
+Route::get('/admin/songs/edit/{id}', [AdminController::class, 'editsong'])->name('admin.songs.edit');
+
+// Route PUT cho việc cập nhật bài hát
+Route::put('/admin/songs/edit/{id}', [AdminController::class, 'updatesong'])->name('admin.songs.update');
+
+
 // Song Routes
 Route::delete('/admin/songs/{id}', [AdminController::class, 'deletesong'])->name('admin.songs.destroy');
 
@@ -40,6 +51,7 @@ Route::get('/admin/users/search', [UserController::class, 'search'])->name('admi
 //doanh thu
 Route::get('/admin/revenue/index', [AdminController::class, 'revenue'])->name('admin.revenue.index');
 
+
 // artist-crud
 Route::get('admin/artist/index', [ArtistController::class, 'indexArtist'])->name('admin.artist.index');
 
@@ -50,3 +62,14 @@ Route::get('admin/artist/update', [ArtistController::class, 'updateArtist'])->na
 Route::post('admin/artist/update', [ArtistController::class, 'postUpdateArtist'])->name('admin.artist.post.update');
 
 Route::get('admin/artist/delete', [ArtistController::class, 'deleteArtist'])->name('admin.artist.delete');
+
+Route::get('/admin/categories/index', [CategoryController::class, 'index'])->name('admin.categories.index');
+
+
+Route::resource('categories', CategoryController::class);
+
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('news', NewsController::class);
+});
+Route::get('admin/news/create', [NewsController::class, 'create'])->name('admin.news.create');
