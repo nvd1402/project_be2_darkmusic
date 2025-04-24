@@ -25,7 +25,11 @@
                     @csrf
                     @method('PUT')
                     <label for="category-name">Tên thể loại</label>
-                    <input type="text" id="category-name" name="tentheloai" value="{{ $category->tentheloai }}" required>
+                    <input type="text" name="tentheloai" value="{{ old('tentheloai', $category->tentheloai ?? '') }}" placeholder="Nhập tên thể loại" required>
+@if ($errors->has('tentheloai'))
+    <div class="text-danger">{{ $errors->first('tentheloai') }}</div>
+@endif
+
                     <button type="submit">Cập nhật</button>
                 </form>
             </section>

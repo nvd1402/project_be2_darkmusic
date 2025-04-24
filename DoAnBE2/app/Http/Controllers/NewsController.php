@@ -13,7 +13,6 @@ class NewsController extends Controller
         $news = News::all();  // Lấy tất cả tin tức từ database
         return view('admin.news.index', compact('news'));  // Trả về view của admin với dữ liệu tin tức
     }
-    
 
     // Hiển thị form tạo mới tin tức
     public function create()
@@ -26,10 +25,23 @@ class NewsController extends Controller
     {
         // Xác thực dữ liệu
         $request->validate([
-            'tieude' => 'required|max:255',  // Tiêu đề là bắt buộc và có độ dài tối đa là 255 ký tự
-            'noidung' => 'required',         // Nội dung là bắt buộc
-            'donvidang' => 'required|max:255', // Đơn vị đăng là bắt buộc và có độ dài tối đa là 255 ký tự
-            'hinhanh' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',  // Hình ảnh có thể có hoặc không, nếu có thì phải là ảnh và có dung lượng tối đa 2MB
+            'tieude' => [
+                'required', 
+                'max:32', 
+                'regex:/^[\p{L}\s0-9][\p{L}\s0-9]*$/u'  // Không cho phép ký tự đặc biệt ở đầu
+            ],
+            'noidung' => 'required',  // Nội dung là bắt buộc
+            'donvidang' => 'required', // Đơn vị đăng là bắt buộc
+            'hinhanh' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',  // Kiểm tra hình ảnh
+        ], [
+            'tieude.required' => 'Vui lòng nhập tiêu đề.',
+            'tieude.max' => 'Tiêu đề không được vượt quá :max ký tự.',
+            'tieude.regex' => 'Tiêu đề không được bắt đầu bằng ký tự đặc biệt.',
+            'noidung.required' => 'Vui lòng nhập nội dung.',
+            'donvidang.required' => 'Vui lòng nhập đơn vị đăng.',
+            'hinhanh.image' => 'Hình ảnh phải là một tệp ảnh hợp lệ.',
+            'hinhanh.mimes' => 'Hình ảnh phải có định dạng: jpeg, png, jpg, gif, svg.',
+            'hinhanh.max' => 'Hình ảnh không được vượt quá :max KB.',
         ]);
     
         // Lưu tin tức mới
@@ -49,47 +61,68 @@ class NewsController extends Controller
         return redirect()->route('admin.news.index')->with('success', 'Tin tức đã được thêm thành công!');
     }
     
+
     // Hiển thị form chỉnh sửa tin tức
     public function edit($id)
     {
         $news = News::findOrFail($id);
-        return view('admin.news.edit', compact('news')); // Đảm bảo đường dẫn đúng
+        return view('admin.news.edit', compact('news'));  // Trả về view chỉnh sửa tin tức
     }
-    
 
     // Cập nhật tin tức
     public function update(Request $request, $id)
     {
-        // Validate the input fields
-        $data = $request->validate([
-            'tieude' => 'required',  // Title is required
-            'noidung' => 'required',  // Content is required
-            'donvidang' => 'required',  // Publisher is required
-            'hinhanh' => 'image|nullable',  // Image is optional but if provided, must be an image
+
+
+        
+        // Xác thực dữ liệu với các thông báo lỗi
+        $request->validate([
+            'tieude' => [
+                'required',
+                'max:32',
+                'regex:/^[\p{L}\s0-9]+$/u', // Không cho phép ký tự đặc biệt
+            ],
+            'noidung' => 'required', // Nội dung là bắt buộc
+            'donvidang' => 'required|max:255', // Đơn vị đăng là bắt buộc và có độ dài tối đa là 255 ký tự
+            'hinhanh' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Hình ảnh có thể có hoặc không
+        ], [
+            'tieude.required' => 'Vui lòng nhập tiêu đề.',
+            'tieude.max' => 'Tiêu đề không được vượt quá 32 ký tự.',
+            'tieude.regex' => 'Tiêu đề không được bắt đầu bằng ký tự đặc biệt.',
+            'noidung.required' => 'Vui lòng nhập nội dung.',
+            'donvidang.required' => 'Vui lòng nhập đơn vị đăng.',
+            'donvidang.max' => 'Đơn vị đăng không được vượt quá 255 ký tự.',
+            'hinhanh.image' => 'Hình ảnh phải là một tệp ảnh hợp lệ.',
+            'hinhanh.mimes' => 'Hình ảnh phải có định dạng: jpeg, png, jpg, gif, svg.',
+            'hinhanh.max' => 'Hình ảnh không được vượt quá 2MB.',
         ]);
-
-        // Find the news by ID
+    
+        // Tìm kiếm tin tức theo ID
         $news = News::findOrFail($id);
-
-        // If there's a new image, store it
+    
+        // Cập nhật các trường thông tin tin tức
+        $news->tieude = $request->tieude;
+        $news->noidung = $request->noidung;
+        $news->donvidang = $request->donvidang;
+    
         if ($request->hasFile('hinhanh')) {
-            $data['hinhanh'] = $request->file('hinhanh')->store('images', 'public');
+            // Nếu có hình ảnh mới, lưu nó
+            $imagePath = $request->file('hinhanh')->store('news_images', 'public');
+            $news->hinhanh = $imagePath;
         }
-
-        // Update the news record
-        $news->update($data);
-
-        // Redirect to the news index page with a success message
-        return redirect()->route('admin.news.index')->with('success', 'Cập nhật thành công');
+    
+        $news->save();  // Lưu bản ghi đã cập nhật vào cơ sở dữ liệu
+    
+        return redirect()->route('admin.news.index')->with('success', 'Tin tức đã được cập nhật thành công!');
     }
 
     // Xóa tin tức
     public function destroy($id)
     {
-        $news = News::findOrFail($id);  // Find the news by ID
-        $news->delete();  // Delete the news record
-
-        // Redirect to the news index page with a success message
-        return redirect()->route('admin.news.index')->with('success', 'Đã xóa tin');
+        // Tìm tin tức theo ID và xóa nó
+        $news = News::findOrFail($id);  // Tìm tin tức theo ID
+        $news->delete();  // Xóa tin tức khỏi cơ sở dữ liệu
+    
+        return redirect()->route('admin.news.index')->with('success', 'Đã xóa tin tức thành công!');  // Quay lại danh sách tin tức với thông báo thành công
     }
 }

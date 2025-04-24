@@ -7,35 +7,48 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    public function index() {
+    public function index()
+    {
         $categories = Category::all();
-        return view('admin.categories.index', compact('categories')); // sửa path view
+        return view('admin.categories.index', compact('categories'));
     }
 
-    public function create() {
-        return view('admin.categories.create'); // sửa path view
+    public function create()
+    {
+        return view('admin.categories.create');
     }
 
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         $request->validate([
-            'tentheloai' => 'required'
+            'tentheloai' => [
+                'required',
+                'max:32',
+                'regex:/^[\p{L}\s0-9]+$/u'
+            ],
         ]);
 
         Category::create([
             'tentheloai' => $request->tentheloai,
         ]);
 
-        return redirect()->route('categories.index')->with('success', 'Thêm thành công!');
+        return redirect()->route('categories.index')->with('success', 'Thêm thể loại thành công!');
     }
 
-    public function edit($id) {
+    public function edit($id)
+    {
         $category = Category::findOrFail($id);
-        return view('admin.categories.edit', compact('category')); // sửa path view
+        return view('admin.categories.edit', compact('category'));
     }
 
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id)
+    {
         $request->validate([
-            'tentheloai' => 'required'
+            'tentheloai' => [
+                'required',
+                'max:32',
+                'regex:/^[\p{L}\s0-9]+$/u'
+            ],
         ]);
 
         $category = Category::findOrFail($id);
@@ -43,17 +56,14 @@ class CategoryController extends Controller
             'tentheloai' => $request->tentheloai,
         ]);
 
-        return redirect()->route('categories.index')->with('success', 'Cập nhật thành công!');
+        return redirect()->route('categories.index')->with('success', 'Cập nhật thể loại thành công!');
     }
 
-    public function destroy($id) {
+    public function destroy($id)
+    {
         $category = Category::findOrFail($id);
         $category->delete();
-        return redirect()->route('categories.index')->with('success', 'Xóa thành công!');
+
+        return redirect()->route('categories.index')->with('success', 'Xóa thể loại thành công!');
     }
-
-
-
-    
-    
 }
