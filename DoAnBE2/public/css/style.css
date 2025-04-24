@@ -6,13 +6,7 @@
     box-sizing: border-box;
     font-family: 'Roboto', sans-serif;
 }
-<<<<<<< Updated upstream
-=======
 
-
-/* news */
-
-/* General Styles */
 .news-list {
     margin-top: 20px;
     background-color: #fff;
@@ -268,7 +262,6 @@ form button:hover {
 }
 
 
->>>>>>> Stashed changes
 /*doanh thu*/
 .info-revenue{
     width:200px;
