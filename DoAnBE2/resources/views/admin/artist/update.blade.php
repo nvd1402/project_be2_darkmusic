@@ -23,15 +23,14 @@
                 <div class="form-group mb-3">
                     <label for="name_artist">Tên nghệ sĩ</label>
                     <input type="text"  placeholder="Name Artist" class="form-control" name="name_artist"
-                        required autofocus value={{ $artist->name_artist }}>
+                        required autofocus value="{{ $artist->name_artist }}">
                 </div>
                 <div class="form-group mb-3">
-                    <label for="name_genre">Thể loại âm nhạc</label>
-                    <select id="name_genre" name="name_genre" required value={{ $artist->genre }}>
-                        <option value="" style="display: none;">{{ $artist->genre }}</option>
-                        <option value="1">Nhạc trẻ</option>
-                        <option value="2">Kpop</option>
-                        <option value="3">Rap Việt</option>
+                    <label for="category_id">Thể loại âm nhạc</label>
+                    <select id="category_id" name="category_id" required >
+                        @foreach ($categories as $category)
+                            <option value="{{ $category->id }}" {{ $artist->category_id == $category->id ? 'selected' : '' }}>{{ $category->tentheloai }}</option>
+                        @endforeach
                     </select>
                 </div>
                 <div class="d-grid mx-auto">
