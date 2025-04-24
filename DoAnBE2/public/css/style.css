@@ -7,7 +7,6 @@
     font-family: "Roboto", sans-serif;
 }
 
-
 /* news */
 
 /* General Styles */
@@ -18,7 +17,6 @@
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-  
 
 .add-btn {
     margin-left: auto;
@@ -31,7 +29,8 @@ table {
     margin-top: 20px;
 }
 
-table th, table td {
+table th,
+table td {
     padding: 12px;
     text-align: left;
     border-bottom: 1px solid #ddd;
@@ -66,7 +65,7 @@ table tr:hover {
 }
 
 .btn.edit {
-    background-color: #4CAF50;
+    background-color: #4caf50;
 }
 
 .btn.edit:hover {
@@ -115,7 +114,9 @@ form button:hover {
     color: #333;
 }
 
-.news-form input[type="text"], .news-form input[type="file"], .news-form textarea {
+.news-form input[type="text"],
+.news-form input[type="file"],
+.news-form textarea {
     width: 100%;
     padding: 10px;
     margin-bottom: 15px;
@@ -167,7 +168,8 @@ form button:hover {
         margin-left: 200px;
     }
 
-    table th, table td {
+    table th,
+    table td {
         padding: 8px;
     }
 
@@ -179,7 +181,6 @@ form button:hover {
         padding: 8px 12px;
     }
 }
-
 
 /* category*/
 .category-list {
@@ -222,7 +223,8 @@ form button:hover {
     margin-bottom: 30px;
 }
 
-.category-table th, .category-table td {
+.category-table th,
+.category-table td {
     padding: 12px;
     border: 1px solid #ddd;
 }
@@ -264,7 +266,6 @@ form button:hover {
 .category-form button:hover {
     background-color: #218838;
 }
-
 
 /*doanh thu*/
 .info-revenue {
@@ -321,7 +322,9 @@ form button:hover {
     scale: 1.05;
     background-color: #5b6bf8;
 }
-
+.link--artist {
+    color: black;
+}
 /************************trang user************************/
 
 .table-user {
