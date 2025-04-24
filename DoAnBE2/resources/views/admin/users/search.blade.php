@@ -1,5 +1,4 @@
 <header>
-<<<<<<< Updated upstream
     <div class="nav-links">
         <button class="menu-btn" id="menu-open">
             <i class='bx bx-menu'></i>
@@ -15,13 +14,8 @@
             <input type="text" name="query" placeholder="Tìm kiếm người dùng" value="{{ request()->query('query') }}">
         </form>
 
-{{--        <!-- Tìm kiếm bài hát -->--}}
-{{--        <form action="{{ route('admin.song.search') }}" method="GET">--}}
-{{--            <input type="text" name="query" placeholder="Tìm kiếm bài hát" value="{{ request()->query('query') }}">--}}
-{{--        </form>--}}
-    </div>
 
-=======
->>>>>>> Stashed changes
-    <div class="userimg"></div>
+
+
+    </div>
 </header>

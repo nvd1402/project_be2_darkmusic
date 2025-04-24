@@ -9,6 +9,7 @@
     <main>
         <!--include file header-->
         @include('admin.partials.header')
+        @include('admin.users.search')
 
         <!--content-->
         <div>
