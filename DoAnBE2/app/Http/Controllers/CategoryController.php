@@ -53,14 +53,7 @@ class CategoryController extends Controller
     }
 
 
-    // public function search(Request $request)
-    // {
-    //     $query = $request->input('query');
-    
-    //     $categories = Category::where('tentheloai', 'like', "%$query%")->get();
-    
-    //     return view('admin.categories.index', compact('categories'));
-    // }
+
     
     
 }
