@@ -25,7 +25,7 @@
             </li>
             <li>
                 <i class='bx bxs-microphone'></i>
-                <a href="#">Quản lý nghệ sỉ</a>
+                <a href="{{ route('admin.artist.index') }}">Quản lý nghệ sĩ</a>
             </li>
             <li>
                 <i class='bx bxs-radio'></i>
