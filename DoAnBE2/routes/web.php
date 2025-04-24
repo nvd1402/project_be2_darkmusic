@@ -63,6 +63,7 @@ Route::post('admin/artist/update', [ArtistController::class, 'postUpdateArtist']
 
 Route::get('admin/artist/delete', [ArtistController::class, 'deleteArtist'])->name('admin.artist.delete');
 
+
 Route::get('/admin/categories/index', [CategoryController::class, 'index'])->name('admin.categories.index');
 
 
