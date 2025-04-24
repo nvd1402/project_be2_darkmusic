@@ -13,6 +13,7 @@
     <main>
         <!--include file header-->
         @include('admin.partials.header')
+        @include('admin.songs.search')
 
         <!--content-->
         <div>
@@ -45,13 +46,20 @@
                         <td>{{ $song->theloai }}</td>
                         <td>
                             @if($song->anh_daidien)
-                                <img src="{{ asset('storage/' . $song->anh_daidien) }}" width="50" alt="avatar">
+                                <img src="{{ asset('storage/' . $song->anh_daidien) }}" width="50" alt="images">
                             @else
                                 Không có ảnh
                             @endif
                         </td>
                         <td>
-                            {{ basename($song->file_amthanh) }}
+                            @if($song->file_amthanh)
+                                <audio controls>
+                                    <source src="{{ asset('storage/'.$song->file_amthanh) }}" type="audio/mpeg">
+                                    Your browser does not support the audio element.
+                                </audio>
+                            @else
+                                <p>Không có âm thanh</p>
+                            @endif
                         </td>
                         <td>
                             <!-- Sửa -->

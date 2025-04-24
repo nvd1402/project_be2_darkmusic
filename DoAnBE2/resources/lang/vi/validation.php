@@ -41,7 +41,7 @@ return [
             'unique' => 'Tên thể loại này đã tồn tại.',
             'max' => 'Tên thể loại không được vượt quá :max ký tự.',
         ],
-        ' tentheloai' => ['required', 'max:32', 
+        ' tentheloai' => ['required', 'max:32',
         'regex:/^[\p{L}\s0-9]+$/u'],
 
         ' tieude' => ['required', 'max:32', 'regex:/^[\p{L}\s0-9]+$/u'],
