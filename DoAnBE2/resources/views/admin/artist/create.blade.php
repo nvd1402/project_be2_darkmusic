@@ -16,7 +16,7 @@
         </div>
         <section class="add-song">
 
-            <form action="{{ route('admin.artist.post.create') }}" method="post" >
+            <form action="{{ route('admin.artist.post.create') }}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="form-group mb-3">
                     <label for="name_artist">Nhập tên nghệ sĩ</label>
@@ -32,6 +32,11 @@
                         @endforeach
                     </select>
                 </div>
+                <div class="form-group mb-3">
+                    <label for="image_artist">Ảnh đại diện</label>
+                    <input id="image_artist" type="file" name="image_artist">
+                </div>
+
                 <div class="d-grid mx-auto">
                     <button type="submit" class="btn--crud--artist">Thêm</button>
                 </div>
