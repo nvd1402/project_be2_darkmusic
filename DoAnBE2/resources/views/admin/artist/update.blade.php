@@ -16,7 +16,7 @@
         </div>
         <section class="add-song">
 
-            <form action="{{ route('admin.artist.post.update') }}" method="post" >
+            <form action="{{ route('admin.artist.post.update') }}" method="post" enctype="multipart/form-data">
                 @csrf
 
                 <input name="id" type="hidden" value="{{ $artist->id }}">
@@ -33,6 +33,23 @@
                         @endforeach
                     </select>
                 </div>
+
+                 {{-- Hình ảnh hiện tại --}}
+                <div class="form-group">
+                    <label>Ảnh hiện tại:</label><br>
+                    @if ($artist->image_artist)
+                        <img src="{{ asset('storage/public/artists/' . $artist->image_artist) }}" width="100">
+                    @else
+                        <p>Không có ảnh</p>
+                    @endif
+                </div>
+
+                {{-- Upload ảnh mới --}}
+                <div class="form-group">
+                    <label for="image_artist">Ảnh mới (tùy chọn):</label>
+                    <input type="file" name="image_artist" class="form-control">
+                </div>
+
                 <div class="d-grid mx-auto">
                     <button type="submit" class="btn--crud--artist">Sữa</button>
                 </div>

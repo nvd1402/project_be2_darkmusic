@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Artist;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ArtistController extends Controller
 {
@@ -18,20 +19,31 @@ class ArtistController extends Controller
         $categories = Category::all();
         return view('admin.artist.create', compact('categories'));
     }
+
     public function postArtist(Request $request)
     {
         $request->validate([
             'name_artist' => 'required|min:3|max:50|string',
+            'image_artist' => 'nullable|image|mimes:jpg,png,jpeg,gif|max:2048',
             'category_id' => 'required|exists:categories,id'
         ]);
 
+        $fileName = null;
+
+        if ($request->hasFile('image_artist')) {
+            $file = $request->file('image_artist');
+            $fileName = $file->hashName();
+            $file->store('public/artists', 'public');
+        }
+
         $data = $request->all();
-        $check = Artist::create([
+        Artist::create([
             'name_artist' => $data['name_artist'],
+            'image_artist' => $fileName,
             'category_id' => $data['category_id']
         ]);
 
-        return redirect()->route('admin.artist.index')->with('Đăng ký thành công!');
+        return redirect()->route('admin.artist.index')->with('Tạo Artist thành công!');
     }
 
     public function updateArtist(Request $request)
@@ -47,26 +59,44 @@ class ArtistController extends Controller
     }
     public function postUpdateArtist(Request $request)
     {
-        $input = $request->all();
-
         $request->validate([
+            'id' => 'required|exists:artists,id',
             'name_artist' => 'required|min:3|max:50|string',
-            'category_id' => 'required',
+            'image_artist' => 'nullable|image|mimes:jpg,png,jpeg,gif|max:2048',
+            'category_id' => 'required|exists:categories,id',
         ]);
 
-        $artist = Artist::find($input['id']);
-        $artist->name_artist = $input['name_artist'];
-        $artist->category_id = $input['category_id'];
-        $artist->save();
+        $artist = Artist::findOrFail($request->id);
 
-        return redirect()->route('admin.artist.index')->with('success', 'Đã cập nhật thành công!');;
+        $fileName = null;
+
+        if ($request->hasFile('image_artist')) {
+            $file = $request->file('image_artist');
+            $fileName = $file->hashName();
+            $file->store('public/artists', 'public');
+        }
+
+        $artist->update([
+            'name_artist' => $request->name_artist,
+            'image_artist' => $fileName,
+            'category_id' => $request->category_id,
+        ]);
+
+        return redirect()->route('admin.artist.index')->with('success', 'Đã cập nhật thành công!');
     }
 
     public function deleteArtist(Request $request)
     {
         $artist_id = $request->get('id');
-        $artist = Artist::destroy($artist_id);
+        $artist = Artist::findOrFail($artist_id);
 
-        return redirect()->route('admin.artist.index')->withSuccess('Xoá thành công');
+
+        if ($artist->image_artist && Storage::disk('public')->exists('artists/' . $artist->image_artist)) {
+            Storage::disk('public')->delete('artists/public/artists' . $artist->image_artist);
+        }
+
+        $artist->delete();
+
+        return redirect()->route('admin.artist.index')->with('success', 'Xoá thành công');
     }
 }
