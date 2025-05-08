@@ -13,5 +13,9 @@ class Song extends Model
         'file_amthanh',
         'anh_daidien',
     ];
+    public function artist()
+    {
+        return $this->belongsTo(Artist::class, 'nghesi');
+    }
 
 }
