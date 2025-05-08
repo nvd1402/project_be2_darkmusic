@@ -4,7 +4,6 @@ use Illuminate\Database\Eloquent\Model;
 use HasFactory;
 class Song extends Model
 {
-    use HasFactory; // Đặt ở đây
 
     protected $table = 'songs';
 
