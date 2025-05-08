@@ -17,9 +17,16 @@
         <section class="song-list">
             <h2 class="title" style="margin-top: -50px">Danh sách người dùng</h2>
 
-
+            <form action="" method="get">
+                <div class="search-artist">
+                    <label for="search" style="margin-right: 10px">Tìm kiếm</label>
+                    <img src="" alt="">
+                    <input name="search_artist" type="text" id="search" placeholder="Search...">
+                    <button>Search</button>
+                </div>
+            </form>
             <div class="add-btn">
-                <a href="{{ route('admin.artist.create') }}">Thêm mới</a>
+                    <a href="{{ route('admin.artist.create') }}">Thêm mới</a>
             </div>
 
             <table class="song-table">
