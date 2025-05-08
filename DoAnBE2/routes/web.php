@@ -97,12 +97,12 @@ Route::group(['prefix'=> '' , 'as' => 'frontend.'], function () {
 });
 
 // Các routes cho trang admin (vẫn giữ nguyên tiền tố /admin)
-Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
-    // Các routes admin của bạn
-    Route::get('/dashboard', [AdminController::class, 'adminindex'])->name('admin.dashboard');
-    Route::get('/songs', [AdminController::class, 'indexsong'])->name('admin.songs.index');
-    // ... các routes admin khác
-});
+//Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
+//    // Các routes admin của bạn
+//    Route::get('/dashboard', [AdminController::class, 'adminindex'])->name('admin.dashboard');
+//    Route::get('/songs', [AdminController::class, 'indexsong'])->name('admin.songs.index');
+//    // ... các routes admin khác
+//});
 
 
 
