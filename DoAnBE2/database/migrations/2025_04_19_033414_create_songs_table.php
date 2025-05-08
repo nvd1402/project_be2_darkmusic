@@ -14,11 +14,13 @@ return new class extends Migration
         Schema::create('songs', function (Blueprint $table) {
             $table->id();
             $table->string('tenbaihat');
-            $table->string('nghesi');
+            $table->unsignedBigInteger('nghesi')->nullable(); // Thay đổi kiểu dữ liệu của cột 'nghesi'
             $table->string('theloai');
             $table->string('file_amthanh');
             $table->string('anh_daidien')->nullable();
             $table->timestamps();
+
+            $table->foreign('nghesi')->references('id')->on('artists')->onDelete('cascade'); // Thêm khóa ngoại
         });
     }
 
