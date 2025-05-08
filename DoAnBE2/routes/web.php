@@ -84,13 +84,8 @@ Route::get('admin/news/create', [NewsController::class, 'create'])->name('admin.
 
 Route::group(['prefix'=> '' , 'as' => 'frontend.'], function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
-    // Route cho trang thể loại (/category/{slug}) trỏ đến phương thức category của HomeController và đặt tên là 'frontend.category'
     Route::get('/category/{slug}', [HomeController::class, 'category'])->name('category');
-
-    // Route cho trang chi tiết bài hát (/song/{slug}) trỏ đến phương thức song của HomeController và đặt tên là 'frontend.song'
-    Route::get('/song/{slug}', [HomeController::class, 'song'])->name('song');
-
-    // Route cho trang xếp hạng (/rankings) trỏ đến phương thức rankings của HomeController và đặt tên là 'frontend.rankings'
+    Route::get('/song/{slug}',[HomeController::class, 'song'])->name('song');
     Route::get('/rankings', [HomeController::class, 'rankings'])->name('rankings');
 
     // Thêm các routes khác cho giao diện người dùng của bạn trong group này

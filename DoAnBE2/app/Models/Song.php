@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Models;
+
 use Illuminate\Database\Eloquent\Model;
 use HasFactory;
 class Song extends Model
@@ -13,6 +15,11 @@ class Song extends Model
         'theloai',
         'file_amthanh',
         'anh_daidien',
+        // Bạn nên thêm các cột này vào đây nếu bạn đã tạo chúng trong migration
+        // 'slug',
+        // 'luotnghe',
+        // 'thoiluong',
+        // 'loibaihat',
     ];
 
     public function artist()
