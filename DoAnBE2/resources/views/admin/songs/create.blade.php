@@ -29,9 +29,9 @@
                         <label for="nghesi">Nghệ sĩ (*)</label>
                         <select id="nghesi" name="nghesi" required>
                             <option value="">-- Chọn nghệ sĩ --</option>
-                            <option value="Jack 97">Jack 97</option>
-                            <option value="Jisoo">Jisoo</option>
-                            <option value="Sơn Tùng">Sơn Tùng MTP</option>
+                            @foreach ($artists as $artist)
+                                <option value="{{ $artist->id }}">{{ $artist->name_artist }}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
@@ -48,8 +48,10 @@
                 </div>
 
                 <div class="form-group full">
+
                     <label for="file_amthanh">Tệp file âm thanh (*)</label>
                     <input style="width: 100%" type="file" id="file_amthanh" name="file_amthanh" accept="audio/*" required>
+
                 </div>
 
                 <div class="form-group fullinput">
