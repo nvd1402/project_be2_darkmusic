@@ -17,6 +17,8 @@ class AdminController extends Controller
     // Dashboard
     public function adminindex()
     {
+        $soLuongBaiHat = Song::count(); // Lấy tổng số bài hát
+        $this->data['soLuongBaiHat'] = $soLuongBaiHat; // Truyền số lượng sang view
         return view('admin.dashboard', $this->data);
     }
 
