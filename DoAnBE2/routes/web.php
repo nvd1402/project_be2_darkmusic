@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ArtistController;
@@ -20,6 +21,8 @@ Route::post('/admin/songs/store', [AdminController::class, 'storesong'])->name('
 Route::get('/admin/songs/index', [AdminController::class, 'indexsong'])->name('admin.songs.index');
 // Route GET cho việc chỉnh sửa bài hát
 Route::get('/admin/songs/edit/{id}', [AdminController::class, 'editsong'])->name('admin.songs.edit');
+Route::get('/admin/songs/search', [AdminController::class, 'search'])->name('admin.songs.search');
+
 
 // Route PUT cho việc cập nhật bài hát
 Route::put('/admin/songs/edit/{id}', [AdminController::class, 'updatesong'])->name('admin.songs.update');
@@ -74,3 +77,50 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('news', NewsController::class);
 });
 Route::get('admin/news/create', [NewsController::class, 'create'])->name('admin.news.create');
+
+
+
+//PHẦN GIAO DIỆN NGƯỜI DÙNG
+
+Route::group(['prefix'=> '' , 'as' => 'frontend.'], function () {
+    Route::get('/', [HomeController::class, 'index'])->name('home');
+    // Route cho trang thể loại (/category/{slug}) trỏ đến phương thức category của HomeController và đặt tên là 'frontend.category'
+    Route::get('/category/{slug}', [HomeController::class, 'category'])->name('category');
+
+    // Route cho trang chi tiết bài hát (/song/{slug}) trỏ đến phương thức song của HomeController và đặt tên là 'frontend.song'
+    Route::get('/song/{slug}', [HomeController::class, 'song'])->name('song');
+
+    // Route cho trang xếp hạng (/rankings) trỏ đến phương thức rankings của HomeController và đặt tên là 'frontend.rankings'
+    Route::get('/rankings', [HomeController::class, 'rankings'])->name('rankings');
+
+    // Thêm các routes khác cho giao diện người dùng của bạn trong group này
+});
+
+// Các routes cho trang admin (vẫn giữ nguyên tiền tố /admin)
+//Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
+//    // Các routes admin của bạn
+//    Route::get('/dashboard', [AdminController::class, 'adminindex'])->name('admin.dashboard');
+//    Route::get('/songs', [AdminController::class, 'indexsong'])->name('admin.songs.index');
+//    // ... các routes admin khác
+//});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

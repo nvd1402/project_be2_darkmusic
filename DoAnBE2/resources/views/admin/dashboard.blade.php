@@ -31,7 +31,7 @@
                 </div>
                 <div class="admincount">
                     <i class="bi bi-music-note-list icon"></i>
-                    <h4>Tổng số lượng bài hát: <span>#</span></h4>
+                    <h4>Tổng số lượng bài hát: <span>{{ $soLuongBaiHat }}</span></h4>
                 </div>
             </a>
             <!-- box 3-->

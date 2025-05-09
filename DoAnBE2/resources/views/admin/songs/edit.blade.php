@@ -32,9 +32,12 @@
                     <div class="form-group half">
                         <label for="nghesi">Nghệ sĩ (*)</label>
                         <select id="nghesi" name="nghesi" required>
-                            <option value="Jack97" {{ $song->nghesi == 'Jack97' ? 'selected' : '' }}>Jack97</option>
-                            <option value="Jisoo" {{ $song->nghesi == 'Jisoo' ? 'selected' : '' }}>Jisoo</option>
-                            <option value="Sơn Tùng MTP" {{ $song->nghesi == 'Sơn Tùng MTP' ? 'selected' : '' }}>Sơn Tùng MTP</option>
+                            <option value="">-- Chọn nghệ sĩ --</option>
+                            @foreach ($artists as $artist)
+                                <option value="{{ $artist->id }}" {{ $song->nghesi == $artist->id ? 'selected' : '' }}>
+                                    {{ $artist->name_artist }}
+                                </option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
@@ -42,9 +45,11 @@
                 <div class="form-group">
                     <label for="theloai">Thể loại (*)</label>
                     <select id="theloai" name="theloai" required>
-                        <option value="Nhạc trẻ" {{ $song->theloai == 'Nhạc trẻ' ? 'selected' : '' }}>Nhạc trẻ</option>
-                        <option value="Kpop" {{ $song->theloai == 'Kpop' ? 'selected' : '' }}>Kpop</option>
-                        <option value="Rap Việt" {{ $song->theloai == 'Rap Việt' ? 'selected' : '' }}>Rap Việt</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->tentheloai }}" {{ $song->theloai == $category->tentheloai ? 'selected' : '' }}>
+                                {{ $category->tentheloai }}
+                            </option>
+                        @endforeach
                     </select>
                 </div>
 
@@ -64,8 +69,8 @@
                 </div>
 
                 <div class="form-group fullinput">
-                    <label for="anhdaidien">Tệp file ảnh đại diện</label>
-                    <input style="width: 810px" type="file" id="anhdaidien" name="anhdaidien" accept="image/*">
+                    <label for="anh_daidien">Tệp file ảnh đại diện</label>
+                    <input style="width: 810px" type="file" id="anh_daidien" name="anh_daidien" accept="images/*">
                     <small>Chỉ chấp nhận ảnh định dạng jpg, png, tối đa 2MB.</small>
                     @if($song->anh_daidien)
                         <div>

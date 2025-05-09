@@ -29,9 +29,9 @@
                         <label for="nghesi">Nghệ sĩ (*)</label>
                         <select id="nghesi" name="nghesi" required>
                             <option value="">-- Chọn nghệ sĩ --</option>
-                            <option value="1">Jack 97</option>
-                            <option value="2">Jisoo</option>
-                            <option value="3">Sơn Tùng MTP</option>
+                            @foreach ($artists as $artist)
+                                <option value="{{ $artist->id }}">{{ $artist->name_artist }}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
@@ -41,20 +41,22 @@
                     <label for="theloai">Thể loại (*)</label>
                     <select id="theloai" name="theloai" required>
                         <option value="">-- Chọn thể loại --</option>
-                        <option value="nhactre">Nhạc trẻ</option>
-                        <option value="kpop">Kpop</option>
-                        <option value="rap">Rap Việt</option>
+                        @foreach ($categories as $category)
+                        <option value="{{ $category->tentheloai }}">{{ $category->tentheloai }}</option>
+                            @endforeach
                     </select>
                 </div>
 
                 <div class="form-group full">
+
                     <label for="file_amthanh">Tệp file âm thanh (*)</label>
                     <input style="width: 100%" type="file" id="file_amthanh" name="file_amthanh" accept="audio/*" required>
+
                 </div>
 
                 <div class="form-group fullinput">
-                    <label for="anhdaidien">Tệp file ảnh đại diện</label>
-                    <input  style="width: 100%"  type="file" id="anhdaidien" name="anhdaidien" accept="image/*">
+                    <label for="anh_daidien">Tệp file ảnh đại diện</label>
+                    <input  style="width: 100%"  type="file" id="anh_daidien" name="anh_daidien" accept="images/*">
                 </div>
 
                 <div class="form-actions">

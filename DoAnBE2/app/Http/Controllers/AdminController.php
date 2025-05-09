@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Song;
+use App\Models\Artist;
+use App\Models\category;
+use App\Models\Userss;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -14,20 +17,25 @@ class AdminController extends Controller
     // Dashboard
     public function adminindex()
     {
+        $soLuongBaiHat = Song::count(); // Lấy tổng số bài hát
+        $this->data['soLuongBaiHat'] = $soLuongBaiHat; // Truyền số lượng sang view
         return view('admin.dashboard', $this->data);
     }
 
     // Song
     public function createsong()
     {
+        $this->data['categories'] = Category::all();
+        $this->data['artists'] = Artist::all();
         return view('admin.songs.create', $this->data);
     }
 
     public function storesong(Request $request)
     {
+        // Validate dữ liệu
         $validated = $request->validate([
-            'tenbaihat' => 'required|string|max:255',
-            'nghesi' => 'required|string|max:255',
+            'tenbaihat' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z0-9\s]+$/u'],
+            'nghesi' => 'required|exists:artists,id', // Kiểm tra xem ID nghệ sĩ có tồn tại trong bảng 'artists' không
             'theloai' => 'required|string|max:100',
             'file_amthanh' => 'required|file|mimes:mp3,wav,ogg',
             'anh_daidien' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
@@ -35,7 +43,7 @@ class AdminController extends Controller
 
         $song = new Song();
         $song->tenbaihat = $validated['tenbaihat'];
-        $song->nghesi = $validated['nghesi'];
+        $song->nghesi = $validated['nghesi']; // Gán ID nghệ sĩ
         $song->theloai = $validated['theloai'];
 
         if ($request->hasFile('file_amthanh')) {
@@ -43,8 +51,8 @@ class AdminController extends Controller
             $song->file_amthanh = $pathAudio;
         }
 
-        if ($request->hasFile('anhdaidien')) {
-            $pathImage = $request->file('anhdaidien')->store('songs/images', 'public');
+        if ($request->hasFile('anh_daidien')) {
+            $pathImage = $request->file('anh_daidien')->store('songs/images', 'public');
             $song->anh_daidien = $pathImage;
         }
 
@@ -63,6 +71,8 @@ class AdminController extends Controller
     public function editsong($id)
     {
         $this->data['song'] = Song::findOrFail($id);
+        $this->data['categories'] = Category::all();
+        $this->data['artists'] = Artist::all(); // Thêm dòng này để lấy tất cả nghệ sĩ
         return view('admin.songs.edit', $this->data);
     }
 
@@ -71,17 +81,16 @@ class AdminController extends Controller
     {
         // Validate dữ liệu từ form
         $validated = $request->validate([
-            'tenbaihat' => 'required|string|max:255',
-            'nghesi' => 'required|string|max:255',
+            'tenbaihat' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z0-9\s]+$/u'],
+            'nghesi' => 'required|exists:artists,id', // Kiểm tra xem ID nghệ sĩ có tồn tại trong bảng 'artists' không
             'theloai' => 'required|string|max:100',
             'file_amthanh' => 'nullable|file|mimes:mp3,wav,ogg',
             'anh_daidien' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
         ]);
-
         // Tìm bài hát theo ID
         $song = Song::findOrFail($id);
         $song->tenbaihat = $request->tenbaihat;
-        $song->nghesi = $request->nghesi;
+        $song->nghesi = $request->nghesi; // Cập nhật ID nghệ sĩ
         $song->theloai = $request->theloai;
 
         // Kiểm tra nếu có file âm thanh mới
@@ -123,6 +132,15 @@ class AdminController extends Controller
         $song->delete();
 
         return redirect()->route('admin.songs.index')->with('success', 'Xóa bài hát thành công!');
+    }
+    public function search(Request $request)
+    {
+            $query = $request->input('query');
+            $songs = Song::where('nghesi', 'like', "%$query%")
+                ->orWhere('tenbaihat', 'like', "%$query%")
+                ->get();
+
+            return view('admin.songs.index', compact('songs'));
     }
 
     // User
