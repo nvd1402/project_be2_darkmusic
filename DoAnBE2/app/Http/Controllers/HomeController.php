@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use function Termwind\renderUsing;
+use App\Models\Song;
 
 class HomeController extends Controller
 {
@@ -20,7 +21,10 @@ class HomeController extends Controller
 
     public function song(string $slug): View
     {
-        return view('frontend.song');
+        $songs = Song::all();
+        return view('frontend.song',[
+            'songs' => $songs,
+        ]);
     }
 
     public function rankings(): View

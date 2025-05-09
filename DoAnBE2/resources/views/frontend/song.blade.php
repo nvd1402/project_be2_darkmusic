@@ -20,52 +20,38 @@
                 <input type="text" placeholder="type here to search">
             </div>
         </header>
-        <!-- Làm trong này -->
-        <section class="songs-detail">
-            <div class="songs-header">
-                <img src="./assets/trend.png" alt="Sunset Album Cover" class="album-cover">
-                <div class="songs-info">
-                    <h1>Sunset</h1>
-                    <p>92914</p>
-                    <div class="songs-actions">
-                        <button class="play-btn">
-                            <i class='bx bx-play'></i>
-                        </button>
-                        <button class="add-btn">
-                            <i class='bx bx-plus'></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
 
             <div class="songs-recommendations">
-                <h2>Đề xuất</h2>
-                <ul class="songs-list">
+                <h2>Tất Cả Bài Hát</h2>
+                @foreach($songs as $song)
+                <ul class="songs-list" style="margin-bottom: 10px;">
                     <li class="songs-item">
-                        <img src="./assets/trend.png" alt="">
-                        <span>free love - dream edit</span>
-                        <span>4:12</span>
-                    </li>
-                    <li class="songs-item">
-                        <img src="./assets/trend.png" alt="">
-                        <span>Colors Of You</span>
-
-                        <span>3:02</span>
-                    </li>
-                    <li class="songs-item">
-                        <img src="./assets/trend.png" alt="">
-                        <span>Lemonade</span>
-
-                        <span>5:12</span>
-                    </li>
-                    <li class="songs-item">
-                        <img src="./assets/trend.png" alt="">
-                        <span>Grace</span>
-
-                        <span>2:13</span>
+                        @if($song->anh_daidien)
+                            <img src="{{ asset('storage/' . $song->anh_daidien) }}" width="50" alt="images">
+                        @else
+                            Không có ảnh
+                        @endif
+                        <div style="margin-right: 100px">
+                            <span>{{ $song->tenbaihat }}</span>
+                            <br>
+                            <small><span>{{ $song->artist->name_artist }}</span></small>
+                        </div>
+                        <span style="text-align: center">{{ $song->theloai }}</span>
+                            <td>
+                                @if($song->file_amthanh)
+                                    <audio controls>
+                                        <source src="{{ asset('storage/'.$song->file_amthanh) }}" type="audio/mpeg">
+                                        Your browser does not support the audio element.
+                                    </audio>
+                                @else
+                                    <p>Không có âm thanh</p>
+                                @endif
+                            </td>
                     </li>
                 </ul>
+                @endforeach
             </div>
+
 
             <div class="artist-trending">
                 <h2>Các bản nhạc thịnh hành của 92914</h2>
