@@ -22,7 +22,11 @@
                     <label for="name_artist">Nhập tên nghệ sĩ</label>
                     <input type="text"  placeholder="Name Artist" class="form-control" name="name_artist"
                         required>
+                    @error('name_artist')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
                 </div>
+                
                 <div class="form-group mb-3">
                     <label for="category_id">Chọn thể loại âm nhạc</label>
                     <select id="category_id" name="category_id" required>
@@ -31,10 +35,17 @@
                             <option value="{{ $category->id }}">{{ $category->tentheloai }}</option>
                         @endforeach
                     </select>
+                    @error('category_id')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
                 </div>
+
                 <div class="form-group mb-3">
                     <label for="image_artist">Ảnh đại diện</label>
                     <input id="image_artist" type="file" name="image_artist">
+                    @error('image_artist')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="d-grid mx-auto">

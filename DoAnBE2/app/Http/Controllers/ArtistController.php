@@ -23,7 +23,7 @@ class ArtistController extends Controller
     public function postArtist(Request $request)
     {
         $request->validate([
-            'name_artist' => 'required|min:3|max:50|string',
+            'name_artist' => 'required|min:4|max:50|string',
             'image_artist' => 'nullable|image|mimes:jpg,png,jpeg,gif|max:2048',
             'category_id' => 'required|exists:categories,id'
         ]);
