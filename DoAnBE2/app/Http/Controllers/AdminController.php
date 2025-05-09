@@ -34,7 +34,12 @@ class AdminController extends Controller
     {
         // Validate dữ liệu
         $validated = $request->validate([
-            'tenbaihat' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z0-9\s]+$/u'],
+            'tenbaihat' => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^[\p{L}\p{M}\d\s\-\'\.]+$/u'
+            ],
             'nghesi' => 'required|exists:artists,id', // Kiểm tra xem ID nghệ sĩ có tồn tại trong bảng 'artists' không
             'theloai' => 'required|string|max:100',
             'file_amthanh' => 'required|file|mimes:mp3,wav,ogg',
