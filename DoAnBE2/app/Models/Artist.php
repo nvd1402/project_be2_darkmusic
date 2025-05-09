@@ -10,6 +10,7 @@ class Artist extends Model
     protected $primaryKey = 'id';
     protected $fillable  = [
         'name_artist',
+        'image_artist',
         'category_id'
     ];
 
