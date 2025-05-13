@@ -17,7 +17,7 @@
             <h2 class="title">Quản lý nghệ sĩ</h2>
         </div>
         <section class="song-list">
-            <h2 class="title" style="margin-top: -50px">Danh sách người dùng</h2>
+            <h2 class="title" style="margin-top: -50px">Danh sách nghệ sĩ</h2>
 
             <div class="add-btn">
                     <a href="{{ route('admin.artist.create') }}">Thêm mới</a>

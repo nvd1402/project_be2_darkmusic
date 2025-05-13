@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
@@ -74,6 +75,7 @@ Route::resource('categories', CategoryController::class);
 
 
 Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('ad', AdController::class);
     Route::resource('news', NewsController::class);
 });
 Route::get('admin/news/create', [NewsController::class, 'create'])->name('admin.news.create');
@@ -82,10 +84,10 @@ Route::get('admin/news/create', [NewsController::class, 'create'])->name('admin.
 
 //PHẦN GIAO DIỆN NGƯỜI DÙNG
 
-Route::group(['prefix'=> '' , 'as' => 'frontend.'], function () {
+Route::group(['prefix' => '', 'as' => 'frontend.'], function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('/category/{slug}', [HomeController::class, 'category'])->name('category');
-    Route::get('/song/{slug}',[HomeController::class, 'song'])->name('song');
+    Route::get('/song/{slug}', [HomeController::class, 'song'])->name('song');
     Route::get('/rankings', [HomeController::class, 'rankings'])->name('rankings');
 
     // Thêm các routes khác cho giao diện người dùng của bạn trong group này
@@ -98,24 +100,3 @@ Route::group(['prefix'=> '' , 'as' => 'frontend.'], function () {
 //    Route::get('/songs', [AdminController::class, 'indexsong'])->name('admin.songs.index');
 //    // ... các routes admin khác
 //});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -18,8 +18,8 @@
                     <tr>
                         <td>{{ $artist->id }}</td>
                         <td>
-                        @if (Storage::disk('public')->exists('public/artists/' . $artist->image_artist))
-                            <img src="{{ asset('storage/public/artists/' . $artist->image_artist) }}" width="50" >
+                        @if (Storage::disk('public')->exists('artists/' . $artist->image_artist))
+                            <img src="{{ asset('storage/artists/' . $artist->image_artist) }}" width="50" >
                         @else
                             <p>Ảnh không tồn tại</p>
                         @endif

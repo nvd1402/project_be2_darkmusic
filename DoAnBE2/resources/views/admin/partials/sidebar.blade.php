@@ -38,7 +38,7 @@
             </li>
             <li>
                 <i class='bx bxs-photo-album'></i>
-                <a href="#">Quản lý quảng cáo</a>
+                <a href="{{ route('admin.ad.index') }}">Quản lý quảng cáo</a>
             </li>
             <li>
                 <i class='bx bxs-heart'></i>
