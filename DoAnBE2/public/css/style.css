@@ -309,6 +309,7 @@ form button:hover {
 .revenue-table th {
     background-color: #f2f2f2;
 }
+
 /************************trang artist************************/
 .search-artist {
     display: flex;
@@ -340,6 +341,23 @@ form button:hover {
 .link--artist {
     color: black;
 }
+
+/************************trang ad************************/
+.search-select {
+    margin-left: 10px;
+    text-align: center;
+    width: 100px;
+    padding: 2px 5px;
+    height: 30px;
+    font-size: 18px;
+    font-weight: 500;
+    border-radius: 5px;
+}
+.search-select option {
+    font-size: 16px;
+    font-weight: 400;
+}
+
 /************************trang user************************/
 
 .table-user {

@@ -28,11 +28,6 @@
                 </div>
 
                 <div class="form-group mb-3">
-                    <label for="content_ad">Tiêu đề</label>
-                    <input type="text"  placeholder="Title " class="form-control" name="content" value="{{ $ad->content }}"
-                        >
-                </div>
-                <div class="form-group mb-3">
                     <label for="media_type">Ảnh hoặc video mới: </label>
                     <input type="file"  placeholder="Image or Video" class="form-control" name="media_type">
                 </div>
@@ -53,8 +48,7 @@
                 </div>
                 <div class="form-group mb-3">
                     <label for="description">Miêu tả quảng cáo</label>
-                    <input type="text"  placeholder="Description" class="form-control" name="description" value="{{ $ad->description }}"
-                        >
+                    <textarea name="description" id="" cols="80" rows="8" class="form-control" >{{ $ad->description }}</textarea>
                 </div>
 
                 <div class="d-grid mx-auto">

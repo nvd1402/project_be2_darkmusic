@@ -24,11 +24,6 @@
                         required>
                 </div>
                 <div class="form-group mb-3">
-                    <label for="content_ad">Tiêu đề</label>
-                    <input type="text"  placeholder="Title " class="form-control" name="content"
-                        required>
-                </div>
-                <div class="form-group mb-3">
                     <label for="media_type">Ảnh hoặc video</label>
                     <input type="file"  placeholder="Image or Video" class="form-control" name="media_type"
                         required >
@@ -48,8 +43,7 @@
                 </div>
                 <div class="form-group mb-3">
                     <label for="description">Miêu tả quảng cáo</label>
-                    <input type="text"  placeholder="Description" class="form-control" name="description"
-                        >
+                    <textarea name="description" id="" cols="80" rows="8" class="form-control"></textarea>
                 </div>
 
                 <div class="d-grid mx-auto">

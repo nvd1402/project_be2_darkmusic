@@ -8,7 +8,6 @@ class Ad extends Model
 {
     protected $fillable = [
         'name',
-        'content',
         'media_type',
         'link_url',
         'is_active',
