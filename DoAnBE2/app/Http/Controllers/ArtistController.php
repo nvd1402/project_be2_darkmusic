@@ -23,13 +23,8 @@ class ArtistController extends Controller
     public function postArtist(Request $request)
     {
         $request->validate([
-<<<<<<< Updated upstream
             'name_artist' => 'required|min:4|max:50|string',
             'image_artist' => 'nullable|image|mimes:jpg,png,jpeg,gif|max:2048',
-=======
-            'name_artist' => 'required|min:3|max:50|string',
-            'image_artist' => 'nullable|image|mimes:jpg,png,jpeg,gif,webp|max:2048',
->>>>>>> Stashed changes
             'category_id' => 'required|exists:categories,id'
         ]);
 
