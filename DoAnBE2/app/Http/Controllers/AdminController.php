@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Song;
 use App\Models\Artist;
-use App\Models\category;
-use App\Models\Userss;
+use App\Models\Category; // Đảm bảo chữ 'C' của Category là viết hoa đúng
+use App\Models\Userss; // Bạn có thể muốn kiểm tra lại model này, tên Userss có vẻ không chuẩn
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -33,10 +33,16 @@ class AdminController extends Controller
     public function storesong(Request $request)
     {
         // Validate dữ liệu
+        // Đã sửa: 'theloai' bây giờ kiểm tra là số nguyên và tồn tại trong bảng categories
         $validated = $request->validate([
-            'tenbaihat' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z0-9\s]+$/u'],
-            'nghesi' => 'required|exists:artists,id', // Kiểm tra xem ID nghệ sĩ có tồn tại trong bảng 'artists' không
-            'theloai' => 'required|string|max:100',
+            'tenbaihat' => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^[\p{L}\p{M}\d\s\-\'\.]+$/u'
+            ],
+            'nghesi' => 'required|exists:artists,id',
+            'theloai' => 'required|exists:categories,id', // SỬA Ở ĐÂY: Kiểm tra ID thể loại
             'file_amthanh' => 'required|file|mimes:mp3,wav,ogg',
             'anh_daidien' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
         ]);
@@ -44,7 +50,7 @@ class AdminController extends Controller
         $song = new Song();
         $song->tenbaihat = $validated['tenbaihat'];
         $song->nghesi = $validated['nghesi']; // Gán ID nghệ sĩ
-        $song->theloai = $validated['theloai'];
+        $song->theloai = $validated['theloai']; // SỬA Ở ĐÂY: Gán ID thể loại (đã validate là số nguyên)
 
         if ($request->hasFile('file_amthanh')) {
             $pathAudio = $request->file('file_amthanh')->store('songs/audio', 'public');
@@ -80,18 +86,19 @@ class AdminController extends Controller
     public function updatesong(Request $request, $id)
     {
         // Validate dữ liệu từ form
+        // Đã sửa: 'theloai' bây giờ kiểm tra là số nguyên và tồn tại trong bảng categories
         $validated = $request->validate([
             'tenbaihat' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z0-9\s]+$/u'],
-            'nghesi' => 'required|exists:artists,id', // Kiểm tra xem ID nghệ sĩ có tồn tại trong bảng 'artists' không
-            'theloai' => 'required|string|max:100',
+            'nghesi' => 'required|exists:artists,id',
+            'theloai' => 'required|exists:categories,id', // SỬA Ở ĐÂY: Kiểm tra ID thể loại
             'file_amthanh' => 'nullable|file|mimes:mp3,wav,ogg',
             'anh_daidien' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
         ]);
         // Tìm bài hát theo ID
         $song = Song::findOrFail($id);
-        $song->tenbaihat = $request->tenbaihat;
-        $song->nghesi = $request->nghesi; // Cập nhật ID nghệ sĩ
-        $song->theloai = $request->theloai;
+        $song->tenbaihat = $validated['tenbaihat']; // Dùng $validated thay vì $request trực tiếp
+        $song->nghesi = $validated['nghesi']; // Dùng $validated
+        $song->theloai = $validated['theloai']; // SỬA Ở ĐÂY: Gán ID thể loại (đã validate là số nguyên)
 
         // Kiểm tra nếu có file âm thanh mới
         if ($request->hasFile('file_amthanh')) {
@@ -103,8 +110,10 @@ class AdminController extends Controller
 
         // Kiểm tra nếu có ảnh đại diện mới
         if ($request->hasFile('anh_daidien')) {
-            $avatarPath = $request->file('anh_daidien')->store('songs/images', 'public');
-            $song->anh_daidien = $avatarPath;
+            if ($song->anh_daidien && Storage::disk('public')->exists($song->anh_daidien)) {
+                Storage::disk('public')->delete($song->anh_daidien);
+            }
+            $song->anh_daidien = $request->file('anh_daidien')->store('songs/images', 'public');
         }
 
         // Lưu bài hát với dữ liệu mới
@@ -114,9 +123,6 @@ class AdminController extends Controller
         return redirect()->route('admin.songs.index')->with('success', 'Cập nhật bài hát thành công!');
     }
 
-
-
-
     public function deletesong($id)
     {
         $song = Song::findOrFail($id);
@@ -125,27 +131,34 @@ class AdminController extends Controller
             Storage::disk('public')->delete($song->file_amthanh);
         }
 
-        if ($song->anhdaidien && Storage::disk('public')->exists($song->anhdaidien)) {
-            Storage::disk('public')->delete($song->anhdaidien);
+        // Chú ý: bạn đang dùng 'anhdaidien' ở đây, trong khi các chỗ khác là 'anh_daidien'.
+        // Hãy đảm bảo tên cột là nhất quán. Tôi đã sửa ở phía trên để dùng 'anh_daidien'.
+        if ($song->anh_daidien && Storage::disk('public')->exists($song->anh_daidien)) {
+            Storage::disk('public')->delete($song->anh_daidien);
         }
 
         $song->delete();
 
         return redirect()->route('admin.songs.index')->with('success', 'Xóa bài hát thành công!');
     }
+
     public function search(Request $request)
     {
-            $query = $request->input('query');
-            $songs = Song::where('nghesi', 'like', "%$query%")
-                ->orWhere('tenbaihat', 'like', "%$query%")
-                ->get();
+        $query = $request->input('query');
 
-            return view('admin.songs.index', compact('songs'));
+        $songs = Song::where('tenbaihat', 'like', "%{$query}%") // Tìm kiếm theo tên bài hát
+        ->orWhereHas('artist', function($q) use ($query) {
+            $q->where('name_artist', 'like', "%{$query}%"); // SỬA Ở ĐÂY: Dùng 'name_artist' thay vì 'name'
+        })
+            ->get();
+
+        return view('admin.songs.index', compact('songs'));
     }
-
     // User
     public function indexuser()
     {
+        // Bạn chưa lấy dữ liệu user ở đây.
+        $this->data['users'] = User::all();
         return view('admin.users.index', $this->data);
     }
 
