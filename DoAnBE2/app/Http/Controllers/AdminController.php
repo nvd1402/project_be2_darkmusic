@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Song;
 use App\Models\Artist;
-use App\Models\category;
+use App\Models\Category;
 use App\Models\Userss;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -17,8 +17,8 @@ class AdminController extends Controller
     // Dashboard
     public function adminindex()
     {
-        $soLuongBaiHat = Song::count(); // Lấy tổng số bài hát
-        $this->data['soLuongBaiHat'] = $soLuongBaiHat; // Truyền số lượng sang view
+        $soLuongBaiHat = Song::count();
+        $this->data['soLuongBaiHat'] = $soLuongBaiHat;
         return view('admin.dashboard', $this->data);
     }
 
@@ -32,18 +32,22 @@ class AdminController extends Controller
 
     public function storesong(Request $request)
     {
-        // Validate dữ liệu
         $validated = $request->validate([
-            'tenbaihat' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z0-9\s]+$/u'],
-            'nghesi' => 'required|exists:artists,id', // Kiểm tra xem ID nghệ sĩ có tồn tại trong bảng 'artists' không
-            'theloai' => 'required|string|max:100',
+            'tenbaihat' => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^[\p{L}\p{M}\d\s\-\'\.]+$/u'
+            ],
+            'nghesi' => 'required|exists:artists,id',
+            'theloai' => 'required|exists:categories,id',
             'file_amthanh' => 'required|file|mimes:mp3,wav,ogg',
             'anh_daidien' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
         ]);
 
         $song = new Song();
         $song->tenbaihat = $validated['tenbaihat'];
-        $song->nghesi = $validated['nghesi']; // Gán ID nghệ sĩ
+        $song->nghesi = $validated['nghesi'];
         $song->theloai = $validated['theloai'];
 
         if ($request->hasFile('file_amthanh')) {
@@ -63,8 +67,9 @@ class AdminController extends Controller
 
     public function indexsong()
     {
-        $this->data['songs'] = Song::all(); // Lấy tất cả bài hát
-        return view('admin.songs.index', $this->data); // Truyền vào view
+        // Thay đổi dòng này để phân trang
+        $this->data['songs'] = Song::paginate(7);  // Lấy 7 bài hát mỗi trang
+        return view('admin.songs.index', $this->data);
     }
 
 
@@ -72,28 +77,25 @@ class AdminController extends Controller
     {
         $this->data['song'] = Song::findOrFail($id);
         $this->data['categories'] = Category::all();
-        $this->data['artists'] = Artist::all(); // Thêm dòng này để lấy tất cả nghệ sĩ
+        $this->data['artists'] = Artist::all();
         return view('admin.songs.edit', $this->data);
     }
 
 
     public function updatesong(Request $request, $id)
     {
-        // Validate dữ liệu từ form
         $validated = $request->validate([
             'tenbaihat' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z0-9\s]+$/u'],
-            'nghesi' => 'required|exists:artists,id', // Kiểm tra xem ID nghệ sĩ có tồn tại trong bảng 'artists' không
-            'theloai' => 'required|string|max:100',
+            'nghesi' => 'required|exists:artists,id',
+            'theloai' => 'required|exists:categories,id',
             'file_amthanh' => 'nullable|file|mimes:mp3,wav,ogg',
             'anh_daidien' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
         ]);
-        // Tìm bài hát theo ID
         $song = Song::findOrFail($id);
-        $song->tenbaihat = $request->tenbaihat;
-        $song->nghesi = $request->nghesi; // Cập nhật ID nghệ sĩ
-        $song->theloai = $request->theloai;
+        $song->tenbaihat = $validated['tenbaihat'];
+        $song->nghesi = $validated['nghesi'];
+        $song->theloai = $validated['theloai'];
 
-        // Kiểm tra nếu có file âm thanh mới
         if ($request->hasFile('file_amthanh')) {
             if ($song->file_amthanh && Storage::disk('public')->exists($song->file_amthanh)) {
                 Storage::disk('public')->delete($song->file_amthanh);
@@ -101,21 +103,17 @@ class AdminController extends Controller
             $song->file_amthanh = $request->file('file_amthanh')->store('songs/audio', 'public');
         }
 
-        // Kiểm tra nếu có ảnh đại diện mới
         if ($request->hasFile('anh_daidien')) {
-            $avatarPath = $request->file('anh_daidien')->store('songs/images', 'public');
-            $song->anh_daidien = $avatarPath;
+            if ($song->anh_daidien && Storage::disk('public')->exists($song->anh_daidien)) {
+                Storage::disk('public')->delete($song->anh_daidien);
+            }
+            $song->anh_daidien = $request->file('anh_daidien')->store('songs/images', 'public');
         }
 
-        // Lưu bài hát với dữ liệu mới
         $song->save();
 
-        // Quay lại trang danh sách bài hát
         return redirect()->route('admin.songs.index')->with('success', 'Cập nhật bài hát thành công!');
     }
-
-
-
 
     public function deletesong($id)
     {
@@ -125,27 +123,19 @@ class AdminController extends Controller
             Storage::disk('public')->delete($song->file_amthanh);
         }
 
-        if ($song->anhdaidien && Storage::disk('public')->exists($song->anhdaidien)) {
-            Storage::disk('public')->delete($song->anhdaidien);
+        if ($song->anh_daidien && Storage::disk('public')->exists($song->anh_daidien)) {
+            Storage::disk('public')->delete($song->anh_daidien);
         }
 
         $song->delete();
 
         return redirect()->route('admin.songs.index')->with('success', 'Xóa bài hát thành công!');
     }
-    public function search(Request $request)
-    {
-            $query = $request->input('query');
-            $songs = Song::where('nghesi', 'like', "%$query%")
-                ->orWhere('tenbaihat', 'like', "%$query%")
-                ->get();
-
-            return view('admin.songs.index', compact('songs'));
-    }
 
     // User
     public function indexuser()
     {
+        $this->data['users'] = User::all();
         return view('admin.users.index', $this->data);
     }
 

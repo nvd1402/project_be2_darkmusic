@@ -11,10 +11,10 @@
 <body>
 <div class="right-section">
             <!-- Profile -->
-           
+
             <div class="profile">
                 <div class="user">
-                    
+
                     <div class="right">
                         <h5>Nâng cấp tài khoản</h5>
                     </div>
@@ -58,7 +58,7 @@
                             </input>
                             <p class="time-end">0:00</p>
                         </div>
-                        
+
 
                         <audio id="audio" src=""></audio>
 
@@ -72,7 +72,7 @@
                             <i class='bx bx-atom'></i>
                         </div>
                         <div class="btn btn-prev">
-                            <i class='bx bx-skip-previous'></i>                      
+                            <i class='bx bx-skip-previous'></i>
                         </div>
                         <div class="btn btn-toggle-play play-toggle">
                             <i class='bx bx-play play-button'></i>
