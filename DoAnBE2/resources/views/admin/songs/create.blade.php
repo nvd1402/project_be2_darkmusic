@@ -47,7 +47,7 @@
                     <select id="theloai" name="theloai" required>
                         <option value="">-- Chọn thể loại --</option>
                         @foreach ($categories as $category)
-                            <option value="{{ $category->tentheloai }}" {{ old('theloai') == $category->tentheloai ? 'selected' : '' }}>{{ $category->tentheloai }}</option>
+                            <option value="{{ $category->id }}" {{ old('theloai') == $category->id ? 'selected' : '' }}>{{ $category->tentheloai }}</option>
                         @endforeach
                     </select>
                     @error('theloai')
