@@ -33,4 +33,9 @@ class HomeController extends Controller
     {
         return view('frontend.rankings');
     }
+        public function news(): View
+    {
+        $news = News::all();
+        return view('frontend.news', compact('news'));
+    }
 }

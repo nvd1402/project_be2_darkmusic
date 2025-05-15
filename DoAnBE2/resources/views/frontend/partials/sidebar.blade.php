@@ -47,7 +47,7 @@
             </li>
             <li>
                 <i class='bx bx-podcast' ></i>
-                <a>Tin tức</a>
+                               <a href="{{ route('frontend.news')}}">Tin Tức</a>
                 {{-- Bạn cần định nghĩa route và controller cho Tin tức nếu muốn liên kết --}}
             </li>
 
