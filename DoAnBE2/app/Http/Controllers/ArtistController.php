@@ -33,8 +33,9 @@ class ArtistController extends Controller
         if ($request->hasFile('image_artist')) {
             $file = $request->file('image_artist');
             $fileName = $file->hashName();
-            $file->store('public/artists', 'public');
+            $file->store('artists', 'public');
         }
+
 
         $data = $request->all();
         Artist::create([
@@ -71,9 +72,13 @@ class ArtistController extends Controller
         $fileName = null;
 
         if ($request->hasFile('image_artist')) {
+            if ($artist->image_artist && Storage::disk('public')->exists('artists/' . $artist->image_artist)) {
+                Storage::disk('public')->delete('artists/' . $artist->image_artist);
+            }
+
             $file = $request->file('image_artist');
             $fileName = $file->hashName();
-            $file->store('public/artists', 'public');
+            $file->store('artists', 'public');
         }
 
         $artist->update([
@@ -90,9 +95,8 @@ class ArtistController extends Controller
         $artist_id = $request->get('id');
         $artist = Artist::findOrFail($artist_id);
 
-
         if ($artist->image_artist && Storage::disk('public')->exists('artists/' . $artist->image_artist)) {
-            Storage::disk('public')->delete('artists/public/artists' . $artist->image_artist);
+            Storage::disk('public')->delete('artists/' . $artist->image_artist);
         }
 
         $artist->delete();

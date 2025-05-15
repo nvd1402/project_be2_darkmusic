@@ -2,6 +2,25 @@
 <html lang="en">
 <head>@include('frontend.partials.head') </head>
 <body>
+    <div class="banner-wrapper">
+        <div class="banner-container">
+                @forelse ($ads as $index => $ad)
+                <div class="banner-slide {{ $index === 0 ? 'active' : '' }}">
+                @php
+                    $ext = pathinfo($ad->media_type, PATHINFO_EXTENSION);
+                @endphp
+
+                @if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif']))
+                    <a href="{{ $ad->link_url }}" target="_blank">
+                        <img src="{{ asset('storage/' . $ad->media_type) }}" class="image-ad card-img-top" alt="Banner {{ $index + 1 }}">
+                    </a>
+                @endif
+                </div>
+                @empty
+                    <p>Không có quảng cáo nào.</p>
+                @endforelse
+            </div>
+        </div>
 <div class="container">
     <!-- Sidebar -->
     @include('frontend.partials.sidebar')
@@ -126,5 +145,6 @@
 </div>
 
 <script type='text/javascript' src="{{ asset('assets/frontend/js/script.js') }}"></script>
+<script src="{{ asset('assets/frontend/js/handle-ad.js') }}"></script>
 </body>
 </html>
