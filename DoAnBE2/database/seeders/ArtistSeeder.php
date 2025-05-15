@@ -73,7 +73,7 @@ class ArtistSeeder extends Seeder
 
         $data = [];
 
-        for ($i = 0; $i < 100; $i++) {
+        for ($i = 0; $i < 10; $i++) {
             $randomName = $artistNames[array_rand($artistNames)];
             $randomImage = $imageArtists[array_rand($imageArtists)];
 
