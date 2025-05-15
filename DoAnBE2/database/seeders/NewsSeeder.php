@@ -28,7 +28,7 @@ class NewsSeeder extends Seeder
             'news5.jpg'
         ];
 
-        for ($i = 1; $i <= 20; $i++) {
+        for ($i = 1; $i <= 100; $i++) {
             DB::table('news')->insert([
                 'tieude' => $titles[array_rand($titles)],
                 'noidung' => 'Đây là nội dung tin tức mẫu số ' . $i . ' với nhiều thông tin hấp dẫn và đầy đủ về sự kiện âm nhạc, nghệ sĩ và các hoạt động nghệ thuật.',
