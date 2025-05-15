@@ -66,8 +66,9 @@ class ArtistSeeder extends Seeder
         $imageArtists = Storage::disk('public')->files('artists');
 
         if (empty($imageArtists)) {
-            $this->command->error('Không tìm thấy ảnh trong thư mục' . $imageArtists);
-            return;
+            $this->command->warn('Không tìm thấy ảnh trong thư mục');
+
+            $imageArtists = ['default-1.jpg'];
         }
 
         $data = [];
