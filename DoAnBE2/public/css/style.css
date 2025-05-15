@@ -11,6 +11,8 @@
 
 /* General Styles */
 
+
+/*end thanh phan trang*/
 .news-list {
     margin-top: 20px;
     background-color: #fff;
@@ -491,7 +493,7 @@ td {
     box-shadow: 0 0 10px rgba(87, 115, 255, 0.1);
 }
 .song-list .title {
-    margin-top: 10px;
+    margin-top: 5px;
     color: #0020c2;
     margin-bottom: 5px;
 }
@@ -501,6 +503,12 @@ td {
     color: #0020c2;
     margin-bottom: 5px;
 }
+.newTitle {
+    margin-top: 0px;
+    font-size: 34px;
+    color: #0020c2;
+}
+
 
 .subtitle {
     color: #666;
@@ -690,16 +698,16 @@ select.is-invalid {
     padding: 10px;
 }
 
-.song-list .title {
+.song-list .newTitle {
     color: #5773ff;
     font-size: 34px;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
     text-align: center;
 }
 
 .song-list .add-btn {
     text-align: right;
-    margin-bottom: 20px;
+    margin-right: 100px;
 }
 
 .song-list .add-btn a {

@@ -115,11 +115,20 @@ class SongSeeder extends Seeder
             'E.T.',
             'Wide Awake'
         ];
-        $imageSongs = Storage::disk('public')->files('songs');
+        $sourceImagesSong = 'songs/images';
+        $sourceAudioSongs = 'songs/audio';
+
+        $imageSongs = Storage::disk('public')->files($sourceImagesSong);
+        $AudioSongs = Storage::disk('public')->files($sourceAudioSongs);
+
 
         if (empty($imageSongs)) {
             $this->command->warn('Không tìm thấy ảnh trong thư mục');
-            $imageSongs = ['default-1.jpg'];
+            $imageSongs =  ['songs/images/default-song-image.jpg'];
+        }
+        if (empty($AudioSongs)) {
+            $this->command->warn('Không tìm thấy file âm thanh trong thư mục');
+            $AudioSongs =  ['songs/audio/default-song-image.jpg'];
         }
 
         // Fetch all category IDs.
@@ -128,8 +137,9 @@ class SongSeeder extends Seeder
         $data = [];
         for ($i = 0; $i < 100; $i++) {
             $randomName = $songNames[array_rand($songNames)];
-            $randomImage = basename($imageSongs[array_rand($imageSongs)]);
-            $audioFilePath = 'path/to/audio_' . ($i + 1) . '.mp3';
+            $randomImagePath = $imageSongs[array_rand($imageSongs)];
+            $randomAudioSongs = $AudioSongs[array_rand($AudioSongs)];
+
 
             // Ensure a valid category ID is used.
             $randomCategoryId = $categoryIds[array_rand($categoryIds)] ?? null; // Use null if $categoryIds is empty
@@ -138,8 +148,8 @@ class SongSeeder extends Seeder
                 'tenbaihat' => $randomName,
                 'nghesi' => rand(1, 100),
                 'theloai' => $randomCategoryId, // Use the ID here
-                'anh_daidien' => $randomImage,
-                'file_amthanh' => $audioFilePath,
+                'anh_daidien' => $randomImagePath,
+                'file_amthanh' => $randomAudioSongs,
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
