@@ -14,16 +14,17 @@
 
         <!--content-->
         <div>
-            <h2 class="title">Quản lý nghệ sĩ</h2>
+            <h2 class="title">Quản lý quảng cáo</h2>
         </div>
         <section class="song-list">
-            <h2 class="title" style="margin-top: -50px">Danh sách nghệ sĩ</h2>
+            <h2 class="title" style="margin-top: -50px">Danh sách quảng cáo</h2>
 
             <div class="add-btn">
-                    <a href="{{ route('admin.artist.create') }}">Thêm mới</a>
+                    <a href="{{ route('admin.ad.create') }}">Thêm quảng cáo</a>
             </div>
 
-                @livewire('search-artists')
+            @livewire('search-ads')
+
         </section>
     </main>
 </div>
