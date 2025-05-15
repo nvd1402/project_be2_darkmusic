@@ -51,13 +51,13 @@ class AdSeeder extends Seeder
         $imageAds = Storage::disk('public')->files('ads');
 
         if (empty($imageAds)) {
-            $this->command->error('Không tìm thấy ảnh trong thư mục' . $imageAds);
-            return;
+            $this->command->warn('Không tìm thấy ảnh trong thư mục');
+            $imageAds = ['ads/default.jpg'];
         }
 
         $data = [];
 
-        for ($i = 0; $i < 100; $i++) {
+        for ($i = 0; $i < 10; $i++) {
             $randomName = $nameAds[array_rand($nameAds)];
             $randomImage = $imageAds[array_rand($imageAds)];
             $randomLink = $linkAds[array_rand($linkAds)];
