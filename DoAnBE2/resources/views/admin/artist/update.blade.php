@@ -37,11 +37,13 @@
                  {{-- Hình ảnh hiện tại --}}
                 <div class="form-group">
                     <label>Ảnh hiện tại:</label><br>
-                    @if ($artist->image_artist)
-                        <img src="{{ asset('storage/public/artists/' . $artist->image_artist) }}" width="100">
-                    @else
-                        <p>Không có ảnh</p>
-                    @endif
+                   <td>
+                        @if (Storage::disk('public')->exists('artists/' . $artist->image_artist))
+                            <img src="{{ asset('storage/artists/' . $artist->image_artist) }}" width="50" >
+                        @else
+                            <p>Ảnh không tồn tại</p>
+                        @endif
+                        </td>
                 </div>
 
                 {{-- Upload ảnh mới --}}

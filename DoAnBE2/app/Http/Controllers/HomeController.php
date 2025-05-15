@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Ad;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use function Termwind\renderUsing;
@@ -10,9 +11,10 @@ use App\Models\Song;
 class HomeController extends Controller
 {
     //
-    public function index():View
+    public function index(): View
     {
-        return view('frontend.index');
+        $ads = Ad::where('is_active', true)->latest()->get();
+        return view('frontend.index', compact('ads'));
     }
     public function category(string $slug): View
     {
@@ -22,7 +24,7 @@ class HomeController extends Controller
     public function song(string $slug): View
     {
         $songs = Song::all();
-        return view('frontend.song',[
+        return view('frontend.song', [
             'songs' => $songs,
         ]);
     }
