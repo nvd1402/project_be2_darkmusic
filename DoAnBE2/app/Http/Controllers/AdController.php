@@ -23,7 +23,7 @@ class AdController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'media_type' => 'nullable|file|mimes:jpg,jpeg,png,gif,mp4,webm|max:20480',
+            'media_type' => 'nullable|image|mimes:jpg,png,jpeg,gif|max:5120',
             'link_url' => 'nullable|required|url',
             'description' => 'nullable|string'
         ]);
@@ -48,7 +48,7 @@ class AdController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'media_type' => 'nullable|file|mimes:jpg,jpeg,png,gif,mp4,webm|max:20480',
+            'media_type' => 'nullable|image|mimes:jpg,png,jpeg,gif|max:5120',
             'link_url' => 'nullable|required|url',
             'description' => 'nullable|string'
         ]);

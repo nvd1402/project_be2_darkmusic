@@ -27,8 +27,8 @@
                         <td> {{ $ad->id }}</td>
                         <td>{{ $ad->name }}</td>
                         <td>
-                        @if (Storage::disk('public')->exists('ads/'.$ad->media_type))
-                            <img src="{{ asset('storage/ads/' . $ad->media_type) }}" width="300" height="100"  >
+                        @if (Storage::disk('public')->exists($ad->media_type))
+                            <img src="{{ asset('storage/' . $ad->media_type) }}" width="300" height="100"  >
                         @else
                             <p>Ảnh không tồn tại</p>
                         @endif
