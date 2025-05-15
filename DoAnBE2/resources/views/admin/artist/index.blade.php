@@ -24,6 +24,7 @@
             </div>
 
                 @livewire('search-artists')
+                
         </section>
     </main>
 </div>
