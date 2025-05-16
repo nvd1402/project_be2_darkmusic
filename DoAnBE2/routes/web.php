@@ -8,10 +8,9 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ArtistController;
 use App\Http\Controllers\UserController;
 use App\Models\Artist;
-
-
-
 use App\Http\Controllers\NewsController;
+
+
 
 //admin
 Route::get('/admin/dashboard', [AdminController::class, 'adminindex'])->name('admin.dashboard');;
@@ -93,7 +92,8 @@ Route::group(['prefix' => '', 'as' => 'frontend.'], function () {
         Route::get('/news', [HomeController::class, 'news'])->name('news');
         Route::get('/category', [HomeController::class, 'category'])->name('category');
 
-     
+Route::get('/news/{id}', [App\Http\Controllers\NewsController::class, 'show'])->name('news.show');
+
     // Thêm các routes khác cho giao diện người dùng của bạn trong group này
 });
 
