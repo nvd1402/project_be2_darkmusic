@@ -46,7 +46,7 @@
                     <label for="theloai">Thể loại (*)</label>
                     <select id="theloai" name="theloai" required>
                         @foreach($categories as $category)
-                            <option value="{{ $category->id }}" {{ $song->theloai == $category->id ? 'selected' : '' }}>
+                            <option value="{{ $category->id }}" {{ $song->theloai == $category->id  ? 'selected' : '' }}>
                                 {{ $category->tentheloai }}
                             </option>
                         @endforeach

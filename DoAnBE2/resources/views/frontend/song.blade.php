@@ -34,13 +34,13 @@
                             </div>
 
                             <div class="song-details">
-                                <span>{{ $song->tenbaihat }}</span>
+                                <span class="nameArtist">{{ $song->tenbaihat }}</span>
                                 <br>
                                 <small><span>{{ $song->artist->name_artist }}</span></small>
                             </div>
 
                             <div class="song-genre">
-                                <span style="text-align: center">{{ $song->category ? $song->category->tentheloai : 'Không có thể loại' }}</span>
+                                <span style="text-align: center; font-size:15px;">{{ $song->category ? $song->category->tentheloai : 'Không có thể loại' }}</span>
                             </div>
 
                             <div class="song-audio">

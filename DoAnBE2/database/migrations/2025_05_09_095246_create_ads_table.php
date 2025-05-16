@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('ads', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('media_type')->default('image');
+            $table->string('media_type')->nullable();
             $table->string('link_url')->nullable();
             $table->boolean('is_active')->default(false);
             $table->text('description')->nullable();

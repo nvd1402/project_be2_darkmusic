@@ -84,7 +84,7 @@
 }
 
 .play-pause-button {
-    background-color: #007bff;
+    background-color: #171d23;
     color: #fff;
     border: none;
     padding: 8px 12px;
@@ -98,6 +98,7 @@
 }
 
 .play-pause-button i {
+    color: #5773ff;
     width: 16px; /* Đảm bảo icon có kích thước */
     height: 16px;
 }
