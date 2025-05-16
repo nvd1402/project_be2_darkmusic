@@ -27,7 +27,7 @@ class NewsController extends Controller
         $request->validate([
             'tieude' => [
                 'required', 
-                'max:255', 
+                'max:1000', 
                 'regex:/^[\p{L}\s0-9][\p{L}\s0-9]*$/u'  // Không cho phép ký tự đặc biệt ở đầu
             ],
             'noidung' => 'required',  // Nội dung là bắt buộc
@@ -79,7 +79,7 @@ class NewsController extends Controller
         $request->validate([
             'tieude' => [
                 'required',
-                'max:255',
+                'max:1000',
                 'regex:/^[\p{L}\s0-9]+$/u', // Không cho phép ký tự đặc biệt
             ],
             'noidung' => 'required', // Nội dung là bắt buộc
@@ -125,4 +125,19 @@ class NewsController extends Controller
     
         return redirect()->route('admin.news.index')->with('success', 'Đã xóa tin tức thành công!');  // Quay lại danh sách tin tức với thông báo thành công
     }
+public function show($id)
+{
+    $news = News::findOrFail($id);
+
+    // Lấy 5 tin khác, trừ tin đang xem
+    $relatedNews = News::where('id', '!=', $news->id)
+                        ->latest()
+                        ->take(5)
+                        ->get();
+
+    return view('frontend.show', compact('news', 'relatedNews'));
+}
+
+
+
 }

@@ -86,7 +86,11 @@
             font-weight: bold;
             text-align: center;
         }
-
+        .container {
+            width: 140%;
+            padding: 0 40px;
+            box-sizing: border-box;
+        }
     </style>
 </head>
 <body class="text-light">
@@ -119,8 +123,13 @@
                         <li class="song-item">
                             <div class="song-info">
                                 <span class="donvidang">{{ $new->donvidang }}</span>
-                                <h3>{{ $new->tieude }}</h3>
-                                <p>{{ Str::limit($new->noidung, 100) }}</p>
+                             <h3><a href="{{ route('frontend.news.show', ['id' => $new->id]) }}">{{ $new->tieude }}</a></h3>
+
+
+
+
+                               
+                                <p>{{ Str::limit($new->noidung, 350) }}</p>
                                 
                             </div>
                             <img src="{{ asset('storage/' . $new->hinhanh) }}" alt="Hình ảnh" class="album-icon">

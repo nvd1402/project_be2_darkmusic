@@ -27,7 +27,7 @@
             </li>
             <li>
                 <i class='bx bxs-microphone' ></i>
-                <a href="{{ route('frontend.category', ['slug' => 'some-category-slug']) }}">Thể loại</a>
+               <a href="{{ route('frontend.category')}}">Thể loại</a>
                 {{-- Lưu ý: Đối với trang thể loại, bạn cần truyền một slug thực tế hoặc điều chỉnh route nếu nó không yêu cầu slug --}}
             </li>
             <li>
