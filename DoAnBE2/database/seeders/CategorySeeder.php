@@ -17,6 +17,15 @@ class CategorySeeder extends Seeder
             'R&B',
             'Rap',
             'Jazz',
+<<<<<<< HEAD
+=======
+            'Blues',
+            'Nhạc Trẻ',
+            'Nhạc Vàng',
+            'Nhạc Trịnh',
+            'Nhạc Thiếu Nhi',
+            'Nhạc Không Lời'
+>>>>>>> admin/ads-darkmusic
         ];
 
         $data = array_map(function ($name) {

@@ -24,12 +24,12 @@ class Song extends Model
 
     public function artist()
     {
-        return $this->belongsTo(Artist::class, 'nghesi');
+        return $this->belongsTo(Artist::class, 'nghesi', 'id');
     }
 
     // Cần thêm mối quan hệ với Category nếu bạn muốn truy cập tên thể loại
     public function category()
     {
-        return $this->belongsTo(Category::class, 'theloai');
+        return $this->belongsTo(Category::class, 'theloai', 'id');
     }
 }

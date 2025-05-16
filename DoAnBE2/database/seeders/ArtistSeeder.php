@@ -48,14 +48,18 @@ class ArtistSeeder extends Seeder
 
         $data = [];
 
+<<<<<<< HEAD
         for ($i = 0; $i < 50; $i++) {
+=======
+        for ($i = 0; $i < 100; $i++) {
+>>>>>>> admin/ads-darkmusic
             $randomName = $artistNames[array_rand($artistNames)];
             $randomImage = $imageArtists[array_rand($imageArtists)];
 
             $data[] = [
                 'name_artist' => $randomName,
                 'image_artist' => basename($randomImage),
-                'category_id' => rand(1, 50),
+                'category_id' => rand(1, 12),
                 'created_at' => now(),
                 'updated_at' => now(),
             ];

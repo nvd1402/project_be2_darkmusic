@@ -2,7 +2,7 @@
 <html lang="en">
 <head>@include('frontend.partials.head') </head>
 <body>
-    @if($ads->count())
+    @empty(!$ads)
     <div class="banner-wrapper">
         <div class="banner-container">
                 @forelse ($ads as $index => $ad)
@@ -22,7 +22,7 @@
                 @endforelse
             </div>
         </div>
-    @endif
+    @endempty
 <div class="container">
     <!-- Sidebar -->
     @include('frontend.partials.sidebar')

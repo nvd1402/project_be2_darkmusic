@@ -1,8 +1,9 @@
 <div>
     <div class="search-artist">
-        <input type="text" wire:model.live.debounce.500ms="query" placeholder="Nhập tên nghệ sĩ..." class="search-artist">
+        <input type="text" wire:model.live.debounce.500ms="query" placeholder="Nhập tên nghệ sĩ..." class="search_query">
     </div>
 
+    <div id="song-table-container">
     <table class="song-table">
                 <thead>
                 <tr>
@@ -32,7 +33,12 @@
                 @endforeach 
                 </tbody>
             </table>
+<<<<<<< HEAD
             <div class="d-felx justify-content-center">
                 {{ $artists->links() }}
             </div>
+=======
+    </div>
+    <div id="pagination-controls"></div>
+>>>>>>> admin/ads-darkmusic
 </div>
