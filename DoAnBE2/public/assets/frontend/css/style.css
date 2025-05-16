@@ -284,7 +284,9 @@
 .song-item.active {
     background-color: #383856;
 }
-
+.song-details .nameArtist{
+    font-size: 15px;
+}
 .song-item:hover {
     background-color: #383856;
 }
@@ -296,7 +298,10 @@
     margin-right: 15px;
     object-fit: cover;
 }
-
+.song-thumbnail img{
+    width: 70px;
+    height: auto;
+}
 .rank {
     font-size: 1.5em;
     font-weight: bold;
@@ -2293,7 +2298,7 @@ body {
 
 .banner-container {
     width: 1024px;
-    height: 120px;
+    height: 150px;
     position: relative;
     overflow: hidden;
     border-radius: 2px;

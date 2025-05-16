@@ -1,6 +1,6 @@
 <div>
     <div class="search-artist">
-        <input type="text" wire:model.live.debounce.500ms="query" placeholder="Search ads" class="search-artist">
+        <input type="text" wire:model.live.debounce.500ms="query" placeholder="Search ads" class="search_query">
 
         <select wire:model.live="state" class="search-select" >
             <option value="all">On/Off</option>
@@ -27,8 +27,8 @@
                         <td> {{ $ad->id }}</td>
                         <td>{{ $ad->name }}</td>
                         <td>
-                        @if (Storage::disk('public')->exists('ads/'.$ad->media_type))
-                            <img src="{{ asset('storage/ads/' . $ad->media_type) }}" width="300" height="100"  >
+                        @if (Storage::disk('public')->exists($ad->media_type))
+                            <img src="{{ asset('storage/' . $ad->media_type) }}" width="300" height="100"  >
                         @else
                             <p>Ảnh không tồn tại</p>
                         @endif
