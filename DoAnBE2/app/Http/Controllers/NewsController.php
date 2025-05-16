@@ -27,7 +27,7 @@ class NewsController extends Controller
         $request->validate([
             'tieude' => [
                 'required', 
-                'max:32', 
+                'max:255', 
                 'regex:/^[\p{L}\s0-9][\p{L}\s0-9]*$/u'  // Không cho phép ký tự đặc biệt ở đầu
             ],
             'noidung' => 'required',  // Nội dung là bắt buộc
@@ -79,7 +79,7 @@ class NewsController extends Controller
         $request->validate([
             'tieude' => [
                 'required',
-                'max:32',
+                'max:255',
                 'regex:/^[\p{L}\s0-9]+$/u', // Không cho phép ký tự đặc biệt
             ],
             'noidung' => 'required', // Nội dung là bắt buộc

@@ -52,6 +52,7 @@ class AdSeeder extends Seeder
 
         if (empty($imageAds)) {
             $this->command->warn('Không tìm thấy ảnh trong thư mục');
+
             $imageAds = ['ads/default.jpg'];
         }
 
@@ -65,7 +66,7 @@ class AdSeeder extends Seeder
 
             $data[] = [
                 'name' => $randomName,
-                'media_type' => basename($randomImage),
+                'media_type' => 'ads/' . basename($randomImage),
                 'link_url' => $randomLink,
                 'is_active' => rand(0, 1),
                 'description' => $randomDescription,

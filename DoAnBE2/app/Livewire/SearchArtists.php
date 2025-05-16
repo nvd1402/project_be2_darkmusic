@@ -16,7 +16,7 @@ class SearchArtists extends Component
         if (strlen($this->query) > 0) {
             $artists = Artist::where('name_artist', 'like', '%' . $this->query . '%')->get();
         } else {
-            $artists = Artist::all();
+            $artists = Artist::paginate(10);
         }
 
         return view('livewire.search-artists', compact('artists'));

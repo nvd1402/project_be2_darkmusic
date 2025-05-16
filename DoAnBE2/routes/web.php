@@ -90,6 +90,8 @@ Route::group(['prefix' => '', 'as' => 'frontend.'], function () {
     Route::get('/song/{slug}', [HomeController::class, 'song'])->name('song');
     Route::get('/rankings', [HomeController::class, 'rankings'])->name('rankings');
 
+        Route::get('/news', [HomeController::class, 'news'])->name('news');
+     
     // Thêm các routes khác cho giao diện người dùng của bạn trong group này
 });
 
