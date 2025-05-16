@@ -1,6 +1,6 @@
 <div>
     <div class="search-artist">
-        <input type="text" wire:model.live.debounce.500ms="query" placeholder="Search ads" class="search-artist">
+        <input type="text" wire:model.live.debounce.500ms="query" placeholder="Search ads" class="search_query">
 
         <select wire:model.live="state" class="search-select" >
             <option value="all">On/Off</option>
