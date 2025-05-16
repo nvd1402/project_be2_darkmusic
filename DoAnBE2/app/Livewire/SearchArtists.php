@@ -13,8 +13,10 @@ class SearchArtists extends Component
     {
         $artists = [];
 
-        if (strlen($this->query) > 0) {
-            $artists = Artist::where('name_artist', 'like', '%' . $this->query . '%')->get();
+        $trimmedQuery = trim($this->query);
+
+        if (strlen($trimmedQuery) > 0) {
+            $artists = Artist::where('name_artist', 'like', '%' . $trimmedQuery . '%')->get();
         } else {
             $artists = Artist::all();
         }
