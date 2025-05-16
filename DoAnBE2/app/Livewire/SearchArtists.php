@@ -16,7 +16,11 @@ class SearchArtists extends Component
         $trimmedQuery = trim($this->query);
 
         if (strlen($trimmedQuery) > 0) {
-            $artists = Artist::where('name_artist', 'like', '%' . $trimmedQuery . '%')->get();
+            $artists = Artist::where('name_artist', 'like', '%' . $trimmedQuery . '%')
+                ->orWhereHas('category', function ($q) {
+                    $q->where('tentheloai', 'like', '%' . $this->query . '%');
+                })
+                ->get();
         } else {
             $artists = Artist::all();
         }
