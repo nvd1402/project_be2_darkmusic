@@ -33,12 +33,6 @@
                 @endforeach 
                 </tbody>
             </table>
-<<<<<<< HEAD
-            <div class="d-felx justify-content-center">
-                {{ $artists->links() }}
-            </div>
-=======
     </div>
     <div id="pagination-controls"></div>
->>>>>>> admin/ads-darkmusic
 </div>
