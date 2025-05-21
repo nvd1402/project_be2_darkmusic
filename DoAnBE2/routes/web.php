@@ -121,7 +121,7 @@ Route::group(['as' => 'frontend.'], function () {
     Route::get('/category', [HomeController::class, 'category'])->name('category');
     Route::get('/category/{id}', [CategoryController::class, 'show'])->name('category_show');
 
-    Route::get('/news/{id}', [App\Http\Controllers\NewsController::class, 'show'])->name('news.show');
+    Route::get('/news/{id}', [App\Http\Controllers\NewsController::class, 'show'])->name('news_show');
 
 
 });
