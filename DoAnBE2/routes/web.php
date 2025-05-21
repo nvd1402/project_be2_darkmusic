@@ -16,6 +16,7 @@ use App\Http\Controllers\AdController;
 use App\Models\Artist;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\AlbumController;
 
 // === Public routes (guest only) ===
 Route::middleware('guest')->group(function () {
@@ -41,6 +42,11 @@ Route::middleware('auth')->group(function () {
 
 // === Admin routes (auth + prefix admin + route name admin.) ===
 Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
+    Route::get('news/search', [NewsController::class, 'search'])->name('news.search');
+    Route::get('categories/search', [CategoryController::class, 'search'])->name('categories.search');
+    Route::get('album/search', [AlbumController::class, 'search'])->name('album.search');
+
+
 
     // Dashboard
     Route::get('dashboard', [AdminController::class, 'adminindex'])->name('dashboard');
@@ -80,8 +86,21 @@ Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
     Route::resource('ad', AdController::class);
     Route::resource('news', NewsController::class);
 
+
     // Doanh thu
     Route::get('revenue', [AdminController::class, 'revenue'])->name('revenue.index');
+
+
+
+
+
+    //album
+Route::get('album/index', [AlbumController::class, 'index'])->name('album.index');
+Route::get('album/create', [AlbumController::class, 'create'])->name('album.create');
+Route::post('album/store', [AlbumController::class, 'store'])->name('album.store');
+Route::get('album/edit/{id}', [AlbumController::class, 'edit'])->name('album.edit');
+Route::put('album/update/{id}', [AlbumController::class, 'update'])->name('album.update');
+Route::delete('album/{id}', [AlbumController::class, 'destroy'])->name('album.destroy');
 });
 
 // === Frontend (public) routes ===
@@ -102,7 +121,7 @@ Route::group(['as' => 'frontend.'], function () {
     Route::get('/category', [HomeController::class, 'category'])->name('category');
     Route::get('/category/{id}', [CategoryController::class, 'show'])->name('category_show');
 
-    Route::get('/news/{id}', [App\Http\Controllers\NewsController::class, 'show'])->name('news.show');
+    Route::get('/news/{id}', [App\Http\Controllers\NewsController::class, 'show'])->name('news_show');
 
 
 });
