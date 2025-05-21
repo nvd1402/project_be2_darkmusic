@@ -72,6 +72,7 @@ Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
 
     // Categories CRUD (dùng resource)
     Route::resource('categories', CategoryController::class);
+    
 
 
 

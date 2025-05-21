@@ -21,7 +21,7 @@
 
            <section class="category-form">
     <h3>Thêm thể loại</h3>
-    <form action="{{ route('categories.store') }}" method="POST">
+    <form action="{{ route('admin.categories.store') }}" method="POST">
         @csrf
         <p>Lưu ý những trường hợp có (*) là bắt buộc phải điền</p>
         <br>

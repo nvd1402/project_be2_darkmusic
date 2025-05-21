@@ -26,20 +26,21 @@ class CategoryController extends Controller
         return view('admin.categories.create', compact('nhoms'));
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'tentheloai' => ['required', 'max:32', 'regex:/^[\p{L}\s0-9]+$/u'],
-            'nhom' => ['required', 'in:' . implode(',', $this->nhoms)], // validate nhóm phải thuộc danh sách
-        ]);
+   public function store(Request $request)
+{
+    $request->validate([
+        'tentheloai' => 'required|string|max:255',
+        'nhom' => 'required|string|max:255',
+    ]);
 
-        Category::create([
-            'tentheloai' => $request->tentheloai,
-            'nhom' => $request->nhom,
-        ]);
+    Category::create([
+        'tentheloai' => $request->tentheloai,
+        'nhom' => $request->nhom,
+    ]);
 
-        return redirect()->route('categories.index')->with('success', 'Thêm thể loại thành công!');
-    }
+    return redirect()->route('admin.categories.index')->with('success', 'Thêm thể loại thành công!');
+}
+
 
     public function edit($id)
     {
@@ -61,7 +62,10 @@ class CategoryController extends Controller
             'nhom' => $request->nhom,
         ]);
 
-        return redirect()->route('categories.index')->with('success', 'Cập nhật thể loại thành công!');
+     
+return redirect()->route('admin.categories.index')->with('success', 'Cập nhật thể loại thành công!');
+
+
     }
 
     public function destroy($id)
@@ -69,7 +73,9 @@ class CategoryController extends Controller
         $category = Category::findOrFail($id);
         $category->delete();
 
-        return redirect()->route('categories.index')->with('success', 'Xóa thể loại thành công!');
+
+// destroy
+return redirect()->route('admin.categories.index')->with('success', 'Xóa thể loại thành công!');
     }
 
     public function show($id)
