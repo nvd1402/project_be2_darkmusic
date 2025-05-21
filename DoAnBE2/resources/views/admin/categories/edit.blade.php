@@ -18,21 +18,34 @@
             <div>
                 <h2 class="title">Chỉnh sửa thể loại</h2>
             </div>
+<section class="category-form">
+    <h3>Chỉnh sửa thể loại</h3>
+    <form action="{{ route('categories.update', $category->id) }}" method="POST">
+        @csrf
+        @method('PUT')
 
-            <section class="category-form">
-                <h3>Chỉnh sửa thể loại</h3>
-                <form action="{{ route('categories.update', $category->id) }}" method="POST">
-                    @csrf
-                    @method('PUT')
-                    <label for="category-name">Tên thể loại</label>
-                    <input type="text" name="tentheloai" value="{{ old('tentheloai', $category->tentheloai ?? '') }}" placeholder="Nhập tên thể loại" required>
-@if ($errors->has('tentheloai'))
-    <div class="text-danger">{{ $errors->first('tentheloai') }}</div>
-@endif
+        <label for="category-name">Tên thể loại</label>
+        <input type="text" name="tentheloai" value="{{ old('tentheloai', $category->tentheloai ?? '') }}" placeholder="Nhập tên thể loại" required>
+        @if ($errors->has('tentheloai'))
+            <div class="text-danger">{{ $errors->first('tentheloai') }}</div>
+        @endif
 
-                    <button type="submit">Cập nhật</button>
-                </form>
-            </section>
+        <label for="nhom">Nhóm</label>
+        <select name="nhom" id="nhom" required>
+            <option value="">-- Chọn nhóm --</option>
+            <option value="Nhạc Rock" {{ old('nhom', $category->nhom ?? '') == 'Nhạc Rock' ? 'selected' : '' }}>Nhạc Rock</option>
+            <option value="Nhạc Remix" {{ old('nhom', $category->nhom ?? '') == 'Nhạc Remix' ? 'selected' : '' }}>Nhạc Remix</option>
+            <option value="Nhạc Nổi Bật" {{ old('nhom', $category->nhom ?? '') == 'Nhạc Nổi Bật' ? 'selected' : '' }}>Nhạc Nổi Bật</option>
+            <option value="Nhạc Mới" {{ old('nhom', $category->nhom ?? '') == 'Nhạc Mới' ? 'selected' : '' }}>Nhạc Mới</option>
+        </select>
+        @if ($errors->has('nhom'))
+            <div class="text-danger">{{ $errors->first('nhom') }}</div>
+        @endif
+
+        <button type="submit">Cập nhật</button>
+    </form>
+</section>
+
         </main>
     </div>
 
