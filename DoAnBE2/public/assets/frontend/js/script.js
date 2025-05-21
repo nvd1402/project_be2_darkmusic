@@ -437,7 +437,7 @@ const app = {
                 <div class="item ${
                     index === this.currentIndex ? "active" : ""
                 }" data-index="${index}">
-                    <div class="info">                     
+                    <div class="info">
                         <img src="${song.image}" alt="">
                         <div class="details">
                             <h5>${song.name}</h5>
@@ -467,7 +467,7 @@ const app = {
                 <div class="itemlist ${
                     index === this.currentIndex ? "active" : ""
                 }" data-index="${index}">
-                    <div class="info">                     
+                    <div class="info">
                         <img src="${song.image}" alt="">
                         <div class="details">
                             <h5>${song.name}</h5>
@@ -502,7 +502,7 @@ const app = {
                 <div class="itemlist ${
                     index === this.currentIndex ? "active" : ""
                 }" data-index="${index}">
-                    <div class="info">                     
+                    <div class="info">
                         <img src="${song.image}" alt="">
                         <div class="details">
                             <h5>${song.name}</h5>
@@ -537,7 +537,7 @@ const app = {
                 <div class="itemlist ${
                     index === this.currentIndex ? "active" : ""
                 }" data-index="${index}">
-                    <div class="info">                     
+                    <div class="info">
                         <img src="${song.image}" alt="">
                         <div class="details">
                             <h5>${song.name}</h5>
@@ -572,7 +572,7 @@ const app = {
                 <div class="itemlist ${
                     index === this.currentIndex ? "active" : ""
                 }" data-index="${index}">
-                    <div class="info">                     
+                    <div class="info">
                         <img src="${song.image}" alt="">
                         <div class="details">
                             <h5>${song.name}</h5>
@@ -607,7 +607,7 @@ const app = {
                 <div class="itemlist ${
                     index === this.currentIndex ? "active" : ""
                 }" data-index="${index}">
-                    <div class="info">                     
+                    <div class="info">
                         <img src="${song.image}" alt="">
                         <div class="details">
                             <h5>${song.name}</h5>
@@ -642,7 +642,7 @@ const app = {
                 <div class="itemlist ${
                     index === this.currentIndex ? "active" : ""
                 }" data-index="${index}">
-                    <div class="info">                     
+                    <div class="info">
                         <img src="${song.image}" alt="">
                         <div class="details">
                             <h5>${song.name}</h5>
