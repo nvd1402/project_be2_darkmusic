@@ -29,7 +29,7 @@
             </li>
             <li>
                 <i class='bx bxs-radio'></i>
-                <a href="#">Quản lý album</a>
+                                <a href="{{ route('admin.album.index') }}">Quản lý album</a>
             </li>
             <li>
                
