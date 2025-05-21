@@ -92,7 +92,12 @@ Route::group(['prefix' => '', 'as' => 'frontend.'], function () {
         Route::get('/news', [HomeController::class, 'news'])->name('news');
         Route::get('/category', [HomeController::class, 'category'])->name('category');
 
-Route::get('/news/{id}', [App\Http\Controllers\NewsController::class, 'show'])->name('news.show');
+Route::get('/news/{id}', [NewsController::class, 'show'])->name('news_show');
+
+
+Route::get('/category/{id}', [CategoryController::class, 'show'])->name('category_show');
+
+
 
     // Thêm các routes khác cho giao diện người dùng của bạn trong group này
 });

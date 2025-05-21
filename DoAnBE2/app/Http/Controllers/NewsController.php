@@ -135,7 +135,7 @@ public function show($id)
                         ->take(5)
                         ->get();
 
-    return view('frontend.show', compact('news', 'relatedNews'));
+    return view('frontend.news_show', compact('news', 'relatedNews'));
 }
 
 

@@ -213,7 +213,7 @@
             <li class="song-item">
                 <div class="song-info">
                     <h3>
-                        <a href="{{ route('frontend.news.show', ['id' => $new->id]) }}">
+                        <a href="{{ route('frontend.news_show', ['id' => $new->id]) }}">
                             {{ $new->tieude }}
                         </a>
                     </h3>
