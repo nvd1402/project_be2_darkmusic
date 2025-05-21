@@ -21,13 +21,36 @@
                 </div>
                 <i class='bx bxs-bell'></i>
                 <i class='bx bxs-cog' ></i>
-                <div class="user">
-                    <div class="left">
-                        <img src="" alt="">
-                    </div>
-                    <div class="right">
-                        <h5>Nguyen Van Dai</h5>
-                    </div>
+                <div class="d-flex align-items-center">
+                    @guest
+                        <a href="{{ route('login') }}" class="text-decoration-none me-3">
+                            <div class="user">
+                                <div class="left"><img src="" alt=""></div>
+                                <div class="right"><h5>Đăng nhập</h5></div>
+                            </div>
+                        </a>
+                    @endguest
+
+                    @auth
+                        <a href="{{ route('profile') }}" class="text-decoration-none me-3">
+                            <div class="user d-flex align-items-center">
+                                <div class="left me-2">
+                                    <img src="{{ Auth::user()->avatar
+                        ? asset('storage/'.Auth::user()->avatar)
+                        : '/default-avatar.png'
+                    }}"
+                                         alt="avatar"
+                                         class="rounded-circle"
+                                         width="40">
+                                </div>
+                                <div class="right">
+                                    <h5 class="mb-0">{{ Auth::user()->username }}</h5>
+                                </div>
+                            </div>
+                        </a>
+
+
+                    @endauth
                 </div>
             </div>
 

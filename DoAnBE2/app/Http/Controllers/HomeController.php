@@ -9,11 +9,7 @@ use Illuminate\View\View;
 use function Termwind\renderUsing;
 use App\Models\Song;
 
-<<<<<<< Updated upstream
-=======
 
-
->>>>>>> Stashed changes
 class HomeController extends Controller
 {
     //
