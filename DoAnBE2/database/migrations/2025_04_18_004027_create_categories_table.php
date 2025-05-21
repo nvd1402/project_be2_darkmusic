@@ -4,19 +4,21 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     public function up(): void
     {
-        Schema::table('categories', function (Blueprint $table) {
-            $table->string('nhom')->nullable()->after('tentheloai');
+        Schema::create('categories', function (Blueprint $table) {
+            $table->id();                      // id tự động tăng
+            $table->string('tentheloai');     // tên thể loại
+            $table->string('nhom')->nullable(); // nhóm, cho phép null
+            $table->timestamps();             // created_at, updated_at
         });
     }
 
     public function down(): void
     {
-        Schema::table('categories', function (Blueprint $table) {
-            $table->dropColumn('nhom');
-        });
+        Schema::dropIfExists('categories');
     }
 };
 
