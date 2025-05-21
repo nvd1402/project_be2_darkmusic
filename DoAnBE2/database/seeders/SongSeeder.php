@@ -146,7 +146,7 @@ class SongSeeder extends Seeder
 
             $data[] = [
                 'tenbaihat' => $randomName,
-                'nghesi' => rand(1, 100),
+                'nghesi' => rand(1, 50),
                 'theloai' => $randomCategoryId, // Use the ID here
                 'anh_daidien' => $randomImagePath,
                 'file_amthanh' => $randomAudioSongs,

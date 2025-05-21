@@ -11,13 +11,13 @@
     <main>
         <!--include file header-->
     @include('admin.partials.header')
-
+    
         <!--content-->
         <div>
-            <h2 class="title">Quản lý quảng cáo</h2>
+            <h2 class="newTitle">Quản lý quảng cáo</h2>
         </div>
         <section class="song-list">
-            <h2 class="title" style="margin-top: -50px">Danh sách quảng cáo</h2>
+            <h2 class="newTitle" style="margin-top: -100px">Danh sách quảng cáo</h2>
 
             <div class="add-btn">
                     <a href="{{ route('admin.ad.create') }}">Thêm quảng cáo</a>

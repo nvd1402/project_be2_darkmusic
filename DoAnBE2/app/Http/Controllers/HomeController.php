@@ -8,6 +8,10 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use function Termwind\renderUsing;
 use App\Models\Song;
+use App\Models\News;
+use App\Models\category;
+
+
 
 
 class HomeController extends Controller
@@ -29,10 +33,7 @@ class HomeController extends Controller
         $ads = Ad::where('is_active', true)->latest()->get();
         return view('frontend.index', compact('trending', 'topSongs', 'categories', 'ads'));
     }
-    public function category(string $slug): View
-    {
-        return view('frontend.category', ['slug' => $slug]);
-    }
+
 
     public function song(string $slug): View
     {
@@ -51,4 +52,10 @@ class HomeController extends Controller
         $news = News::all();
         return view('frontend.news', compact('news'));
     }
+public function category(): View
+{
+    $categories = Category::all();// Lấy danh sách thể loại
+    return view('frontend.category', compact('categories'));
+}
+
 }

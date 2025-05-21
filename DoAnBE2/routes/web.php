@@ -9,16 +9,27 @@ use App\Http\Controllers\Auth\ProfileController;
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
+<<<<<<< HEAD
 use App\Http\Controllers\ArtistController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\AdController;
+=======
+use App\Models\Artist;
+>>>>>>> origin/master
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\HomeController;
 
+<<<<<<< HEAD
 // === Public routes (guest only) ===
 Route::middleware('guest')->group(function () {
     Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
     Route::post('login', [LoginController::class, 'login']);
+=======
+
+
+//admin
+Route::get('/admin/dashboard', [AdminController::class, 'adminindex'])->name('admin.dashboard');;
+>>>>>>> origin/master
 
     Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
     Route::post('register', [RegisterController::class, 'register']);
@@ -79,10 +90,23 @@ Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
 // === Frontend (public) routes ===
 Route::group(['as' => 'frontend.'], function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
+<<<<<<< HEAD
     Route::get('category/{slug}', [HomeController::class, 'category'])->name('category');
     Route::get('song/{slug}', [HomeController::class, 'song'])->name('song');
     Route::get('rankings', [HomeController::class, 'rankings'])->name('rankings');
     Route::get('news', [HomeController::class, 'news'])->name('news');
     Route::get('news/{id}', [NewsController::class, 'show'])->name('news.show');
+=======
+
+    Route::get('/song/{slug}', [HomeController::class, 'song'])->name('song');
+    Route::get('/rankings', [HomeController::class, 'rankings'])->name('rankings');
+
+        Route::get('/news', [HomeController::class, 'news'])->name('news');
+        Route::get('/category', [HomeController::class, 'category'])->name('category');
+
+Route::get('/news/{id}', [App\Http\Controllers\NewsController::class, 'show'])->name('news.show');
+
+    // Thêm các routes khác cho giao diện người dùng của bạn trong group này
+>>>>>>> origin/master
 });
 
