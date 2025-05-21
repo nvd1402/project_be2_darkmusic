@@ -11,7 +11,8 @@ class Category extends Model
 
     protected $table = 'categories';
 
-    protected $fillable = ['tentheloai'];
+    // Thêm 'nhom' vào đây
+    protected $fillable = ['tentheloai', 'nhom'];
 
     public function artists()
     {

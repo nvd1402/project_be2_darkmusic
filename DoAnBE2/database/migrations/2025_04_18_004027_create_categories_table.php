@@ -7,15 +7,16 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('categories', function (Blueprint $table) {
-            $table->id();
-            $table->string('tentheloai');
-            $table->timestamps();
+        Schema::table('categories', function (Blueprint $table) {
+            $table->string('nhom')->nullable()->after('tentheloai');
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('categories');
+        Schema::table('categories', function (Blueprint $table) {
+            $table->dropColumn('nhom');
+        });
     }
 };
+
