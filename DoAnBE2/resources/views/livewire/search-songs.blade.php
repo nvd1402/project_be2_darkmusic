@@ -51,6 +51,7 @@
                 </tr>
             @endforeach
             </tbody>
-        </table> </div>
+        </table> 
+    </div>
     <div id="pagination-controls"></div>
 </div>

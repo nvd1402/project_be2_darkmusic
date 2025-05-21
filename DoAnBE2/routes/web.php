@@ -41,6 +41,9 @@ Route::middleware('auth')->group(function () {
 
 // === Admin routes (auth + prefix admin + route name admin.) ===
 Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
+    Route::get('news/search', [NewsController::class, 'search'])->name('news.search');
+    Route::get('categories/search', [CategoryController::class, 'search'])->name('categories.search');
+
 
     // Dashboard
     Route::get('dashboard', [AdminController::class, 'adminindex'])->name('dashboard');
@@ -79,6 +82,7 @@ Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
     // Ads & News (resource)
     Route::resource('ad', AdController::class);
     Route::resource('news', NewsController::class);
+
 
     // Doanh thu
     Route::get('revenue', [AdminController::class, 'revenue'])->name('revenue.index');
