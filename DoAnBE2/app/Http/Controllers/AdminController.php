@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Song;
+use App\Models\Artist;
+use App\Models\Category;
+use App\Models\Userss;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -14,21 +17,30 @@ class AdminController extends Controller
     // Dashboard
     public function adminindex()
     {
+        $soLuongBaiHat = Song::count();
+        $this->data['soLuongBaiHat'] = $soLuongBaiHat;
         return view('admin.dashboard', $this->data);
     }
 
     // Song
     public function createsong()
     {
+        $this->data['categories'] = Category::all();
+        $this->data['artists'] = Artist::all();
         return view('admin.songs.create', $this->data);
     }
 
     public function storesong(Request $request)
     {
         $validated = $request->validate([
-            'tenbaihat' => 'required|string|max:255',
-            'nghesi' => 'required|string|max:255',
-            'theloai' => 'required|string|max:100',
+            'tenbaihat' => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^[\p{L}\p{M}\d\s\-\'\.]+$/u'
+            ],
+            'nghesi' => 'required|exists:artists,id',
+            'theloai' => 'required|exists:categories,id',
             'file_amthanh' => 'required|file|mimes:mp3,wav,ogg',
             'anh_daidien' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
         ]);
@@ -43,8 +55,8 @@ class AdminController extends Controller
             $song->file_amthanh = $pathAudio;
         }
 
-        if ($request->hasFile('anhdaidien')) {
-            $pathImage = $request->file('anhdaidien')->store('songs/images', 'public');
+        if ($request->hasFile('anh_daidien')) {
+            $pathImage = $request->file('anh_daidien')->store('songs/images', 'public');
             $song->anh_daidien = $pathImage;
         }
 
@@ -55,16 +67,53 @@ class AdminController extends Controller
 
     public function indexsong()
     {
-        $this->data['songs'] = Song::all();
+        // Thay đổi dòng này để phân trang
+        $this->data['songs'] = Song::paginate(7);  // Lấy 7 bài hát mỗi trang
         return view('admin.songs.index', $this->data);
     }
+
 
     public function editsong($id)
     {
         $this->data['song'] = Song::findOrFail($id);
+        $this->data['categories'] = Category::all();
+        $this->data['artists'] = Artist::all();
         return view('admin.songs.edit', $this->data);
     }
 
+
+    public function updatesong(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'tenbaihat' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z0-9\s]+$/u'],
+            'nghesi' => 'required|exists:artists,id',
+            'theloai' => 'required|exists:categories,id',
+            'file_amthanh' => 'nullable|file|mimes:mp3,wav,ogg',
+            'anh_daidien' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+        ]);
+        $song = Song::findOrFail($id);
+        $song->tenbaihat = $validated['tenbaihat'];
+        $song->nghesi = $validated['nghesi'];
+        $song->theloai = $validated['theloai'];
+
+        if ($request->hasFile('file_amthanh')) {
+            if ($song->file_amthanh && Storage::disk('public')->exists($song->file_amthanh)) {
+                Storage::disk('public')->delete($song->file_amthanh);
+            }
+            $song->file_amthanh = $request->file('file_amthanh')->store('songs/audio', 'public');
+        }
+
+        if ($request->hasFile('anh_daidien')) {
+            if ($song->anh_daidien && Storage::disk('public')->exists($song->anh_daidien)) {
+                Storage::disk('public')->delete($song->anh_daidien);
+            }
+            $song->anh_daidien = $request->file('anh_daidien')->store('songs/images', 'public');
+        }
+
+        $song->save();
+
+        return redirect()->route('admin.songs.index')->with('success', 'Cập nhật bài hát thành công!');
+    }
 
     public function deletesong($id)
     {
@@ -74,8 +123,8 @@ class AdminController extends Controller
             Storage::disk('public')->delete($song->file_amthanh);
         }
 
-        if ($song->anhdaidien && Storage::disk('public')->exists($song->anhdaidien)) {
-            Storage::disk('public')->delete($song->anhdaidien);
+        if ($song->anh_daidien && Storage::disk('public')->exists($song->anh_daidien)) {
+            Storage::disk('public')->delete($song->anh_daidien);
         }
 
         $song->delete();
@@ -86,6 +135,7 @@ class AdminController extends Controller
     // User
     public function indexuser()
     {
+        $this->data['users'] = User::all();
         return view('admin.users.index', $this->data);
     }
 

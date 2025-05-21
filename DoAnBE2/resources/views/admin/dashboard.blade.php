@@ -31,7 +31,7 @@
                 </div>
                 <div class="admincount">
                     <i class="bi bi-music-note-list icon"></i>
-                    <h4>Tổng số lượng bài hát: <span>#</span></h4>
+                    <h4>Tổng số lượng bài hát: <span>{{ $soLuongBaiHat }}</span></h4>
                 </div>
             </a>
             <!-- box 3-->
@@ -57,7 +57,7 @@
                 </div>
             </a>
             <!-- box 5-->
-            <a href="#" class="boxPageAdmin">
+            <a href="{{ route('admin.artist.index') }}" class="boxPageAdmin">
                 <div class="admininfo">
                     <i class="bi bi-person-bounding-box icon"></i>
                     <h2>Nghệ sĩ</h2>

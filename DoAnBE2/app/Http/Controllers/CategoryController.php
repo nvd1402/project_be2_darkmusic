@@ -7,60 +7,83 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    public function index() {
+    protected $nhoms = [
+        'Nhạc Rock',
+        'Nhạc Remix',
+        'Nhạc Nổi Bật',
+        'Nhạc Mới',
+    ];
+
+    public function index()
+    {
         $categories = Category::all();
-        return view('admin.categories.index', compact('categories')); // sửa path view
+        return view('admin.categories.index', compact('categories'));
     }
 
-    public function create() {
-        return view('admin.categories.create'); // sửa path view
+    public function create()
+    {
+        $nhoms = $this->nhoms; // truyền danh sách nhóm
+        return view('admin.categories.create', compact('nhoms'));
     }
 
-    public function store(Request $request) {
-        $request->validate([
-            'tentheloai' => 'required'
-        ]);
+   public function store(Request $request)
+{
+    $request->validate([
+        'tentheloai' => 'required|string|max:255',
+        'nhom' => 'required|string|max:255',
+    ]);
 
-        Category::create([
-            'tentheloai' => $request->tentheloai,
-        ]);
+    Category::create([
+        'tentheloai' => $request->tentheloai,
+        'nhom' => $request->nhom,
+    ]);
 
-        return redirect()->route('categories.index')->with('success', 'Thêm thành công!');
-    }
+    return redirect()->route('admin.categories.index')->with('success', 'Thêm thể loại thành công!');
+}
 
-    public function edit($id) {
+
+    public function edit($id)
+    {
         $category = Category::findOrFail($id);
-        return view('admin.categories.edit', compact('category')); // sửa path view
+        $nhoms = $this->nhoms; // truyền danh sách nhóm
+        return view('admin.categories.edit', compact('category', 'nhoms'));
     }
 
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id)
+    {
         $request->validate([
-            'tentheloai' => 'required'
+            'tentheloai' => ['required', 'max:32', 'regex:/^[\p{L}\s0-9]+$/u'],
+            'nhom' => ['required', 'in:' . implode(',', $this->nhoms)],
         ]);
 
         $category = Category::findOrFail($id);
         $category->update([
             'tentheloai' => $request->tentheloai,
+            'nhom' => $request->nhom,
         ]);
 
-        return redirect()->route('categories.index')->with('success', 'Cập nhật thành công!');
+     
+return redirect()->route('admin.categories.index')->with('success', 'Cập nhật thể loại thành công!');
+
+
     }
 
-    public function destroy($id) {
+    public function destroy($id)
+    {
         $category = Category::findOrFail($id);
         $category->delete();
-        return redirect()->route('categories.index')->with('success', 'Xóa thành công!');
+
+
+// destroy
+return redirect()->route('admin.categories.index')->with('success', 'Xóa thể loại thành công!');
     }
 
-
-    public function search(Request $request)
+    public function show($id)
     {
-        $query = $request->input('query');
+        $category = Category::findOrFail($id);
 
-        // Tìm kiếm người dùng theo tên hoặc email
-        $users = categories::where('tentheloai', 'like', "%$query%")
-            ->get();
+        $newsList = Category::where('id', $id)->latest()->paginate(10);
 
-        return view('admin.categories.index', compact('tentheloai'));
+        return view('frontend.category_show', compact('category', 'newsList'));
     }
 }

@@ -36,5 +36,31 @@ return [
             'mimes' => 'Ảnh đại diện phải có định dạng JPEG hoặc PNG.',
             'max' => 'Ảnh đại diện không được vượt quá 2MB.',
         ],
+        'tentheloai' => [
+            'required' => 'Vui lòng nhập tên thể loại.',
+            'unique' => 'Tên thể loại này đã tồn tại.',
+            'max' => 'Tên thể loại không được vượt quá :max ký tự.',
+        ],
+        ' tentheloai' => ['required', 'max:32',
+        'regex:/^[\p{L}\s0-9]+$/u'],
+
+        ' tieude' => ['required', 'max:32', 'regex:/^[\p{L}\s0-9]+$/u'],
+
+'tieude' => [
+            'required' => 'Vui lòng nhập tiêu đề.',
+            'max' => 'Tiêu đề không được vượt quá :max ký tự.',
+        ],
+        'noidung' => [
+            'required' => 'Vui lòng nhập nội dung.',
+        ],
+        'donvidang' => [
+            'required' => 'Vui lòng nhập đơn vị đăng.',
+        ],
+        'hinhanh' => [
+            'nullable' => 'Hình ảnh là không bắt buộc.',
+            'image' => 'Hình ảnh phải là một tệp ảnh hợp lệ.',
+            'mimes' => 'Hình ảnh phải có định dạng: jpeg, png, jpg, gif, svg.',
+            'max' => 'Hình ảnh không được vượt quá :max KB.',
+        ],
     ],
 ];

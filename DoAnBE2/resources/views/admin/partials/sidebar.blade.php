@@ -25,19 +25,20 @@
             </li>
             <li>
                 <i class='bx bxs-microphone'></i>
-                <a href="#">Quản lý nghệ sỉ</a>
+                <a href="{{ route('admin.artist.index') }}">Quản lý nghệ sĩ</a>
             </li>
             <li>
                 <i class='bx bxs-radio'></i>
                 <a href="#">Quản lý album</a>
             </li>
             <li>
-                <i class='bx bx-undo'></i>
-                <a href="#">Quản lý tin tức</a>
+               
+            <i class='bx bxs-album'></i>
+                <a href="{{ route('admin.news.index') }}">Quản lý tin tức</a>
             </li>
             <li>
                 <i class='bx bxs-photo-album'></i>
-                <a href="#">Quản lý quảng cáo</a>
+                <a href="{{ route('admin.ad.index') }}">Quản lý quảng cáo</a>
             </li>
             <li>
                 <i class='bx bxs-heart'></i>
