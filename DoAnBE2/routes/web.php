@@ -17,7 +17,6 @@ use App\Models\Artist;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AlbumController;
-
 // === Public routes (guest only) ===
 Route::middleware('guest')->group(function () {
     Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
