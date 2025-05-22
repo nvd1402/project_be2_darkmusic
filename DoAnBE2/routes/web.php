@@ -18,6 +18,9 @@ use App\Http\Controllers\NewsController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AlbumController;
 
+use App\Http\Controllers\VipController;
+use App\Http\Controllers\PaymentController;
+
 use App\Http\Controllers\ListeningHistoryController;
 
 // === Public routes (guest only) ===
@@ -130,6 +133,19 @@ Route::group(['as' => 'frontend.'], function () {
     Route::get('/history', [ListeningHistoryController::class, 'index'])
         ->middleware('auth')
         ->name('listening.history');
+
+
+    Route::get('/vip/register', [VipController::class, 'showRegistrationForm'])->name('vip.register');
+    // Route để hiển thị trang thanh toán, nhận tham số gói VIP
+    Route::get('/payment/checkout/{plan}', [PaymentController::class, 'showCheckout'])->name('payment.checkout');
+
+    // Route để xử lý việc gửi form thanh toán (ví dụ: gửi đến cổng thanh toán VNPAY)
+    Route::post('/payment/process', [PaymentController::class, 'processPayment'])->name('payment.process');
+
+    // Route này là cần thiết cho VNPAY gọi về sau khi thanh toán, bạn sẽ cần triển khai logic xử lý phản hồi ở đây
+    Route::get('/payment/return', [PaymentController::class, 'paymentReturn'])->name('payment.return');
+//    Route::get('/payment/checkout/{plan}', [PaymentController::class, 'showCheckout'])->name('payment.checkout');
+
 
 });
 //Route::post('/song/{id}/toggle-like', [AdminController::class, 'toggleLike'])
