@@ -139,7 +139,8 @@ Route::get('category/{tentheloai}', [HomeController::class, 'categoryDetail'])->
     Route::get('/news', [HomeController::class, 'news'])->name('news');
 
 
-Route::post('news/{id}/comment', [CommentsController::class, 'store'])->name('frontend.comment.store');
+Route::post('news/{id}/comment', [CommentsController::class, 'store'])->name('comment.store');
+
 
 
 
