@@ -36,25 +36,26 @@ public function edit($id)
         $news = News::all();
         return view('admin.comments.create', compact('users', 'news'));
     }
+public function store(Request $request, $id)
+{
+    $request->validate([
+        'noidung' => 'required|string|max:1000',
+    ]);
 
-    // Lưu bình luận mới
-    public function store(Request $request)
-    {
-        
-  $request->validate([
-    'user_id' => 'required|exists:users,user_id',
-    'news_id' => 'required|exists:news,id',
-    'noidung' => 'required|string|max:1000',
-]);
+    Comment::create([
+        'user_id' => auth()->id(),
+        'news_id' => $id,
+        'noidung' => $request->noidung,
+    ]);
 
-        Comment::create([
-            'user_id' => $request->user_id,
-            'news_id' => $request->news_id,
-            'noidung' => $request->noidung,
-        ]);
-
-        return redirect()->route('admin.comments.index')->with('success', 'Bình luận đã được thêm.');
+    // Nếu là AJAX
+    if ($request->ajax()) {
+        return response()->json(['success' => true, 'message' => 'Bình luận đã gửi!']);
     }
+
+    return redirect()->back()->with('success', 'Bình luận đã được gửi!');
+}
+
     // Cập nhật bình luận
     public function update(Request $request, $id)
     {
