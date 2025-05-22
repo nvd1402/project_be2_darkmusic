@@ -15,9 +15,9 @@
     <div class="profile">
         <div class="user">
 
-            <div class="right">
-                <h5>Nâng cấp tài khoản</h5>
-            </div>
+            <button class="right" style="background-color: rgb(37, 37, 45);">
+                <h5 style="">Nâng Cấp VIP</h5>
+            </button>
         </div>
         <i class='bx bxs-bell'></i>
         <i class='bx bxs-cog' ></i>
