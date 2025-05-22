@@ -55,9 +55,28 @@ class HomeController extends Controller
         $news = News::all();
         return view('frontend.news', compact('news'));
     }
+
     public function category(): View
     {
-        $categories = Category::all(); // Lấy danh sách thể loại
-        return view('frontend.category', compact('categories'));
+        $nhoms = ['Nhạc Rock', 'Nhạc Remix', 'Nhạc Nổi Bật', 'Nhạc Mới'];
+        $categoriesByNhom = [];
+
+        foreach ($nhoms as $nhom) {
+            $categoriesByNhom[$nhom] = Category::where('nhom', $nhom)->get();
+        }
+
+        return view('frontend.category', compact('nhoms', 'categoriesByNhom'));
+    }
+    public function categoryDetail(string $tentheloai)
+    {
+        // Tìm thể loại theo tentheloai
+        $category = category::where('tentheloai', $tentheloai)->first();
+
+        if (!$category) {
+            abort(404, 'Không tìm thấy thể loại');
+        }
+
+        // Truyền $category sang view, chỉ cần lấy đúng thể loại này thôi
+        return view('frontend.category_show', compact('category'));
     }
 }
