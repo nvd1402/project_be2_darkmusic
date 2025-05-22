@@ -20,6 +20,7 @@ use App\Http\Controllers\AlbumController;
 
 use App\Http\Controllers\VipController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\CommentsController;
 
 use App\Http\Controllers\ListeningHistoryController;
 
