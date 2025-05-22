@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FavoriteController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,6 +18,10 @@ use App\Models\Artist;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AlbumController;
+
+use App\Http\Controllers\VipController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\CommentsController;
 
 use App\Http\Controllers\ListeningHistoryController;
 
@@ -47,7 +52,7 @@ Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
     Route::get('news/search', [NewsController::class, 'search'])->name('news.search');
     Route::get('categories/search', [CategoryController::class, 'search'])->name('categories.search');
     Route::get('album/search', [AlbumController::class, 'search'])->name('album.search');
-
+  Route::get('comments/search', [CommentsController::class, 'search'])->name('comments.search');
 
 
     // Dashboard
@@ -65,6 +70,8 @@ Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
     // Users CRUD (dùng resource, loại bỏ 'show' nếu không dùng)
     Route::resource('users', UserController::class)->except(['show']);
     Route::get('users/search', [UserController::class, 'search'])->name('users.search');
+    Route::get('users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
+    Route::get('users/destroy', [UserController::class, 'destroy'])->name('users.destroy');
 
 
 
@@ -80,7 +87,7 @@ Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
     Route::resource('categories', CategoryController::class);
 
 
-        // ...
+
 
 
     // Ads & News (resource)
@@ -104,10 +111,21 @@ Route::put('album/update/{id}', [AlbumController::class, 'update'])->name('album
 Route::delete('album/{id}', [AlbumController::class, 'destroy'])->name('album.destroy');
 });
 
+// Hiển thị danh sách bình luận (admin)
+Route::get('/admin/comments', [CommentsController::class, 'index'])->name('admin.comments.index');
+Route::get('/admin/comments/create', [CommentsController::class, 'create'])->name('admin.comments.create');
+Route::post('/admin/comments/store', [CommentsController::class, 'store'])->name('admin.comments.store');
+Route::get('/admin/comments/edit/{id}', [CommentsController::class, 'edit'])->name('admin.comments.edit');
+Route::put('/admin/comments/update/{id}', [CommentsController::class, 'update'])->name('admin.comments.update');
+Route::delete('/admin/comments/{id}', [CommentsController::class, 'destroy'])->name('admin.comments.destroy');
+
+
 // === Frontend (public) routes ===
 Route::group(['as' => 'frontend.'], function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
-//    Route::get('category/{slug}', [HomeController::class, 'category'])->name('category');
+Route::get('category', [HomeController::class, 'category'])->name('category'); // Danh sách nhóm thể loại
+Route::get('category/{tentheloai}', [HomeController::class, 'categoryDetail'])->name('category.detail'); // Chi tiết thể loại
+
     Route::get('song/{slug}', [HomeController::class, 'song'])->name('song');
     Route::get('rankings', [HomeController::class, 'rankings'])->name('rankings');
     Route::get('news', [HomeController::class, 'news'])->name('news');
@@ -119,21 +137,29 @@ Route::group(['as' => 'frontend.'], function () {
     Route::get('/rankings', [HomeController::class, 'rankings'])->name('rankings');
 
     Route::get('/news', [HomeController::class, 'news'])->name('news');
-    Route::get('/category', [HomeController::class, 'category'])->name('category');
-    Route::get('/category/{id}', [CategoryController::class, 'show'])->name('category_show');
+
+
 
     Route::get('/news/{id}', [App\Http\Controllers\NewsController::class, 'show'])->name('news_show');
 
-
-    Route::get('/listening-history', [ListeningHistoryController::class, 'index'])->name('listening.history');
-
-    Route::post('/listening-history/save', [ListeningHistoryController::class, 'save'])
+Route::get('/category/{tentheloai}', [CategoryController::class, 'show'])->name('category_show');
+    Route::get('/history', [ListeningHistoryController::class, 'index'])
         ->middleware('auth')
-        ->name('listening.history.save');
+        ->name('listening.history');
 
-    Route::delete('/listening-history/{id}', [ListeningHistoryController::class, 'destroy'])->name('listening.history.destroy');
 
-    Route::post('/listening-history/clear-all', [ListeningHistoryController::class, 'clearAll'])->name('listening.history.clearAll');
+    Route::get('/vip/register', [VipController::class, 'showRegistrationForm'])->name('vip.register');
+    // Route để hiển thị trang thanh toán, nhận tham số gói VIP
+    Route::get('/payment/checkout/{plan}', [PaymentController::class, 'showCheckout'])->name('payment.checkout');
+
+    // Route để xử lý việc gửi form thanh toán (ví dụ: gửi đến cổng thanh toán VNPAY)
+    Route::post('/payment/process', [PaymentController::class, 'processPayment'])->name('payment.process');
+
+    // Route này là cần thiết cho VNPAY gọi về sau khi thanh toán, bạn sẽ cần triển khai logic xử lý phản hồi ở đây
+    Route::get('/payment/return', [PaymentController::class, 'paymentReturn'])->name('payment.return');
+//    Route::get('/payment/checkout/{plan}', [PaymentController::class, 'showCheckout'])->name('payment.checkout');
+
+    Route::get('/favorite', [HomeController::class, 'favorite'])->name('favorite');
 });
 //Route::post('/song/{id}/toggle-like', [AdminController::class, 'toggleLike'])
 //    ->name('song.toggleLike')
