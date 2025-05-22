@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Lịch Sử Nghe Nhạc</title>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="{{ asset('assets/frontend/css/style.css') }}">
@@ -267,63 +268,97 @@
 
 
 <script>
-    // === JavaScript cho các nút hành động ===
-    document.addEventListener('DOMContentLoaded', function() {
-        // Xử lý nút Play
+    document.addEventListener('DOMContentLoaded', () => {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        // Hàm gọi API lưu lịch sử nghe khi nhấn play
+        function saveListeningHistory(songId) {
+            fetch('/listening-history/save', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({ song_id: songId })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (!data.success) {
+                        console.warn('Không lưu được lịch sử nghe nhạc');
+                    }
+                })
+                .catch(() => {
+                    console.warn('Lỗi mạng khi lưu lịch sử nghe nhạc');
+                });
+        }
+
+        // Bắt sự kiện click nút Play
         document.querySelectorAll('.play-btn').forEach(button => {
             button.addEventListener('click', function() {
                 const songId = this.dataset.songId;
-                alert('Phát bài hát có ID: ' + songId);
-                // Thực hiện logic phát nhạc ở đây (ví dụ: gửi request AJAX tới API phát nhạc)
+
+                // Gọi lưu lịch sử nghe
+                saveListeningHistory(songId);
+
+                // TODO: Thêm logic phát nhạc ở đây nếu cần
+                alert('Phát bài hát ID: ' + songId);
             });
         });
 
-        // Xử lý nút Delete (xóa từng bản ghi lịch sử)
+        // Xóa bản ghi lịch sử
         document.querySelectorAll('.delete-btn').forEach(button => {
             button.addEventListener('click', function() {
                 const historyId = this.dataset.historyId;
-                if (confirm('Bạn có chắc muốn xóa bản ghi lịch sử này không?')) {
-                    // Thực hiện logic xóa bản ghi lịch sử (ví dụ: gửi request AJAX tới route xóa)
-                    // Ví dụ: fetch('/history/' + historyId, { method: 'DELETE' })
-                    // .then(response => response.json())
-                    // .then(data => {
-                    //     if (data.success) {
-                    //         this.closest('.history-item').remove(); // Xóa item khỏi DOM
-                    //     } else {
-                    //         alert('Không thể xóa bản ghi: ' + data.message);
-                    //     }
-                    // });
-                    alert('Xóa bản ghi lịch sử có ID: ' + historyId);
-                    // Sau khi xóa thành công, bạn có thể xóa item khỏi DOM hoặc reload trang
-                    this.closest('.history-item').remove(); // Xóa tạm thời khỏi giao diện
-                }
+                if (!confirm('Bạn có chắc muốn xóa bản ghi lịch sử này không?')) return;
+
+                fetch(`/listening-history/${historyId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json',
+                    }
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            this.closest('.history-item').remove();
+                        } else {
+                            alert('Xóa không thành công: ' + data.message);
+                        }
+                    })
+                    .catch(() => alert('Lỗi kết nối, vui lòng thử lại.'));
             });
         });
 
-        // Xử lý nút Xóa tất cả lịch sử
-        const clearAllHistoryBtn = document.getElementById('clearAllHistory');
-        if (clearAllHistoryBtn) {
-            clearAllHistoryBtn.addEventListener('click', function() {
-                if (confirm('Bạn có chắc chắn muốn xóa TẤT CẢ lịch sử nghe nhạc không?')) {
-                    // Thực hiện logic xóa tất cả lịch sử (ví dụ: gửi request AJAX tới route xóa tất cả)
-                    // Ví dụ: fetch('/history/clear-all', { method: 'POST' })
-                    // .then(response => response.json())
-                    // .then(data => {
-                    //     if (data.success) {
-                    //         document.querySelector('.history-list').innerHTML = '<p style="text-align: center; color: #666;">Bạn chưa nghe bài hát nào gần đây.</p>';
-                    //         this.remove(); // Xóa nút "Xóa tất cả"
-                    //     } else {
-                    //         alert('Không thể xóa tất cả lịch sử: ' + data.message);
-                    //     }
-                    // });
-                    alert('Đã yêu cầu xóa tất cả lịch sử.');
-                    // Sau khi xóa thành công, bạn có thể cập nhật DOM
-                    document.querySelector('.history-list').innerHTML = '<p style="text-align: center; color: #666;">Bạn chưa nghe bài hát nào gần đây.</p>';
-                    this.remove(); // Xóa nút "Xóa tất cả"
-                }
+        // Xóa tất cả lịch sử
+        const clearBtn = document.getElementById('clearAllHistory');
+        if (clearBtn) {
+            clearBtn.addEventListener('click', () => {
+                if (!confirm('Bạn có chắc chắn muốn xóa TẤT CẢ lịch sử nghe nhạc không?')) return;
+
+                fetch('/listening-history/clear-all', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json',
+                    }
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            const list = document.querySelector('.history-list');
+                            list.innerHTML = '<p style="text-align: center; color: #666;">Bạn chưa nghe bài hát nào gần đây.</p>';
+                            clearBtn.remove();
+                        } else {
+                            alert('Xóa tất cả không thành công');
+                        }
+                    })
+                    .catch(() => alert('Lỗi kết nối, vui lòng thử lại.'));
             });
         }
     });
+
 </script>
 
 </body>
