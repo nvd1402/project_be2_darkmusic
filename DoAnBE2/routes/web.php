@@ -51,7 +51,7 @@ Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
     Route::get('news/search', [NewsController::class, 'search'])->name('news.search');
     Route::get('categories/search', [CategoryController::class, 'search'])->name('categories.search');
     Route::get('album/search', [AlbumController::class, 'search'])->name('album.search');
-  Route::get('comments/search', [AlbumController::class, 'search'])->name('comments.search');
+  Route::get('comments/search', [CommentsController::class, 'search'])->name('comments.search');
 
 
     // Dashboard

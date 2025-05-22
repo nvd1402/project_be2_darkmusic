@@ -79,14 +79,23 @@ public function edit($id)
     }
 
     // Tìm kiếm bình luận theo nội dung
-    public function search(Request $request)
-    {
-        $query = $request->input('query');
+public function search(Request $request)
+{
+    $query = $request->input('query');
 
-        $comments = Comment::where('noidung', 'like', '%' . $query . '%')
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
+    $comments = Comment::with(['user', 'news'])
+        ->where(function ($q) use ($query) {
+            $q->where('noidung', 'like', '%' . $query . '%')
+              ->orWhereHas('user', function ($q2) use ($query) {
+                  $q2->where('username', 'like', '%' . $query . '%');
+              })
+              ->orWhereHas('news', function ($q3) use ($query) {
+                  $q3->where('tieude', 'like', '%' . $query . '%');
+              });
+        })
+        ->orderBy('created_at', 'desc')
+        ->paginate(10);
 
-        return view('admin.comments.index', compact('comments'))->with('query', $query);
-    }
+    return view('admin.comments.index', compact('comments'))->with('query', $query);
+}
 }
