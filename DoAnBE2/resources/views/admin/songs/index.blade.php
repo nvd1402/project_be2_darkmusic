@@ -4,7 +4,12 @@
     <head>
         @include('admin.partials.head')
     </head>
-
+<style>
+    main {
+        overflow-y: auto; /* Cho phép cuộn nếu nội dung dài */
+        height: 100vh; /* Chiều cao đầy đủ để cuộn */
+    }
+</style>
     <body>
 
     <div class="container">

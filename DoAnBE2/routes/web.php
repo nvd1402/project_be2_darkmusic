@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FavoriteController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -86,7 +87,7 @@ Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
     Route::resource('categories', CategoryController::class);
 
 
-       
+
 
 
     // Ads & News (resource)
@@ -136,8 +137,8 @@ Route::get('category/{tentheloai}', [HomeController::class, 'categoryDetail'])->
     Route::get('/rankings', [HomeController::class, 'rankings'])->name('rankings');
 
     Route::get('/news', [HomeController::class, 'news'])->name('news');
-  
-    
+
+
 
     Route::get('/news/{id}', [App\Http\Controllers\NewsController::class, 'show'])->name('news_show');
 
@@ -158,7 +159,7 @@ Route::get('/category/{tentheloai}', [CategoryController::class, 'show'])->name(
     Route::get('/payment/return', [PaymentController::class, 'paymentReturn'])->name('payment.return');
 //    Route::get('/payment/checkout/{plan}', [PaymentController::class, 'showCheckout'])->name('payment.checkout');
 
-
+    Route::get('/favorite', [HomeController::class, 'favorite'])->name('favorite');
 });
 //Route::post('/song/{id}/toggle-like', [AdminController::class, 'toggleLike'])
 //    ->name('song.toggleLike')

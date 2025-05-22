@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Ad;
 use App\Models\Artist;
+use App\Models\favourite;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use function Termwind\renderUsing;
@@ -78,5 +79,10 @@ class HomeController extends Controller
 
         // Truyền $category sang view, chỉ cần lấy đúng thể loại này thôi
         return view('frontend.category_show', compact('category'));
+    }
+    public function favorite(): View
+    {
+        $favorites = favourite::with('song')->get();
+        return view('frontend.favorite',compact('favorites'));
     }
 }
