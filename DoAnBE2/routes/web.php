@@ -113,9 +113,9 @@ Route::group(['as' => 'frontend.'], function () {
     Route::get('news', [HomeController::class, 'news'])->name('news');
 
     Route::get('news/{id}', [NewsController::class, 'show'])->name('news.show');
-//    Route::get('/history', [ListeningHistoryController::class, 'index'])
-//        ->middleware('auth')
-//        ->name('listening.history');
+    Route::get('/history', [ListeningHistoryController::class, 'index'])
+        ->middleware('auth')
+        ->name('listening.history');
 
     Route::get('/song/{slug}', [HomeController::class, 'song'])->name('song');
     Route::get('/rankings', [HomeController::class, 'rankings'])->name('rankings');
