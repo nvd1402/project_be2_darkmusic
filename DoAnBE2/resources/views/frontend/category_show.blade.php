@@ -325,6 +325,7 @@
 
         updateCarousel();
     });
+    
 </script>
 </body>
 </html>
