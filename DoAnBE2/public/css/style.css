@@ -754,6 +754,13 @@ select.is-invalid {
     background-color: #ffc107;
     color: #000;
 }
+.btn.hide {
+    background-color: #11ff00;
+    color: #000;
+}
+.btn.hide:hover {
+    background-color: #ffea00;: ;
+}
 
 .btn.delete {
     background-color: #dc3545;

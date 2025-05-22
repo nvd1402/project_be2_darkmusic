@@ -46,12 +46,11 @@
                             @method('DELETE')
                             <button type="submit" class="btn delete" onclick="return confirm('Bạn có chắc chắn muốn xóa bài hát này?')">Xóa</button>
                         </form>
-                        <span class="status active">Hoạt động</span>
                     </td>
                 </tr>
             @endforeach
             </tbody>
-        </table> 
+        </table>
     </div>
     <div id="pagination-controls"></div>
 </div>

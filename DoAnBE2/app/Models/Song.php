@@ -15,6 +15,7 @@ class Song extends Model
         'theloai',
         'file_amthanh',
         'anh_daidien',
+        'status',
         // Bạn nên thêm các cột này vào đây nếu bạn đã tạo chúng trong migration
         // 'slug',
         // 'luotnghe',
@@ -31,5 +32,10 @@ class Song extends Model
     public function category()
     {
         return $this->belongsTo(Category::class, 'theloai', 'id');
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', true);
     }
 }
