@@ -17,7 +17,7 @@
     display: flex;
     flex-direction: column; /* cho mỗi nhóm 1 dòng theo chiều dọc */
     gap: 20px;
-    margin-top: 30px;
+    margin-top: 30px; 
 }
 
 
