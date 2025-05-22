@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Artist;
 use App\Models\News;
 use Illuminate\Http\Request;
+use App\Models\Ad;
 
 class CategoryController extends Controller
 {
@@ -108,11 +109,13 @@ public function show($tentheloai)
 
     // Lấy danh sách nghệ sĩ thuộc thể loại hiện tại
     $artists = Artist::where('category_id', $category->id)->get();
+     $bannerAd = Ad::where('is_active', 1)->inRandomOrder()->first();
 
     return view('frontend.category_show', [
         'category' => $category,
         'categoriesByNhom' => $categoriesByNhom,
         'artists' => $artists,
+         'bannerAd' => $bannerAd,
     ]);
 }
 

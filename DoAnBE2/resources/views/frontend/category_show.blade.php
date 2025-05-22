@@ -236,7 +236,17 @@
                 </button>
             </div>
         </header>
-         <div class="banner">Banner quảng cáo hoặc thông báo</div>
+         <div class="banner">        @if ($bannerAd)
+    <div class="banner my-4 p-3 rounded shadow bg-light text-center">
+        <a href="{{ $bannerAd->link_url }}" target="_blank" style="text-decoration: none; color: inherit;">
+            <img src="{{ asset('storage/' . $bannerAd->media_type) }}"
+                 alt="{{ $bannerAd->name }}"
+                 style="max-width: 100%; max-height: 200px; object-fit: cover; border-radius: 8px;">
+            <p class="mt-2">{{ $bannerAd->description }}</p>
+        </a>
+    </div>
+@endif
+</div>
 
         <!-- Phần hiển thị group theo nhóm của thể loại hiện tại -->
         <section class="category-section">
@@ -316,7 +326,7 @@
             }
         });
 
-        window.addEventListener('resize', () => {
+        ww.addEventListener('resize', () => {
             visibleCount = Math.floor(group.querySelector('.carousel-container').offsetWidth / itemWidth);
             maxIndex = Math.max(0, totalItems - visibleCount);
             currentIndex = 0;
@@ -325,7 +335,7 @@
 
         updateCarousel();
     });
-    
+        
 </script>
 </body>
 </html>
