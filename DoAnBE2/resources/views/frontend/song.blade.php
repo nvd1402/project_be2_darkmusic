@@ -4,11 +4,6 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @include('frontend.partials.head')
     <style>
-        main {
-            overflow-y: auto; /* Cho phép cuộn nếu nội dung dài */
-            height: 100vh; /* Chiều cao đầy đủ để cuộn */
-        }
-
         .heart-float {
             position: absolute;
             animation: floatUp 1s ease-out;
