@@ -6,6 +6,64 @@
     box-sizing: border-box;
     font-family: "Roboto", sans-serif;
 }
+
+/* CSS cho phần danh sách bài hát Đề Xuất có thanh cuộn */
+.recommended-songs-scroll-container {
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+
+.recommended-songs-scroll-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.recommended-songs-scroll-container::-webkit-scrollbar-track {
+    background: #333;
+    border-radius: 10px;
+}
+
+.recommended-songs-scroll-container::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+.recommended-songs-scroll-container::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.song-details .nameArtist {
+    white-space: normal;
+    word-wrap: break-word;
+    max-width: 150px;
+}
+
+.music-items__list {
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.music-items__list::-webkit-scrollbar {
+    width: 8px;
+}
+.music-items__list::-webkit-scrollbar-track {
+    background: #333;
+    border-radius: 10px;
+}
+.music-items__list::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+.music-items__list::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+
+/*ket thuc thanh cuon*/
+
+
 .genre-section {
     padding: 20px 30px;
     background-color: #1e1e2f;

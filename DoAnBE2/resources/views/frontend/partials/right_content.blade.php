@@ -21,6 +21,9 @@
         </div>
         <i class='bx bxs-bell'></i>
         <i class='bx bxs-cog' ></i>
+        <a href="{{ route('frontend.listening.history') }}" class="history-link">
+            <i class='bx bx-history' id="history-icon"></i>
+        </a>
         <div class="d-flex align-items-center">
             @guest
                 <a href="{{ route('login') }}" class="text-decoration-none me-3">
