@@ -15,7 +15,7 @@ class CommentsTableSeeder extends Seeder
               // Tắt kiểm tra khóa ngoại để truncate bảng
     DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
-    DB::table('categories')->truncate();
+    DB::table('comments')->truncate();
 
     // Bật lại kiểm tra khóa ngoại
     DB::statement('SET FOREIGN_KEY_CHECKS=1;');
