@@ -119,6 +119,5 @@
 
 <script type='text/javascript' src="script.js"></script>
 <script type='text/javascript' src="{{ asset('assets/frontend/js/songs.js') }}"></script>
-
 </body>
 </html>

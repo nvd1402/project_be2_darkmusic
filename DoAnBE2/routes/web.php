@@ -65,6 +65,8 @@ Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
     // Users CRUD (dùng resource, loại bỏ 'show' nếu không dùng)
     Route::resource('users', UserController::class)->except(['show']);
     Route::get('users/search', [UserController::class, 'search'])->name('users.search');
+    Route::get('users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
+    Route::get('users/destroy', [UserController::class, 'destroy'])->name('users.destroy');
 
 
 
@@ -107,7 +109,7 @@ Route::delete('album/{id}', [AlbumController::class, 'destroy'])->name('album.de
 // === Frontend (public) routes ===
 Route::group(['as' => 'frontend.'], function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
-//    Route::get('category/{slug}', [HomeController::class, 'category'])->name('category');
+    Route::get('category/{slug}', [HomeController::class, 'category'])->name('category');
     Route::get('song/{slug}', [HomeController::class, 'song'])->name('song');
     Route::get('rankings', [HomeController::class, 'rankings'])->name('rankings');
     Route::get('news', [HomeController::class, 'news'])->name('news');
@@ -125,15 +127,10 @@ Route::group(['as' => 'frontend.'], function () {
     Route::get('/news/{id}', [App\Http\Controllers\NewsController::class, 'show'])->name('news_show');
 
 
-    Route::get('/listening-history', [ListeningHistoryController::class, 'index'])->name('listening.history');
-
-    Route::post('/listening-history/save', [ListeningHistoryController::class, 'save'])
+    Route::get('/history', [ListeningHistoryController::class, 'index'])
         ->middleware('auth')
-        ->name('listening.history.save');
+        ->name('listening.history');
 
-    Route::delete('/listening-history/{id}', [ListeningHistoryController::class, 'destroy'])->name('listening.history.destroy');
-
-    Route::post('/listening-history/clear-all', [ListeningHistoryController::class, 'clearAll'])->name('listening.history.clearAll');
 });
 //Route::post('/song/{id}/toggle-like', [AdminController::class, 'toggleLike'])
 //    ->name('song.toggleLike')

@@ -202,9 +202,6 @@
 <script type='text/javascript' src="{{ asset('assets/frontend/js/script.js') }}"></script>
 <script type='text/javascript' src="{{ asset('assets/frontend/js/audio-controls.js') }}"></script>
 <script src="{{ asset('assets/frontend/js/handle-ad.js') }}"></script>
-<script type='text/javascript' src="{{ asset('assets/frontend/js/songs.js') }}"></script>
-<script>
 
-</script>
 </body>
 </html>
