@@ -132,6 +132,9 @@ public function show($id)
 {
     $news = News::findOrFail($id);
 
+    // Lấy danh sách bình luận của bài news, kèm user
+    $comments = $news->comments()->with('user')->latest()->get();
+
     $relatedNews = News::where('id', '!=', $news->id)
                         ->latest()
                         ->take(5)
@@ -140,5 +143,7 @@ public function show($id)
     // Lấy 1 quảng cáo ngẫu nhiên đang được active
     $bannerAd = Ad::where('is_active', 1)->inRandomOrder()->first();
 
-    return view('frontend.news_show', compact('news', 'relatedNews', 'bannerAd'));
-}}
+    return view('frontend.news_show', compact('news', 'relatedNews', 'bannerAd', 'comments'));
+}
+
+}
