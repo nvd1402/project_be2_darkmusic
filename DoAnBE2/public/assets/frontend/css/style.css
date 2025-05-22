@@ -14,7 +14,6 @@
     padding-right: 10px;
 }
 
-
 .recommended-songs-scroll-container::-webkit-scrollbar {
     width: 8px;
 }
@@ -60,9 +59,7 @@
     background: #555;
 }
 
-
 /*ket thuc thanh cuon*/
-
 
 .genre-section {
     padding: 20px 30px;
@@ -342,7 +339,7 @@
 .song-item.active {
     background-color: #383856;
 }
-.song-details .nameArtist{
+.song-details .nameArtist {
     font-size: 15px;
 }
 .song-item:hover {
@@ -356,7 +353,7 @@
     margin-right: 15px;
     object-fit: cover;
 }
-.song-thumbnail img{
+.song-thumbnail img {
     width: 70px;
     height: auto;
 }
@@ -2383,4 +2380,50 @@ body {
     height: 100%;
     object-fit: fill;
     border-radius: 8px;
+}
+
+/* ----------artist-css--------------- */
+.box-artist {
+    padding: 20px;
+    background-color: #121212;
+}
+
+.list-artist {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 20px;
+}
+
+.artist {
+    text-align: center;
+    background-color: #181818;
+    padding: 16px;
+    border-radius: 8px;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+    cursor: pointer;
+}
+
+.artist:hover {
+    transform: scale(1.05);
+    background-color: #282828;
+}
+
+.image-artist {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 12px;
+}
+
+.title-artist {
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 4px;
+}
+
+.text-artist {
+    font-size: 13px;
+    color: #b3b3b3;
 }
