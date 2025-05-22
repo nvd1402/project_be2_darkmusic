@@ -11,6 +11,7 @@ class LoginController extends Controller
     /**
      * Hiển thị form đăng nhập
      */
+
     public function showLoginForm()
     {
         return view('auth.login');
@@ -21,7 +22,6 @@ class LoginController extends Controller
      */
     public function login(Request $request)
     {
-        // Validate dữ liệu
         $credentials = $request->validate([
             'email'    => 'required|email',
             'password' => 'required',
@@ -30,26 +30,28 @@ class LoginController extends Controller
         $remember = $request->boolean('remember');
 
         if (Auth::attempt($credentials, $remember)) {
-            // Chống session fixation
             $request->session()->regenerate();
 
-            // Lấy user vừa đăng nhập
             $user = Auth::user();
 
-            // Nếu là Admin thì vào dashboard
+            // Kiểm tra trạng thái tài khoản
+            if ($user->status === 'inactive') {
+                Auth::logout();
+                return back()->withErrors(['email' => 'Tài khoản của bạn đã bị khóa.']);
+            }
+
             if ($user->role === 'Admin') {
                 return redirect()->route('admin.dashboard');
             }
 
-            // Nếu là User thì vào trang home frontend
             return redirect()->route('frontend.home');
         }
 
-        // Nếu login thất bại
         return back()
             ->withInput($request->only('email', 'remember'))
             ->withErrors(['email' => 'Email hoặc mật khẩu không đúng.']);
     }
+
 
     /**
      * Đăng xuất
