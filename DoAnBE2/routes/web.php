@@ -17,6 +17,9 @@ use App\Models\Artist;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AlbumController;
+
+use App\Http\Controllers\ListeningHistoryController;
+
 // === Public routes (guest only) ===
 Route::middleware('guest')->group(function () {
     Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -79,6 +82,7 @@ Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
     Route::resource('categories', CategoryController::class);
 
 
+        // ...
 
 
     // Ads & News (resource)
@@ -122,6 +126,10 @@ Route::group(['as' => 'frontend.'], function () {
 
     Route::get('/news/{id}', [App\Http\Controllers\NewsController::class, 'show'])->name('news_show');
 
+
+    Route::get('/history', [ListeningHistoryController::class, 'index'])
+        ->middleware('auth')
+        ->name('listening.history');
 
 });
 //Route::post('/song/{id}/toggle-like', [AdminController::class, 'toggleLike'])
