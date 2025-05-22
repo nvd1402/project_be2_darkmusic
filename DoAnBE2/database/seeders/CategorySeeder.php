@@ -10,16 +10,15 @@ class CategorySeeder extends Seeder
 {
     public function run(): void
     {
-      // Tắt kiểm tra khóa ngoại để truncate bảng
-    DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        // Tắt kiểm tra khóa ngoại để truncate bảng
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
-    DB::table('categories')->truncate();
+        DB::table('categories')->truncate();
 
-    // Bật lại kiểm tra khóa ngoại
-    DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        // Bật lại kiểm tra khóa ngoại
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         $categories = [
-<<<<<<< HEAD
             'Pop',
             'Rock',
             'Hip Hop',
@@ -32,15 +31,6 @@ class CategorySeeder extends Seeder
             'Nhạc Trịnh',
             'Nhạc Thiếu Nhi',
             'Nhạc Không Lời'
-=======
-            'Pop', 'Rock', 'Hip Hop', 'R&B', 'Rap', 'Jazz', 'Blues', 'Country', 'Classical',
-            'Electronic', 'Dance', 'Reggae', 'Folk', 'Metal', 'Alternative', 'Indie', 'Soul',
-            'Disco', 'Techno', 'House', 'Trance', 'Dubstep', 'K-Pop', 'J-Pop', 'Lo-fi', 'Chill',
-            'Ambient', 'EDM', 'Trap', 'Funk', 'Ballad', 'Acoustic', 'Opera', 'Instrumental',
-            'Punk', 'Grunge', 'Hard Rock', 'Garage', 'Ska', 'Progressive Rock', 'Bolero',
-            'Nhạc Trẻ', 'Nhạc Vàng', 'Nhạc Cách Mạng', 'Nhạc Trịnh', 'Nhạc Thiếu Nhi',
-            'Nhạc Remix', 'Nhạc EDM Việt', 'Nhạc Phật Giáo', 'Nhạc Không Lời'
->>>>>>> master
         ];
 
         $nhom = ['Nhạc Rock', 'Nhạc Remix', 'Nhạc Nổi Bật', 'Nhạc Mới']; // Các nhóm bạn cần
