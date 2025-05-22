@@ -218,7 +218,7 @@
                         </a>
                     </h3>
                 </div>
-                <img src="{{ asset('storage/' . $new->hinhanh) }}" alt="Hình ảnh" class="album-icon">
+                <img src="{{ asset('storage/artists/' . $new->hinhanh) }}" alt="Hình ảnh" class="album-icon">
                 
             </li>
         @endforeach
