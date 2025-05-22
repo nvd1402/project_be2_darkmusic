@@ -20,6 +20,25 @@ class CategoryController extends Controller
         return view('admin.categories.index', compact('categories'));
     }
 
+// Tìm kiếm thể loại theo từ khóa (trang admin)
+public function search(Request $request)
+{
+    $query = $request->input('query');
+
+    if (!$query) {
+        // Nếu không có từ khóa, trả về danh sách đầy đủ
+        return redirect()->route('admin.categories.index');
+    }
+
+    // Tìm theo cột 'tentheloai' hoặc 'nhom' thay vì 'theloai' (sai tên cột)
+    $categories = Category::where('tentheloai', 'like', "%{$query}%")
+        ->orWhere('nhom', 'like', "%{$query}%")
+        ->get();
+
+    return view('admin.categories.index', compact('categories'));
+}
+
+
     public function create()
     {
         $nhoms = $this->nhoms; // truyền danh sách nhóm

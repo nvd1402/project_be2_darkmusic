@@ -7,32 +7,48 @@ use App\Models\News;
 
 class NewsController extends Controller
 {
-    // Hiển thị danh sách tin tức
+    // Hiển thị tất cả tin tức (trang admin)
     public function index()
     {
-        $news = News::all();  // Lấy tất cả tin tức từ database
-        return view('admin.news.index', compact('news'));  // Trả về view của admin với dữ liệu tin tức
+        $news = News::all();
+        return view('admin.news.index', compact('news'));
     }
 
-    // Hiển thị form tạo mới tin tức
+    // Tìm kiếm tin tức theo từ khóa (trang admin)
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+
+        if (!$query) {
+            // Nếu không có từ khóa, trả về danh sách đầy đủ
+            return redirect()->route('admin.news.index');
+        }
+
+        $news = News::where('tieude', 'like', "%{$query}%")
+                    ->orWhere('donvidang', 'like', "%{$query}%")
+                    ->get();
+
+        return view('admin.news.index', compact('news'));
+    }
+
+    // Các hàm create, store, edit, update, destroy bạn giữ nguyên như hiện tại
+
     public function create()
     {
-        return view('admin.news.create'); // Đảm bảo đường dẫn view đúng
+        return view('admin.news.create');
     }
 
-    // Lưu tin tức mới vào database
     public function store(Request $request)
     {
-        // Xác thực dữ liệu
         $request->validate([
             'tieude' => [
                 'required', 
                 'max:1000', 
-                'regex:/^[\p{L}\s0-9][\p{L}\s0-9]*$/u'  // Không cho phép ký tự đặc biệt ở đầu
+                'regex:/^[\p{L}\s0-9][\p{L}\s0-9]*$/u'
             ],
-            'noidung' => 'required',  // Nội dung là bắt buộc
-            'donvidang' => 'required', // Đơn vị đăng là bắt buộc
-            'hinhanh' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',  // Kiểm tra hình ảnh
+            'noidung' => 'required',
+            'donvidang' => 'required',
+            'hinhanh' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ], [
             'tieude.required' => 'Vui lòng nhập tiêu đề.',
             'tieude.max' => 'Tiêu đề không được vượt quá :max ký tự.',
@@ -43,48 +59,39 @@ class NewsController extends Controller
             'hinhanh.mimes' => 'Hình ảnh phải có định dạng: jpeg, png, jpg, gif, svg.',
             'hinhanh.max' => 'Hình ảnh không được vượt quá :max KB.',
         ]);
-    
-        // Lưu tin tức mới
+
         $news = new News();
         $news->tieude = $request->tieude;
         $news->noidung = $request->noidung;
         $news->donvidang = $request->donvidang;
-    
+
         if ($request->hasFile('hinhanh')) {
-            // Nếu có file hình ảnh thì lưu nó
             $imagePath = $request->file('hinhanh')->store('news_images', 'public');
             $news->hinhanh = $imagePath;
         }
-    
+
         $news->save();
-    
+
         return redirect()->route('admin.news.index')->with('success', 'Tin tức đã được thêm thành công!');
     }
-    
 
-    // Hiển thị form chỉnh sửa tin tức
     public function edit($id)
     {
         $news = News::findOrFail($id);
-        return view('admin.news.edit', compact('news'));  // Trả về view chỉnh sửa tin tức
+        return view('admin.news.edit', compact('news'));
     }
 
-    // Cập nhật tin tức
     public function update(Request $request, $id)
     {
-
-
-        
-        // Xác thực dữ liệu với các thông báo lỗi
         $request->validate([
             'tieude' => [
                 'required',
                 'max:1000',
-                'regex:/^[\p{L}\s0-9]+$/u', // Không cho phép ký tự đặc biệt
+                'regex:/^[\p{L}\s0-9]+$/u',
             ],
-            'noidung' => 'required', // Nội dung là bắt buộc
-            'donvidang' => 'required|max:255', // Đơn vị đăng là bắt buộc và có độ dài tối đa là 255 ký tự
-            'hinhanh' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Hình ảnh có thể có hoặc không
+            'noidung' => 'required',
+            'donvidang' => 'required|max:255',
+            'hinhanh' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ], [
             'tieude.required' => 'Vui lòng nhập tiêu đề.',
             'tieude.max' => 'Tiêu đề không được vượt quá 32 ký tự.',
@@ -96,48 +103,39 @@ class NewsController extends Controller
             'hinhanh.mimes' => 'Hình ảnh phải có định dạng: jpeg, png, jpg, gif, svg.',
             'hinhanh.max' => 'Hình ảnh không được vượt quá 2MB.',
         ]);
-    
-        // Tìm kiếm tin tức theo ID
+
         $news = News::findOrFail($id);
-    
-        // Cập nhật các trường thông tin tin tức
         $news->tieude = $request->tieude;
         $news->noidung = $request->noidung;
         $news->donvidang = $request->donvidang;
-    
+
         if ($request->hasFile('hinhanh')) {
-            // Nếu có hình ảnh mới, lưu nó
             $imagePath = $request->file('hinhanh')->store('news_images', 'public');
             $news->hinhanh = $imagePath;
         }
-    
-        $news->save();  // Lưu bản ghi đã cập nhật vào cơ sở dữ liệu
-    
+
+        $news->save();
+
         return redirect()->route('admin.news.index')->with('success', 'Tin tức đã được cập nhật thành công!');
     }
 
-    // Xóa tin tức
     public function destroy($id)
     {
-        // Tìm tin tức theo ID và xóa nó
-        $news = News::findOrFail($id);  // Tìm tin tức theo ID
-        $news->delete();  // Xóa tin tức khỏi cơ sở dữ liệu
-    
-        return redirect()->route('admin.news.index')->with('success', 'Đã xóa tin tức thành công!');  // Quay lại danh sách tin tức với thông báo thành công
+        $news = News::findOrFail($id);
+        $news->delete();
+
+        return redirect()->route('admin.news.index')->with('success', 'Đã xóa tin tức thành công!');
     }
-public function show($id)
-{
-    $news = News::findOrFail($id);
 
-    // Lấy 5 tin khác, trừ tin đang xem
-    $relatedNews = News::where('id', '!=', $news->id)
-                        ->latest()
-                        ->take(5)
-                        ->get();
+    public function show($id)
+    {
+        $news = News::findOrFail($id);
 
-    return view('frontend.news_show', compact('news', 'relatedNews'));
-}
+        $relatedNews = News::where('id', '!=', $news->id)
+                            ->latest()
+                            ->take(5)
+                            ->get();
 
-
-
+        return view('frontend.news_show', compact('news', 'relatedNews'));
+    }
 }
