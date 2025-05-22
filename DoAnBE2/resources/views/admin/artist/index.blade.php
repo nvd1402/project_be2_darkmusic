@@ -27,7 +27,7 @@
     </main>
 </div>
     <script src="{{ asset('js/script.js') }}"></script>
-    <script type='text/javascript' src="{{ asset('assets/frontend/js/adminSong.js') }}"></script>
+    <script type='text/javascript' src="{{ asset('assets/frontend/js/artist.js') }}"></script>
 </body>
 
 </html>

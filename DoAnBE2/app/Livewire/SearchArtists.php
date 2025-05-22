@@ -13,10 +13,16 @@ class SearchArtists extends Component
     {
         $artists = [];
 
-        if (strlen($this->query) > 0) {
-            $artists = Artist::where('name_artist', 'like', '%' . $this->query . '%')->get();
+        $trimmedQuery = trim($this->query);
+
+        if (strlen($trimmedQuery) > 0) {
+            $artists = Artist::where('name_artist', 'like', '%' . $trimmedQuery . '%')
+                ->orWhereHas('category', function ($q) {
+                    $q->where('tentheloai', 'like', '%' . $this->query . '%');
+                })
+                ->get();
         } else {
-            $artists = Artist::paginate(10);
+            $artists = Artist::all();
         }
 
         return view('livewire.search-artists', compact('artists'));

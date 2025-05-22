@@ -182,7 +182,18 @@
                     @endforelse
                 </div> {{-- Đóng div.recommended-songs-scroll-container --}}
             </div>
+        </div>
 
+        <div class="box-artist">
+            <div class="list-artist">
+                @foreach ($artists as $artist)
+                    <div class="artist">
+                        <img src="{{ asset('storage/artists/' . $artist->image_artist) }}" alt="{{ $artist->name_artist }}" class="image-artist">
+                        <h3 class="title-artist">{{ $artist->name_artist }}</h3>
+                        <span class="text-artist">Artist</span>
+                    </div>
+                @endforeach
+            </div>
         </div>
 
     </main>
@@ -202,9 +213,6 @@
 <script type='text/javascript' src="{{ asset('assets/frontend/js/script.js') }}"></script>
 <script type='text/javascript' src="{{ asset('assets/frontend/js/audio-controls.js') }}"></script>
 <script src="{{ asset('assets/frontend/js/handle-ad.js') }}"></script>
-<script type='text/javascript' src="{{ asset('assets/frontend/js/songs.js') }}"></script>
-<script>
 
-</script>
 </body>
 </html>

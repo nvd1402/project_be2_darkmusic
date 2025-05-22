@@ -118,7 +118,7 @@
     }
 
     .song-info a {
-        color: #90caf9;
+        color:rgb(0, 0, 0);
         text-decoration: none;
     }
 
@@ -179,6 +179,100 @@
         text-align: center;
         font-weight: bold;
     }
+    .comment-section {
+        background-color: #1e1e2f;
+        padding: 20px;
+        border-radius: 12px;
+        margin-top: 50px;
+        color: #ddd;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+
+    .comment-section h2 {
+        color: #ffcc70;
+        margin-bottom: 20px;
+        font-weight: 700;
+    }
+
+    .alert {
+        padding: 10px 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-weight: 600;
+    }
+    .alert-success {
+        background-color: #27ae60;
+        color: #fff;
+    }
+    .alert-danger {
+        background-color: #c0392b;
+        color: #fff;
+    }
+
+    .comment-form textarea {
+        width: 100%;
+        background-color: #121212;
+        color: #eee;
+        border: 1px solid #444;
+        border-radius: 8px;
+        padding: 12px;
+        font-size: 16px;
+        resize: vertical;
+        transition: border-color 0.3s ease;
+    }
+    .comment-form textarea:focus {
+        border-color: #00b894;
+        outline: none;
+        background-color: #161616;
+    }
+
+    .comment-form button {
+        margin-top: 12px;
+        background-color: #00b894;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 12px 20px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    .comment-form button:hover {
+        background-color: #019875;
+    }
+
+    .comment-list {
+        margin-top: 30px;
+    }
+
+    .comment-item {
+        background-color: #292946;
+        padding: 15px 20px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    }
+
+    .comment-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+        font-size: 14px;
+        color: #bbb;
+    }
+
+    .comment-item p {
+        margin: 0;
+        font-size: 16px;
+        line-height: 1.5;
+        color: #ddd;
+        white-space: pre-wrap;
+    }
+
+    a {
+        color:rgb(255, 255, 255);
+        text-decoration: none;
+    }
 </style>
 
 </head>
@@ -188,12 +282,17 @@
 
      <main>
         <!-- Banner -->
-        <div class="banner">Banner quảng cáo hoặc thông báo</div>
-
-     
-
-
-
+        <div class="banner">@if ($bannerAd)
+    <div class="banner my-4 p-3 rounded shadow bg-light text-center">
+        <a href="{{ $bannerAd->link_url }}" target="_blank" style="text-decoration: none; color: inherit;">
+            <img src="{{ asset('storage/' . $bannerAd->media_type) }}"
+                 alt="{{ $bannerAd->name }}"
+                 style="max-width: 100%; max-height: 200px; object-fit: cover; border-radius: 8px;">
+            <p class="mt-2">{{ $bannerAd->description }}</p>
+        </a>
+    </div>
+@endif
+</div>
 
 
 <div class="content-wrapper">
@@ -201,7 +300,7 @@
     <div class="news-content">
         <h1 class="news-title">{{ $news->tieude }}</h1>
         <div class="news-unit">Đơn vị đăng: {{ $news->donvidang }}</div>
-        <img src="{{ asset('storage/' . $news->hinhanh) }}" alt="Hình ảnh tin tức" class="news-image">
+        <img src="{{ asset('storage/artists/' . $news->hinhanh) }}" alt="Hình ảnh tin tức" class="news-image">
         <div class="news-body">{!! nl2br(e($news->noidung)) !!}</div>
         <a href="{{ route('frontend.news') }}" class="btn-back">← Quay lại danh sách tin tức</a>
     </div>
@@ -226,22 +325,51 @@
 </div>
 
 
-        <!-- Bình luận -->
-        <div class="comment-section">
-            <h2>Bình luận</h2>
-            <form action="#" method="POST" class="comment-form">
-                <textarea name="comment" placeholder="Viết bình luận..." rows="4"></textarea>
-                <button type="submit">Gửi bình luận</button>
-            </form>
+<hr>
+
+<div class="comment-section">
+    <h2>Bình luận</h2>
+
+    {{-- Hiển thị thông báo --}}
+    @if(session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+
+    @if(session('error'))
+        <div class="alert alert-danger">{{ session('error') }}</div>
+    @endif
+
+    {{-- Form bình luận (chỉ hiện nếu đã đăng nhập) --}}
+    @auth
+<form action="{{ route('frontend.comment.store', $news->id) }}" method="POST" class="comment-form">
+    @csrf
+    <textarea name="noidung" rows="4" placeholder="Viết bình luận..." required></textarea>
+    <button type="submit">Gửi bình luận</button>
+</form>
+
+
+
+    @else
+    <p><a href="{{ route('login') }}">Đăng nhập</a> để bình luận.</p>
+    @endauth
+
+    {{-- Danh sách bình luận --}}
+    <div class="comment-list">
+        @foreach($news->comments()->latest()->get() as $comment)
+        <div class="comment-item">
+            <div class="comment-header">
+                <strong>{{ $comment->user ? $comment->user->name : 'Khách' }}</strong>
+                <small>{{ $comment->created_at->format('d/m/Y H:i') }}</small>
+            </div>
+            <p>{{ $comment->noidung }}</p>
         </div>
-    </main>
+        @endforeach
+    </div>
 </div>
+
+
+
 
 <script src="{{ asset('js/script.js') }}"></script>
 </body>
 </html>
-
-
-
-
-
