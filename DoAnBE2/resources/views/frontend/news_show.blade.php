@@ -348,6 +348,7 @@
 </form>
 
 
+
     @else
     <p><a href="{{ route('login') }}">Đăng nhập</a> để bình luận.</p>
     @endauth
