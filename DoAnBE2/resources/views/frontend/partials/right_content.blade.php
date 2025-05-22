@@ -14,10 +14,19 @@
 
     <div class="profile">
         <div class="user">
+            {{-- Kiểm tra nếu người dùng chưa đăng nhập --}}
+            @guest
+                <a href="{{ route('login') }}" class="right" style="background-color: rgb(37, 37, 45); text-decoration: none; display: flex; align-items: center; justify-content: center; padding: 10px 15px; border-radius: 8px;">
+                    <h5 style="color: #e0e0e0; margin: 0;">Nâng Cấp VIP</h5>
+                </a>
+            @endguest
 
-            <button class="right" style="background-color: rgb(37, 37, 45);">
-                <h5 style="">Nâng Cấp VIP</h5>
-            </button>
+            {{-- Kiểm tra nếu người dùng đã đăng nhập --}}
+            @auth
+                <a href="{{ route('frontend.vip.register') }}" class="right" style="background-color: rgb(37, 37, 45); text-decoration: none; display: flex; align-items: center; justify-content: center; padding: 10px 15px; border-radius: 8px;">
+                    <h5 style="color: #e0e0e0; margin: 0;">Nâng Cấp VIP</h5>
+                </a>
+            @endauth
         </div>
         <i class='bx bxs-bell'></i>
         <i class='bx bxs-cog' ></i>
