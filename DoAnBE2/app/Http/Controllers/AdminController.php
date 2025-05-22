@@ -13,6 +13,48 @@ use Illuminate\Support\Facades\Storage;
 class AdminController extends Controller
 {
     public $data = [];
+    public function index()
+    {
+        $songs = Song::with(['artist', 'category'])->get();
+
+        $user = auth()->user();
+        $userLikedSongIds = $user ? $user->likedSongs->pluck('id')->toArray() : [];
+
+        return view('frontend.song', compact('songs', 'userLikedSongIds'));
+    }
+    public function showLikedSongs()
+    {
+        $user = auth()->user();  // hoặc lấy user bằng cách khác
+
+        if (!$user) {
+            return redirect()->route('login');  // hoặc xử lý khi chưa đăng nhập
+        }
+
+        $likedSongs = $user->likedSongs()->get();
+
+        return view('liked_songs', compact('likedSongs'));
+    }
+    public function toggleLike($id)
+    {
+        $user = auth()->user();
+
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $action = request('action');
+
+        if ($action === 'like') {
+            $user->likedSongs()->syncWithoutDetaching([$id]);
+        } elseif ($action === 'unlike') {
+            $user->likedSongs()->detach($id);
+        }
+
+        return response()->json(['message' => 'Thành công']);
+    }
+
+
+
 
     // Dashboard
     public function adminindex()

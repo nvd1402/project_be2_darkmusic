@@ -1,106 +1,143 @@
+
+
 <!DOCTYPE html>
-<html lang="en">
-<head>@include('frontend.partials.head') </head>
-<body class="text-light">>
+<html lang="vi">
+<head>
+    @include('frontend.partials.head')
+    <title>Tin tức</title>
+    <style>
+
+
+
+
+.container main {
+    width: 150%;
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.category-section {
+    background-color: #1e1e2f;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    margin-top: 30px;
+}
+
+.category-title {
+    font-size: 28px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #ffcc00;
+}
+
+.category-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.category-item a {
+    display: block;
+    background-color: #292942;
+    padding: 15px 20px;
+    border-radius: 10px;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.category-item a:hover {
+    background-color: #3e3e60;
+    transform: translateY(-3px);
+}
+
+
+.category-section {
+    background-color: #1e1e2f;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    margin-top: 30px;
+}
+
+.category-title {
+    font-size: 28px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #ffcc00;
+}
+
+.category-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.category-item a {
+    display: block;
+    background-color: #292942;
+    padding: 15px 20px;
+    border-radius: 10px;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.category-item a:hover {
+    background-color: #3e3e60;
+    transform: translateY(-3px);
+}
+
+    </style>
+</head>
+<body class="text-light">
 <div class="container">
-    <!-- Sidebar -->
     @include('frontend.partials.sidebar')
-    <main>
-        <!-- navLink -->
-        <header>
-            <div class="nav-links">
-                <button class="menu-btn" id="menu-open">
-                    <i class='bx bx-menu'></i>
-                </button>
+   <main>
+            <header>
+                <div class="nav-links">
+                    <button class="menu-btn" id="menu-open">
+                        <i class='bx bx-menu'></i>
+                    </button>
+                </div>
+                <div class="search">
+                    <i class='bx bx-search-alt-2'></i>
+                    <input type="text" placeholder="Tìm kiếm thể loại...">
+                </div>
+            </header>
 
-            </div>
+            <!-- Danh sách thể loại -->
+            <section class="category-section">
+                <h2 class="category-title">Danh sách thể loại</h2>
+                <ul class="category-list">
+                    @foreach($categories as $category)
+                       <li class="category-item">
+    <a href="{{ route('frontend.category_show', ['id' => $category->id]) }}" style="color: inherit; text-decoration: none;">
+        {{ $category->tentheloai }}
+    </a>
+</li>
 
-            <div class="search">
-                <i class='bx bx-search-alt-2'></i>
-                <input type="text" placeholder="type here to search">
-            </div>
-        </header>
-        <!-- Làm trong này -->
-        <section class="genre-section">
-            <div class="genre-tabs">
-                <button class="genre-btn active">Pop</button>
-                <button class="genre-btn">Rap</button>
-                <button class="genre-btn">Indie</button>
-                <button class="genre-btn">Ballad</button>
-                <button class="genre-btn">Rock</button>
-                <button class="genre-btn">R&B</button>
-                <button class="genre-btn">Jazz</button>
-            </div>
-
-            <div class="genre-content">
-                <h2 class="genre-title">Pop</h2>
-                <ul class="song-list">
-                    <li class="song-item">
-                        <span class="rank">1</span>
-                        <img src="./assets/song1.jpg" alt="Ai Ma Biết Được I Tình" class="album-icon">
-                        <div class="song-info">
-                            <h3>Ai Ma Biết Được I Tình</h3>
-                            <p>Soobin Hoàng Sơn</p>
-                        </div>
-                        <button class="play-btn"><i class='bx bx-play'></i></button>
-                        <button class="like-btn"><i class='bx bx-heart'></i></button>
-                        <button class="add-btn"><i class='bx bx-plus'></i></button>
-                    </li>
-                    <li class="song-item">
-                        <span class="rank">2</span>
-                        <img src="./assets/song2.jpg" alt="Bật Nổ Lên" class="album-icon">
-                        <div class="song-info">
-                            <h3>Bật Nổ Lên</h3>
-                            <p>Soobin Hoàng Sơn</p>
-                        </div>
-                        <button class="play-btn"><i class='bx bx-play'></i></button>
-                        <button class="like-btn"><i class='bx bx-heart'></i></button>
-                        <button class="add-btn"><i class='bx bx-plus'></i></button>
-                    </li>
-                    <li class="song-item">
-                        <span class="rank">3</span>
-                        <img src="./assets/song3.jpg" alt="Beautiful Nightmare (Interlude)" class="album-icon">
-                        <div class="song-info">
-                            <h3>Beautiful Nightmare (Interlude)</h3>
-                            <p>Amee</p>
-                        </div>
-                        <button class="play-btn"><i class='bx bx-play'></i></button>
-                        <button class="like-btn"><i class='bx bx-heart'></i></button>
-                        <button class="add-btn"><i class='bx bx-plus'></i></button>
-                    </li>
-                    <li class="song-item">
-                        <span class="rank">4</span>
-                        <img src="./assets/song4.jpg" alt="Bình Minh Rơi Đằng Tây" class="album-icon">
-                        <div class="song-info">
-                            <h3>Bình Minh Rơi Đằng Tây</h3>
-                            <p>14 Casper & Bon Nghiêm</p>
-                        </div>
-                        <button class="play-btn"><i class='bx bx-play'></i></button>
-                        <button class="like-btn"><i class='bx bx-heart'></i></button>
-                        <button class="add-btn"><i class='bx bx-plus'></i></button>
-                    </li>
-                    <li class="song-item">
-                        <span class="rank">5</span>
-                        <img src="./assets/song5.jpg" alt="Cuộc Gọi Lúc Nửa Đêm" class="album-icon">
-                        <div class="song-info">
-                            <h3>Cuộc Gọi Lúc Nửa Đêm</h3>
-                            <p>Amee</p>
-                        </div>
-                        <button class="play-btn"><i class='bx bx-play'></i></button>
-                        <button class="like-btn"><i class='bx bx-heart'></i></button>
-                        <button class="add-btn"><i class='bx bx-plus'></i></button>
-                    </li>
-
+                    @endforeach
                 </ul>
-            </div>
-        </section>
-    </main>
-
-    @include('frontend.partials.right_content')
-
-</div>
+            </section>
+        </main>
 </div>
 
-<script type='text/javascript' src="script.js"></script>
+<script src="{{ asset('js/script.js') }}"></script>
 </body>
 </html>
