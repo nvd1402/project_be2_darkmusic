@@ -17,6 +17,7 @@ use App\Models\Artist;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AlbumController;
+use App\Http\Controllers\CommentsController;
 
 // === Public routes (guest only) ===
 Route::middleware('guest')->group(function () {
@@ -45,6 +46,8 @@ Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
     Route::get('news/search', [NewsController::class, 'search'])->name('news.search');
     Route::get('categories/search', [CategoryController::class, 'search'])->name('categories.search');
     Route::get('album/search', [AlbumController::class, 'search'])->name('album.search');
+    Route::get('comments/search', [AlbumController::class, 'search'])->name('comments.search');
+
 
 
 
@@ -78,13 +81,19 @@ Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
 
     // Categories CRUD (dùng resource)
     Route::resource('categories', CategoryController::class);
-    
+
+
+
+
+  
+
 
 
 
     // Ads & News (resource)
     Route::resource('ad', AdController::class);
     Route::resource('news', NewsController::class);
+    Route::post('/news/{id}/comment', [CommentController::class, 'store'])->name('user.comments.store');
 
 
     // Doanh thu
@@ -103,10 +112,23 @@ Route::put('album/update/{id}', [AlbumController::class, 'update'])->name('album
 Route::delete('album/{id}', [AlbumController::class, 'destroy'])->name('album.destroy');
 });
 
+
+// Hiển thị danh sách bình luận (admin)
+Route::get('/admin/comments', [CommentsController::class, 'index'])->name('admin.comments.index');
+Route::get('/admin/comments/create', [CommentsController::class, 'create'])->name('admin.comments.create');
+Route::post('/admin/comments/store', [CommentsController::class, 'store'])->name('admin.comments.store');
+Route::get('/admin/comments/edit/{id}', [CommentsController::class, 'edit'])->name('admin.comments.edit');
+Route::put('/admin/comments/update/{id}', [CommentsController::class, 'update'])->name('admin.comments.update');
+Route::delete('/admin/comments/{id}', [CommentsController::class, 'destroy'])->name('admin.comments.destroy');
+
+
 // === Frontend (public) routes ===
 Route::group(['as' => 'frontend.'], function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
-    Route::get('category/{slug}', [HomeController::class, 'category'])->name('category');
+Route::get('category', [HomeController::class, 'category'])->name('category'); // Danh sách nhóm thể loại
+Route::get('category/{tentheloai}', [HomeController::class, 'categoryDetail'])->name('category.detail'); // Chi tiết thể loại
+
+
     Route::get('song/{slug}', [HomeController::class, 'song'])->name('song');
     Route::get('rankings', [HomeController::class, 'rankings'])->name('rankings');
     Route::get('news', [HomeController::class, 'news'])->name('news');
@@ -119,10 +141,18 @@ Route::group(['as' => 'frontend.'], function () {
 
     Route::get('/news', [HomeController::class, 'news'])->name('news');
     Route::get('/category', [HomeController::class, 'category'])->name('category');
-    Route::get('/category/{id}', [CategoryController::class, 'show'])->name('category_show');
+  
 
     Route::get('/news/{id}', [App\Http\Controllers\NewsController::class, 'show'])->name('news_show');
 
+
+
+
+
+Route::get('/category/{tentheloai}', [CategoryController::class, 'show'])->name('category_show');
+
+
+    
 
 });
 
