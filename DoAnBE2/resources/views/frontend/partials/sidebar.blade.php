@@ -42,7 +42,7 @@
             </li>
             <li>
                 <i class='bx bx-podcast' ></i>
-                <a href="{{ route('frontend.favorite')}}">Yêu Thích</a>
+                <a>Yêu thích</a>
                 {{-- Bạn cần định nghĩa route và controller cho Yêu thích nếu muốn liên kết --}}
             </li>
             <li>
