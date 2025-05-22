@@ -55,7 +55,7 @@
 
                 <div class="form-group full">
                     <label for="file_amthanh">Tệp file âm thanh (*)</label>
-                    <input style="width: 100%" type="file" id="file_amthanh" name="file_amthanh" accept="audio/*">
+                    <input style="width: 810px" type="file" id="file_amthanh" name="file_amthanh" accept="audio/*">
                     <small>Chỉ chấp nhận file mp3, wav, ogg.</small>
                     @if($song->file_amthanh)
                         <div style="margin-top: 10px;">
@@ -70,7 +70,7 @@
 
                 <div class="form-group fullinput">
                     <label for="anh_daidien">Tệp file ảnh đại diện</label>
-                    <input style="width: 100%" type="file" id="anh_daidien" name="anh_daidien" accept="images/*">
+                    <input style="width: 810px" type="file" id="anh_daidien" name="anh_daidien" accept="images/*">
                     <small>Chỉ chấp nhận ảnh định dạng jpg, png, tối đa 2MB.</small>
                     @if($song->anh_daidien)
                         <div>

@@ -11,6 +11,7 @@
 
 /* General Styles */
 
+
 /*end thanh phan trang*/
 .news-list {
     margin-top: 20px;
@@ -412,11 +413,10 @@ td {
 
 .flex-container {
     display: grid;
-
     grid-template-columns: repeat(4, 1fr); /* 3 cột */
+    margin-left: 100px;
     margin-top: 10px;
-    margin-left: -50px;
-    width: 30vw;
+    width: 50vw;
     height: 60vh;
 }
 .flex-container .boxPageAdmin {
