@@ -19,7 +19,20 @@ class HomeController extends Controller
     public function index(): View
     {
         $ads = Ad::where('is_active', true)->latest()->get();
-        return view('frontend.index', compact('ads'));
+
+        //de xuat: ducanh
+        $latestSong = Song::with(['artist', 'category'])
+        ->orderBy('created_at', 'desc')
+            ->first();
+
+        $recommendedSongs = Song::with(['artist', 'category'])
+        ->orderBy('created_at', 'desc')
+            ->skip(1)
+            ->take(4)
+            ->get();
+
+
+        return view('frontend.index', compact('ads', 'latestSong', 'recommendedSongs'));
     }
 
 
