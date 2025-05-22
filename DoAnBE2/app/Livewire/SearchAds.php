@@ -14,11 +14,9 @@ class SearchAds extends Component
     {
         $ads = [];
 
-        $trimmedQuery = trim($this->query);
-
-        if (!empty($trimmedQuery)) {
-            $ads = Ad::where('name', 'like', '%' . $trimmedQuery . "%")
-                ->orWhere('description', 'like', '%' . $trimmedQuery . "%")
+        if (!empty($this->query)) {
+            $ads = Ad::where('name', 'like', '%' . $this->query . "%")
+                ->orWhere('description', 'like', '%' . $this->query . "%")
                 ->get();
         } else {
             $ads = Ad::latest()->paginate(10);

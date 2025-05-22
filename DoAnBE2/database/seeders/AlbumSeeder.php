@@ -10,12 +10,6 @@ class AlbumSeeder extends Seeder
 {
     public function run(): void
     {
-            DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-
-    DB::table('albums')->truncate();
-
-    // Bật lại kiểm tra khóa ngoại
-    DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         $albumNames = [
             'Mùa Hè Bất Tận',
             'Lặng Lẽ Yêu',
