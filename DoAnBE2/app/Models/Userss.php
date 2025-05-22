@@ -18,6 +18,15 @@ class Userss extends Authenticatable
     // Nếu cần, xác định kiểu và auto-increment
     public $incrementing = true;
     protected $keyType = 'int';
+    public function likedSongs()
+    {
+        return $this->belongsToMany(
+            Song::class,          // Model liên quan
+            'song_user_likes',    // Tên bảng trung gian
+            'user_id',            // Tên cột khóa ngoại trên bảng trung gian trỏ về user
+            'song_id'             // Tên cột khóa ngoại trên bảng trung gian trỏ về song
+        );
+    }
 
     // Tạo cho Auth đúng key name
     public function getKeyName()
@@ -46,5 +55,6 @@ class Userss extends Authenticatable
         'password',
         'remember_token',
     ];
+
 }
 

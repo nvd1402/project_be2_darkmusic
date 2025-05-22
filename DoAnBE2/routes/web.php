@@ -78,7 +78,7 @@ Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
 
     // Categories CRUD (dùng resource)
     Route::resource('categories', CategoryController::class);
-    
+
 
 
 
@@ -110,9 +110,9 @@ Route::group(['as' => 'frontend.'], function () {
     Route::get('song/{slug}', [HomeController::class, 'song'])->name('song');
     Route::get('rankings', [HomeController::class, 'rankings'])->name('rankings');
     Route::get('news', [HomeController::class, 'news'])->name('news');
-    
+
     Route::get('news/{id}', [NewsController::class, 'show'])->name('news.show');
-     
+
 
     Route::get('/song/{slug}', [HomeController::class, 'song'])->name('song');
     Route::get('/rankings', [HomeController::class, 'rankings'])->name('rankings');
@@ -125,4 +125,11 @@ Route::group(['as' => 'frontend.'], function () {
 
 
 });
+//Route::post('/song/{id}/toggle-like', [AdminController::class, 'toggleLike'])
+//    ->name('song.toggleLike')
+//    ->middleware('auth');
+Route::post('/song/{id}/like', [AdminController::class, 'toggleLike'])->name('song.like');
+
+
+
 

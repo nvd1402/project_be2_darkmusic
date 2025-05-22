@@ -1,7 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     @include('frontend.partials.head')
+    <style>
+        .heart-float {
+            position: absolute;
+            animation: floatUp 1s ease-out;
+            font-size: 18px;
+            color: red;
+            pointer-events: none;
+        }
+
+        @keyframes floatUp {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-40px) scale(1.5);
+            }
+        }
+    </style>
 </head>
 <body class="text-light">
 <div class="container">
@@ -43,6 +64,7 @@
                                 <span style="text-align: center; font-size:15px;">{{ $song->category ? $song->category->tentheloai : 'Không có thể loại' }}</span>
                             </div>
 
+
                             <div class="song-audio">
                                 <audio id="audio-{{ $song->id }}" src="{{ asset('storage/'. $song->file_amthanh) }}"></audio>
                                 <div class="audio-controls">
@@ -51,7 +73,15 @@
                                     <span class="audio-duration">0:00 / 0:00</span>
                                 </div>
                             </div>
-                        </li>
+                            <div>
+                                @php
+                                    $likedSongs = $userLikedSongIds ?? [];
+                                @endphp
+
+                                <button class="btn-like" data-song-id="{{ $song->id }}" style="background: transparent; border: none; font-size: 24px; color: white; cursor: pointer;">
+                                    {{ in_array($song->id, $likedSongs) ? '♥' : '♡' }}
+                                </button>
+                            </div>
                     </div>
                 @endforeach
             </div>

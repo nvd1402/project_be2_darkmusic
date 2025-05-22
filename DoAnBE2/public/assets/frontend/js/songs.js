@@ -139,6 +139,54 @@
             return minutes + ':' + formattedSeconds;
         }
     });
+        document.querySelectorAll('.btn-like').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            const songId = this.dataset.songId;
+            const isLiked = this.textContent.trim() === '♥';
+            const action = isLiked ? 'unlike' : 'like';
+
+            fetch(`/song/${songId}/like`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({ action })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not OK');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Toggle icon
+                    this.textContent = isLiked ? '♡' : '♥';
+                    this.style.color = isLiked ? 'gray' : 'gray';
+
+                    // Hiệu ứng trái tim bay
+                    if (!isLiked) {
+                        const heart = document.createElement('span');
+                        heart.textContent = '❤';
+                        heart.classList.add('heart-float');
+                        this.appendChild(heart);
+
+                        setTimeout(() => {
+                            heart.remove();
+                        }, 1000);
+                    }
+                })
+                .catch(error => {
+                    alert('Lỗi kết nối hoặc xử lý. Vui lòng thử lại.');
+                    console.error('Fetch error:', error);
+                });
+        });
+    });
+
+
+
 
 
 
