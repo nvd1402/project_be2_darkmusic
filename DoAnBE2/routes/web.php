@@ -86,22 +86,11 @@ Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
     // Categories CRUD (dùng resource)
     Route::resource('categories', CategoryController::class);
 
-    //History
-    Route::get('/listening-history', [ListeningHistoryController::class, 'index'])->name('listening.history');
-
-    Route::post('/listening-history/save', [ListeningHistoryController::class, 'save'])
-        ->middleware('auth')
-        ->name('listening.history.save');
-
-    Route::delete('/listening-history/{id}', [ListeningHistoryController::class, 'destroy'])->name('listening.history.destroy');
-
-    Route::post('/listening-history/clear-all', [ListeningHistoryController::class, 'clearAll'])->name('listening.history.clearAll');
 
 
 
 
-
-// Ads & News (resource)
+    // Ads & News (resource)
     Route::resource('ad', AdController::class);
     Route::resource('news', NewsController::class);
 
