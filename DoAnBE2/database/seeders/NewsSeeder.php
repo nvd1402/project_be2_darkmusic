@@ -10,6 +10,13 @@ class NewsSeeder extends Seeder
 {
     public function run(): void
     {
+
+            DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+
+    DB::table('news')->truncate();
+
+    // Bật lại kiểm tra khóa ngoại
+    DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         $titles = [
             'Lễ hội âm nhạc mùa hè chính thức trở lại',
             'Ca sĩ A ra mắt album mới gây bão',
