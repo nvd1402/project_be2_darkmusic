@@ -44,12 +44,6 @@
                 <i class='bx bxs-heart'></i>
                 <a href="{{ route('admin.revenue.index') }}">Quản lý doanh thu</a>
             </li>
-                        <li>
-
-                            <i class='bx bxs-comment'></i>
-                
-                <a href="{{ route('admin.comments.index') }}">Quản lý bình luận </a>
-            </li>
             <li>
                 <i class='bx bxs-folder'></i>
                 <a href="#">Local</a>

@@ -16,9 +16,4 @@ class News extends Model
         'donvidang',
         'hinhanh',
     ];
-    public function comments()
-{
-    return $this->hasMany(Comment::class);
-}
-
 }

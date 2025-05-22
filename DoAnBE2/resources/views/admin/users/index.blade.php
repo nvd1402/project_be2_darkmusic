@@ -48,10 +48,10 @@
                         <td><img class="avatar" src="{{ asset('storage/' . $user->avatar) }}" alt="avatar"></td>
                         <td>{{ $user->role }}</td>
                         <td>
-                            <a href="{{ route('admin.users.edit', ['id' => $user->user_id]) }}" class="btn edit">Sửa</a>
+                            <a href="{{ route('admin.users.edit', ['user' => $user->user_id]) }}" class="btn edit">Sửa</a>
 
                             <!-- Form xác nhận xóa -->
-                            <form action="{{ route('admin.users.destroy', ['id' => $user->user_id]) }}" method="POST" style="display:inline;">
+                            <form action="{{ route('admin.users.destroy', ['user' => $user->user_id]) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn delete" onclick="return confirm('Bạn có chắc chắn muốn xóa người dùng này không?');">Xóa</button>
