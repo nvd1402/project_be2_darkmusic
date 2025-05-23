@@ -10,11 +10,14 @@ use App\Models\Ad;
 class NewsController extends Controller
 {
     // Hiển thị tất cả tin tức (trang admin)
-    public function index()
-    {
-        $news = News::all();
-        return view('admin.news.index', compact('news'));
-    }
+public function index()
+{
+    // Lấy danh sách news sắp xếp theo updated_at giảm dần (mới nhất lên đầu)
+    $news = News::orderBy('updated_at', 'desc')->get();
+
+    return view('admin.news.index', compact('news'));
+}
+
 
     // Tìm kiếm tin tức theo từ khóa (trang admin)
     public function search(Request $request)
@@ -41,41 +44,52 @@ class NewsController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $request->validate([
-            'tieude' => [
-                'required', 
-                'max:1000', 
-                'regex:/^[\p{L}\s0-9][\p{L}\s0-9]*$/u'
-            ],
-            'noidung' => 'required',
-            'donvidang' => 'required',
-            'hinhanh' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ], [
-            'tieude.required' => 'Vui lòng nhập tiêu đề.',
-            'tieude.max' => 'Tiêu đề không được vượt quá :max ký tự.',
-            'tieude.regex' => 'Tiêu đề không được bắt đầu bằng ký tự đặc biệt.',
-            'noidung.required' => 'Vui lòng nhập nội dung.',
-            'donvidang.required' => 'Vui lòng nhập đơn vị đăng.',
-            'hinhanh.image' => 'Hình ảnh phải là một tệp ảnh hợp lệ.',
-            'hinhanh.mimes' => 'Hình ảnh phải có định dạng: jpeg, png, jpg, gif, svg.',
-            'hinhanh.max' => 'Hình ảnh không được vượt quá :max KB.',
-        ]);
+{
+    // Validate dữ liệu đầu vào, bắt buộc phải có ảnh
+   $request->validate([
+    'tieude' => [
+        'required', 
+        'max:1000', 
+        'regex:/^[\p{L}\s0-9][\p{L}\s0-9]*$/u' // giữ nguyên
+    ],
+    'noidung' => 'required',
+    'donvidang' => [
+        'required',
+        'max:255',
+        'regex:/^[\p{L}\s0-9][\p{L}\s0-9]*$/u' // chỉ cho phép chữ, số và khoảng trắng
+    ],
+    'hinhanh' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+], [
+    'tieude.required' => 'Vui lòng nhập tiêu đề.',
+    'tieude.max' => 'Tiêu đề không được vượt quá :max ký tự.',
+    'tieude.regex' => 'Tiêu đề không được bắt đầu bằng ký tự đặc biệt.',
+    'noidung.required' => 'Vui lòng nhập nội dung.',
+    'donvidang.required' => 'Vui lòng nhập đơn vị đăng.',
+    'donvidang.max' => 'Đơn vị đăng không được vượt quá 255 ký tự.',
+    'donvidang.regex' => 'Đơn vị đăng không được chứa ký tự đặc biệt.',
+    'hinhanh.required' => 'Vui lòng chọn ảnh cho tin tức.',
+    'hinhanh.image' => 'Hình ảnh phải là một tệp ảnh hợp lệ.',
+    'hinhanh.mimes' => 'Hình ảnh phải có định dạng: jpeg, png, jpg, gif, svg.',
+    'hinhanh.max' => 'Hình ảnh không được vượt quá 2MB.',
+]);
 
-        $news = new News();
-        $news->tieude = $request->tieude;
-        $news->noidung = $request->noidung;
-        $news->donvidang = $request->donvidang;
+    $news = new News();
+    $news->tieude = $request->tieude;
+    $news->noidung = $request->noidung;
+    $news->donvidang = $request->donvidang;
 
-        if ($request->hasFile('hinhanh')) {
-            $imagePath = $request->file('hinhanh')->store('news_images', 'public');
-            $news->hinhanh = $imagePath;
-        }
-
-        $news->save();
-
-        return redirect()->route('admin.news.index')->with('success', 'Tin tức đã được thêm thành công!');
+    // Xử lý upload ảnh
+    if ($request->hasFile('hinhanh')) {
+        $imagePath = $request->file('hinhanh')->store('news_images', 'public'); 
+        // Lưu đường dẫn ảnh vào db, ví dụ: news/abc.jpg
+        $news->hinhanh = $imagePath;
     }
+
+    $news->save();
+
+    return redirect()->route('admin.news.index')->with('success', 'Tin tức đã được thêm thành công!');
+}
+
 
     public function edit($id)
     {
@@ -85,26 +99,32 @@ class NewsController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'tieude' => [
-                'required',
-                'max:1000',
-                'regex:/^[\p{L}\s0-9]+$/u',
-            ],
-            'noidung' => 'required',
-            'donvidang' => 'required|max:255',
-            'hinhanh' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ], [
-            'tieude.required' => 'Vui lòng nhập tiêu đề.',
-            'tieude.max' => 'Tiêu đề không được vượt quá 32 ký tự.',
-            'tieude.regex' => 'Tiêu đề không được bắt đầu bằng ký tự đặc biệt.',
-            'noidung.required' => 'Vui lòng nhập nội dung.',
-            'donvidang.required' => 'Vui lòng nhập đơn vị đăng.',
-            'donvidang.max' => 'Đơn vị đăng không được vượt quá 255 ký tự.',
-            'hinhanh.image' => 'Hình ảnh phải là một tệp ảnh hợp lệ.',
-            'hinhanh.mimes' => 'Hình ảnh phải có định dạng: jpeg, png, jpg, gif, svg.',
-            'hinhanh.max' => 'Hình ảnh không được vượt quá 2MB.',
-        ]);
+         $request->validate([
+    'tieude' => [
+        'required', 
+        'max:1000', 
+        'regex:/^[\p{L}\s0-9][\p{L}\s0-9]*$/u' // giữ nguyên
+    ],
+    'noidung' => 'required',
+    'donvidang' => [
+        'required',
+        'max:255',
+        'regex:/^[\p{L}\s0-9][\p{L}\s0-9]*$/u' // chỉ cho phép chữ, số và khoảng trắng
+    ],
+    'hinhanh' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+], [
+    'tieude.required' => 'Vui lòng nhập tiêu đề.',
+    'tieude.max' => 'Tiêu đề không được vượt quá :max ký tự.',
+    'tieude.regex' => 'Tiêu đề không được bắt đầu bằng ký tự đặc biệt.',
+    'noidung.required' => 'Vui lòng nhập nội dung.',
+    'donvidang.required' => 'Vui lòng nhập đơn vị đăng.',
+    'donvidang.max' => 'Đơn vị đăng không được vượt quá 255 ký tự.',
+    'donvidang.regex' => 'Đơn vị đăng không được chứa ký tự đặc biệt.',
+    'hinhanh.required' => 'Vui lòng chọn ảnh cho tin tức.',
+    'hinhanh.image' => 'Hình ảnh phải là một tệp ảnh hợp lệ.',
+    'hinhanh.mimes' => 'Hình ảnh phải có định dạng: jpeg, png, jpg, gif, svg.',
+    'hinhanh.max' => 'Hình ảnh không được vượt quá 2MB.',
+]);
 
         $news = News::findOrFail($id);
         $news->tieude = $request->tieude;

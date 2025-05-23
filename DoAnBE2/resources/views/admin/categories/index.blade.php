@@ -36,6 +36,7 @@
             padding: 10px;
             border: 1px solid #ddd;
             text-align: left;
+            vertical-align: middle;
         }
 
         th {
@@ -58,6 +59,20 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+        }
+
+        /* Style ảnh đại diện */
+        .category-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        form.inline-form {
+            display: inline-block;
+            margin: 0;
         }
     </style>
 </head>
@@ -100,6 +115,7 @@
                     <thead>
                         <tr>
                             <th>ID</th>
+                            <th>Ảnh</th>
                             <th>Tên thể loại</th>
                             <th>Nhóm</th>
                             <th>Hành động</th>
@@ -109,14 +125,28 @@
                         @foreach($categories as $category)
                             <tr class="category-item-js">
                                 <td>{{ $category->id }}</td>
+   <td>
+    @if ($category->image)
+        @php
+            $image = $category->image;
+            if (!str_starts_with($image, 'category/')) {
+                $image = 'category/' . $image;
+            }
+        @endphp
+        <img src="{{ asset('storage/' . $image) }}" alt="{{ $category->tentheloai }}" width="100" height="100">
+    @else
+        <span>Chưa có ảnh</span>
+    @endif
+</td>
+
                                 <td>{{ $category->tentheloai }}</td>
                                 <td>{{ $category->nhom }}</td>
                                 <td>
                                     <a href="{{ route('admin.categories.edit', $category->id) }}" class="btn btn-warning">Sửa</a>
-                                    <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST" style="display:inline;">
+                                    <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST" class="inline-form" onsubmit="return confirm('Bạn có chắc chắn muốn xóa?')">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa?')">Xóa</button>
+                                        <button type="submit" class="btn btn-danger">Xóa</button>
                                     </form>
                                 </td>
                             </tr>

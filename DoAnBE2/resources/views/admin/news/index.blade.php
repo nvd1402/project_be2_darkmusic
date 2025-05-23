@@ -73,13 +73,20 @@
                                 <td>{{ $item->id }}</td>
                                 <td>{{ $item->tieude }}</td>
                                 <td>{{ \Illuminate\Support\Str::limit($item->noidung, 50) }}</td>
-                                <td>
-                                    @if ($item->hinhanh)
-                                        <img src="{{ asset('storage/' . $item->hinhanh) }}" alt="Hình ảnh tin tức" width="100" height="100">
-                                    @else
-                                        <span>Không có hình ảnh</span>
-                                    @endif
-                                </td>
+  <td>
+    @if ($item->hinhanh)
+        @php
+            $hinhanh = $item->hinhanh;
+            if (!str_starts_with($hinhanh, 'news_images/')) {
+                $hinhanh = 'news_images/' . $hinhanh;
+            }
+        @endphp
+        <img src="{{ asset('storage/' . $hinhanh) }}" alt="Hình ảnh tin tức" width="100" height="100">
+    @else
+        <span>Không có hình ảnh</span>
+    @endif
+</td>
+
                                 <td>
                                     <a href="{{ route('admin.news.edit', $item->id) }}" class="btn btn-warning btn-sm">Sửa</a>
                                     <form 

@@ -4,13 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Artist;
-use App\Models\News;
-use Illuminate\Http\Request;
+use App\Models\Song;
 use App\Models\Ad;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
 {
-    // Các nhóm thể loại cố định
     protected $nhoms = [
         'Nhạc Rock',
         'Nhạc Remix',
@@ -18,14 +18,12 @@ class CategoryController extends Controller
         'Nhạc Mới',
     ];
 
-    // Trang danh sách thể loại (Admin)
     public function index()
     {
-        $categories = Category::all();
+        $categories = Category::orderBy('updated_at', 'desc')->get();
         return view('admin.categories.index', compact('categories'));
     }
 
-    // Tìm kiếm thể loại (Admin)
     public function search(Request $request)
     {
         $query = $request->input('query');
@@ -41,30 +39,35 @@ class CategoryController extends Controller
         return view('admin.categories.index', compact('categories'));
     }
 
-    // Form thêm thể loại (Admin)
     public function create()
     {
         $nhoms = $this->nhoms;
         return view('admin.categories.create', compact('nhoms'));
     }
 
-    // Lưu thể loại mới (Admin)
     public function store(Request $request)
     {
         $request->validate([
             'tentheloai' => 'required|string|max:255',
             'nhom' => 'required|string|in:' . implode(',', $this->nhoms),
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            // Lưu ảnh vào folder 'category' trong storage/app/public
+            $imagePath = $request->file('image')->store('category', 'public');
+        }
 
         Category::create([
             'tentheloai' => $request->tentheloai,
             'nhom' => $request->nhom,
+            'image' => $imagePath,
         ]);
 
         return redirect()->route('admin.categories.index')->with('success', 'Thêm thể loại thành công!');
     }
 
-    // Form sửa thể loại (Admin)
     public function edit($id)
     {
         $category = Category::findOrFail($id);
@@ -72,58 +75,67 @@ class CategoryController extends Controller
         return view('admin.categories.edit', compact('category', 'nhoms'));
     }
 
-    // Cập nhật thể loại (Admin)
     public function update(Request $request, $id)
     {
         $request->validate([
-            'tentheloai' => ['required', 'max:32', 'regex:/^[\p{L}\s0-9]+$/u'],
+            'tentheloai' => ['required', 'max:255'],
             'nhom' => ['required', 'in:' . implode(',', $this->nhoms)],
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         $category = Category::findOrFail($id);
-        $category->update([
-            'tentheloai' => $request->tentheloai,
-            'nhom' => $request->nhom,
-        ]);
+
+        if ($request->hasFile('image')) {
+            // Xoá ảnh cũ nếu có
+            if ($category->image) {
+                Storage::disk('public')->delete($category->image);
+            }
+            // Lưu ảnh mới vào folder 'category'
+            $imagePath = $request->file('image')->store('category', 'public');
+            $category->image = $imagePath;
+        }
+
+        $category->tentheloai = $request->tentheloai;
+        $category->nhom = $request->nhom;
+        $category->save();
 
         return redirect()->route('admin.categories.index')->with('success', 'Cập nhật thể loại thành công!');
     }
 
-    // Xóa thể loại (Admin)
     public function destroy($id)
     {
         $category = Category::findOrFail($id);
+
+        // Xoá ảnh nếu có
+        if ($category->image) {
+            Storage::disk('public')->delete($category->image);
+        }
+
         $category->delete();
 
         return redirect()->route('admin.categories.index')->with('success', 'Xóa thể loại thành công!');
     }
 
-public function show($tentheloai)
-{
-    $category = Category::where('tentheloai', $tentheloai)->firstOrFail();
+    public function show($tentheloai)
+    {
+        $category = Category::where('tentheloai', $tentheloai)->firstOrFail();
 
-    // Lấy danh sách các thể loại cùng nhóm, loại trừ chính nó nếu muốn
-    $categoriesByNhom = Category::where('nhom', $category->nhom)
-        ->where('id', '!=', $category->id)
-        ->get();
+        $categoriesByNhom = Category::where('nhom', $category->nhom)
+            ->where('id', '!=', $category->id)
+            ->get();
 
-    // Lấy danh sách nghệ sĩ thuộc thể loại hiện tại
-    $artists = Artist::where('category_id', $category->id)->get();
-     $bannerAd = Ad::where('is_active', 1)->inRandomOrder()->first();
+        $artists = Artist::where('category_id', $category->id)->get();
 
-    return view('frontend.category_show', [
-        'category' => $category,
-        'categoriesByNhom' => $categoriesByNhom,
-        'artists' => $artists,
-         'bannerAd' => $bannerAd,
-    ]);
-}
+        $songs = Song::where('theloai', $category->id)->get();
 
+        $bannerAd = Ad::where('is_active', 1)->inRandomOrder()->first();
 
-
-
-
-
-
-  
+        return view('frontend.category_show', [
+            'category' => $category,
+            'categoriesByNhom' => $categoriesByNhom,
+            'artists' => $artists,
+            'songs' => $songs,
+            'bannerAd' => $bannerAd,
+        ]);
+    }
 }

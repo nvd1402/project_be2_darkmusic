@@ -9,10 +9,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('categories', function (Blueprint $table) {
-            $table->id();                      // id tự động tăng
-            $table->string('tentheloai');     // tên thể loại
-            $table->string('nhom')->nullable(); // nhóm, cho phép null
-            $table->timestamps();             // created_at, updated_at
+            $table->id();                           // ID tự tăng
+            $table->string('tentheloai');           // Tên thể loại
+            $table->string('nhom')->nullable();     // Nhóm thể loại (có thể null)
+            $table->string('image')->nullable();    // Ảnh thể loại (có thể null, lưu đường dẫn)
+            $table->timestamps();                   // created_at & updated_at
         });
     }
 
@@ -21,4 +22,3 @@ return new class extends Migration
         Schema::dropIfExists('categories');
     }
 };
-
