@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id('user_id'); // Primary key (user_id)
+            $table->bigIncrements('user_id'); // Primary key (user_id)
             $table->string('username', 100); // Tên người dùng
             $table->text('password'); // Mật khẩu
             $table->string('email', 100)->unique(); // Email (không cho phép null, phải là duy nhất)

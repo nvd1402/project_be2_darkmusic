@@ -10,100 +10,135 @@
 </head>
 <body>
 <div class="right-section">
-            <!-- Profile -->
+    <!-- Profile -->
 
-            <div class="profile">
-                <div class="user">
+    <div class="profile">
+        <div class="user">
+            {{-- Kiểm tra nếu người dùng chưa đăng nhập --}}
+            @guest
+                <a href="{{ route('login') }}" class="right" style="background-color: rgb(37, 37, 45); text-decoration: none; display: flex; align-items: center; justify-content: center; padding: 10px 15px; border-radius: 8px;">
+                    <h5 style="color: #e0e0e0; margin: 0;">Nâng Cấp VIP</h5>
+                </a>
+            @endguest
 
-                    <div class="right">
-                        <h5>Nâng cấp tài khoản</h5>
+            {{-- Kiểm tra nếu người dùng đã đăng nhập --}}
+            @auth
+                <a href="{{ route('frontend.vip.register') }}" class="right" style="background-color: rgb(37, 37, 45); text-decoration: none; display: flex; align-items: center; justify-content: center; padding: 10px 15px; border-radius: 8px;">
+                    <h5 style="color: #e0e0e0; margin: 0;">Nâng Cấp VIP</h5>
+                </a>
+            @endauth
+        </div>
+        <i class='bx bxs-bell'></i>
+        <i class='bx bxs-cog' ></i>
+        <a href="{{ route('frontend.listening.history') }}" class="history-link">
+            <i class='bx bx-history' id="history-icon"></i>
+        </a>
+        <div class="d-flex align-items-center">
+            @guest
+                <a href="{{ route('login') }}" class="text-decoration-none me-3">
+                    <div class="user">
+                        <div class="left"><img src="" alt=""></div>
+                        <div class="right"><h5>Đăng nhập</h5></div>
                     </div>
+                </a>
+            @endguest
+
+            @auth
+                <a href="{{ route('profile') }}" class="text-decoration-none me-3">
+                    <div class="user d-flex align-items-center">
+                        <div class="left me-2">
+                            <img src="{{ Auth::user()->avatar
+                        ? asset('storage/'.Auth::user()->avatar)
+                        : '/default-avatar.png'
+                    }}"
+                                 alt="avatar"
+                                 class="rounded-circle"
+                                 width="40">
+                        </div>
+                        <div class="right">
+                            <h5 class="mb-0">{{ Auth::user()->username }}</h5>
+                        </div>
+                    </div>
+                </a>
+
+
+            @endauth
+        </div>
+    </div>
+
+    <!-- Music player -->
+    <div class="music-player">
+        <div class="top-section">
+            <div class="header">
+                <h5>Player</h5>
+                <i class='bx bxs-playlist'></i>
+            </div>
+            <div class="song-info">
+                <div class="cd">
+                    <div class="cd-thumb"></div>
+                    <!-- <img src="assets/player.png" alt=""> -->
                 </div>
-                <i class='bx bxs-bell'></i>
-                <i class='bx bxs-cog' ></i>
-                <div class="user">
-                    <div class="left">
-                        <img src="" alt="">
+                <div class="description">
+                    <h3>Ripple Echoes</h3>
+                    <!-- <h5>Kael Fischer</h5> -->
+                    <p>Best of 2024</p>
+                </div>
+                <div class="time">
+                    <p class="time-start">0:00</p>
+                    <input id="progress" class="progress" type="range" value="0" step="1" min="0" max="100">
+                    <!-- <p class="start">02:45</p>
+                    <div class="active-line"></div>
+                    <div class="deactive-line"></div>
+                    <p class="end">01:02</p> -->
+                    </input>
+                    <p class="time-end">0:00</p>
+                </div>
+
+
+                <audio id="audio" src=""></audio>
+
+            </div>
+        </div>
+
+        <div class="player-actions">
+            <div class="buttons">
+                <div class="btn btn-repeat">
+                    <i class='bx bx-repeat'></i>
+                    <i class='bx bx-atom'></i>
+                </div>
+                <div class="btn btn-prev">
+                    <i class='bx bx-skip-previous'></i>
+                </div>
+                <div class="btn btn-toggle-play play-toggle">
+                    <i class='bx bx-play play-button'></i>
+                    <i class='bx bx-pause play-pause'></i>
+                </div>
+                <div class="btn btn-next">
+                    <i class='bx bx-skip-next' ></i>
+                </div>
+                <div class="btn btn-random">
+                    <i class='bx bx-transfer-alt' ></i>
+                </div>
+            </div>
+
+            <div class="lyrics">
+                <i class='bx bx-chevron-up' ></i>
+                <i class='bx bx-chevron-down'></i>
+                <h5>Lyrics</h5>
+                <div class="lyrics-song hidden">
+                    <div class="lyrics-song__name">
+
                     </div>
-                    <div class="right">
-                        <h5>Nguyen Van Dai</h5>
+                    <div class="lyrics-songs">
+                        ${formatLyrics(song.lyrics)}
                     </div>
                 </div>
             </div>
 
-            <!-- Music player -->
-            <div class="music-player">
-                <div class="top-section">
-                    <div class="header">
-                        <h5>Player</h5>
-                        <i class='bx bxs-playlist'></i>
-                    </div>
-                    <div class="song-info">
-                        <div class="cd">
-                            <div class="cd-thumb"></div>
-                            <!-- <img src="assets/player.png" alt=""> -->
-                        </div>
-                        <div class="description">
-                            <h3>Ripple Echoes</h3>
-                            <!-- <h5>Kael Fischer</h5> -->
-                            <p>Best of 2024</p>
-                        </div>
-                        <div class="time">
-                            <p class="time-start">0:00</p>
-                            <input id="progress" class="progress" type="range" value="0" step="1" min="0" max="100">
-                            <!-- <p class="start">02:45</p>
-                            <div class="active-line"></div>
-                            <div class="deactive-line"></div>
-                            <p class="end">01:02</p> -->
-                            </input>
-                            <p class="time-end">0:00</p>
-                        </div>
+        </div>
 
+    </div>
 
-                        <audio id="audio" src=""></audio>
-
-                    </div>
-                </div>
-
-                <div class="player-actions">
-                    <div class="buttons">
-                        <div class="btn btn-repeat">
-                            <i class='bx bx-repeat'></i>
-                            <i class='bx bx-atom'></i>
-                        </div>
-                        <div class="btn btn-prev">
-                            <i class='bx bx-skip-previous'></i>
-                        </div>
-                        <div class="btn btn-toggle-play play-toggle">
-                            <i class='bx bx-play play-button'></i>
-                            <i class='bx bx-pause play-pause'></i>
-                        </div>
-                        <div class="btn btn-next">
-                            <i class='bx bx-skip-next' ></i>
-                        </div>
-                        <div class="btn btn-random">
-                            <i class='bx bx-transfer-alt' ></i>
-                          </div>
-                    </div>
-
-                    <div class="lyrics">
-                        <i class='bx bx-chevron-up' ></i>
-                        <i class='bx bx-chevron-down'></i>
-                        <h5>Lyrics</h5>
-                        <div class="lyrics-song hidden">
-                            <div class="lyrics-song__name">
-
-                            </div>
-                            <div class="lyrics-songs">
-                                ${formatLyrics(song.lyrics)}
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-
-            <script type='text/javascript' src="script.js"></script>
+    <script type='text/javascript' src="script.js"></script>
 </body>
 </html>

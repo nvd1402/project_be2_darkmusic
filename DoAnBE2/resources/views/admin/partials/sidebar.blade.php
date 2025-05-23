@@ -29,7 +29,7 @@
             </li>
             <li>
                 <i class='bx bxs-radio'></i>
-                <a href="#">Quản lý album</a>
+                                <a href="{{ route('admin.album.index') }}">Quản lý album</a>
             </li>
             <li>
                
@@ -43,6 +43,12 @@
             <li>
                 <i class='bx bxs-heart'></i>
                 <a href="{{ route('admin.revenue.index') }}">Quản lý doanh thu</a>
+            </li>
+                        <li>
+
+                            <i class='bx bxs-comment'></i>
+                
+                <a href="{{ route('admin.comments.index') }}">Quản lý bình luận </a>
             </li>
             <li>
                 <i class='bx bxs-folder'></i>

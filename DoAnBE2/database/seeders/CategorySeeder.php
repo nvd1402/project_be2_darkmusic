@@ -4,11 +4,19 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Arr;
 
 class CategorySeeder extends Seeder
 {
     public function run(): void
     {
+        // Tắt kiểm tra khóa ngoại để truncate bảng
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+
+        DB::table('categories')->truncate();
+
+        // Bật lại kiểm tra khóa ngoại
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         $categories = [
             'Pop',
@@ -28,9 +36,12 @@ class CategorySeeder extends Seeder
 >>>>>>> admin/ads-darkmusic
         ];
 
-        $data = array_map(function ($name) {
+        $nhom = ['Nhạc Rock', 'Nhạc Remix', 'Nhạc Nổi Bật', 'Nhạc Mới']; // Các nhóm bạn cần
+
+        $data = array_map(function ($name) use ($nhom) {
             return [
                 'tentheloai' => $name,
+                'nhom' => Arr::random($nhom),
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
