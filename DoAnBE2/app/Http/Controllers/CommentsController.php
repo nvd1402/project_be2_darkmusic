@@ -43,18 +43,14 @@ public function store(Request $request, $id)
     ]);
 
     Comment::create([
-        'user_id' => auth()->id(),
-        'news_id' => $id,
+        'user_id' => auth()->id(),  // lấy id user đang đăng nhập
+        'news_id' => $id,           // lấy id từ URL
         'noidung' => $request->noidung,
     ]);
 
-    // Nếu là AJAX
-    if ($request->ajax()) {
-        return response()->json(['success' => true, 'message' => 'Bình luận đã gửi!']);
-    }
-
     return redirect()->back()->with('success', 'Bình luận đã được gửi!');
 }
+
 
     // Cập nhật bình luận
     public function update(Request $request, $id)

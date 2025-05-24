@@ -190,14 +190,22 @@
                 <div class="carousel-container">
                     <button class="carousel-btn btn-prev" data-index="{{ $index }}" aria-label="Prev">&lt;</button>
                     <ul class="carousel-track" id="carousel-track-{{ $index }}">
-                        @foreach ($categoriesByNhom[$nhom] as $category)
-                            <li class="category-item">
-                                <a href="{{ route('frontend.category_show', ['tentheloai' => $category->tentheloai]) }}">
-                                    <img src="{{ asset('storage/category/' . $category->image) }}" alt="{{ $category->tentheloai }}" style="width: 100%; height: 100px; object-fit: cover; border-radius: 8px; margin-bottom: 8px;">
-                                    <div style="font-weight: bold; color: #ffcc00;">{{ $category->tentheloai }}</div>
-                                </a>
-                            </li>
-                        @endforeach
+@foreach ($categoriesByNhom[$nhom] as $category)
+    <li class="category-item">
+        @if ($category->status) 
+            <a href="{{ route('frontend.category_show', ['tentheloai' => $category->tentheloai]) }}">
+                <img src="{{ asset('storage/category/' . $category->image) }}" alt="{{ $category->tentheloai }}" style="width: 100%; height: 100px; object-fit: cover; border-radius: 8px; margin-bottom: 8px;">
+                <div style="font-weight: bold; color:rgb(255, 255, 255);">{{ $category->tentheloai }}</div>
+            </a>
+        @else
+            <a href="javascript:void(0)" onclick="alert('Thể loại này hiện không hoạt động!')">
+                <img src="{{ asset('storage/category/' . $category->image) }}" alt="{{ $category->tentheloai }}" style="width: 100%; height: 100px; object-fit: cover; border-radius: 8px; margin-bottom: 8px; opacity: 0.5;">
+                <div style="font-weight: bold; color:rgb(255, 255, 255);">{{ $category->tentheloai }} (Đang khóa)</div>
+            </a>
+        @endif
+    </li>
+@endforeach
+
                     </ul>
                     <button class="carousel-btn btn-next" data-index="{{ $index }}" aria-label="Next">&gt;</button>
                 </div>

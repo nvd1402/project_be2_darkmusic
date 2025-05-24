@@ -7,6 +7,10 @@ use App\Models\Song;
 use App\Models\Artist;
 use App\Models\Category;
 use App\Models\Userss;
+use App\Models\News;
+use App\Models\Ad;
+use App\Models\Album;
+use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -61,6 +65,16 @@ class AdminController extends Controller
     {
         $soLuongBaiHat = Song::count();
         $this->data['soLuongBaiHat'] = $soLuongBaiHat;
+$this->data['soLuongAlbum'] = Album::count();
+
+        
+        $this->data['soLuongComment'] = Comment::count();
+        $this->data['soLuongTheLoai'] = Category::count();
+     
+        $this->data['soLuongTinTuc'] = News::count();
+
+return view('admin.dashboard', $this->data);
+
         return view('admin.dashboard', $this->data);
     }
 
