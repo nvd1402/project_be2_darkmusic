@@ -111,20 +111,22 @@
                 </form>
 
                 {{-- Bảng danh sách thể loại --}}
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Ảnh</th>
-                            <th>Tên thể loại</th>
-                            <th>Nhóm</th>
-                            <th>Hành động</th>
-                        </tr>
-                    </thead>
-                    <tbody id="category-list-container">
-                        @foreach($categories as $category)
-                            <tr class="category-item-js">
-                                <td>{{ $category->id }}</td>
+               <table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Ảnh</th>
+            <th>Tên thể loại</th>
+            <th>Nhóm</th>
+            <th>Mô tả</th>
+            <th>Trạng thái</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody id="category-list-container">
+        @foreach($categories as $category)
+            <tr class="category-item-js">
+                <td>{{ $category->id }}</td>
    <td>
     @if ($category->image)
         @php
@@ -138,21 +140,29 @@
         <span>Chưa có ảnh</span>
     @endif
 </td>
+                <td>{{ $category->tentheloai }}</td>
+                <td>{{ $category->nhom }}</td>
+                <td>{{ Str::limit($category->description, 50) }}</td>
+                <td>
+                    @if ($category->status)
+                        <span style="color: green;">Hoạt động</span>
+                    @else
+                        <span style="color: red;">Không hoạt động</span>
+                    @endif
+                </td>
+                <td>
+                    <a href="{{ route('admin.categories.edit', $category->id) }}" class="btn btn-warning">Sửa</a>
+                    <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST" class="inline-form" onsubmit="return confirm('Bạn có chắc chắn muốn xóa?')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger">Xóa</button>
+                    </form>
+                </td>
+            </tr>
+        @endforeach
+    </tbody>
+</table>
 
-                                <td>{{ $category->tentheloai }}</td>
-                                <td>{{ $category->nhom }}</td>
-                                <td>
-                                    <a href="{{ route('admin.categories.edit', $category->id) }}" class="btn btn-warning">Sửa</a>
-                                    <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST" class="inline-form" onsubmit="return confirm('Bạn có chắc chắn muốn xóa?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger">Xóa</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
 
                 <div id="pagination-controls" style="margin-top: 15px;"></div>
             </section>

@@ -118,7 +118,7 @@
     }
 
     .song-info a {
-        color:rgb(0, 0, 0);
+        color:rgb(255, 255, 255);
         text-decoration: none;
     }
 
@@ -136,7 +136,7 @@
 
     .comment-section {
         margin-top: 50px;
-        background-color: #1e1e2f;
+        background-color:rgb(255, 255, 255);
         padding: 20px;
         border-radius: 12px;
     }
@@ -189,7 +189,7 @@
     }
 
     .comment-section h2 {
-        color: #ffcc70;
+        color:rgb(255, 255, 255);
         margin-bottom: 20px;
         font-weight: 700;
     }
@@ -328,7 +328,12 @@
 <hr>
 
 <div class="comment-section">
+
+
+
     <h2>Bình luận</h2>
+
+
 
     {{-- Hiển thị thông báo --}}
     @if(session('success'))
@@ -341,17 +346,12 @@
 
     {{-- Form bình luận (chỉ hiện nếu đã đăng nhập) --}}
     @auth
-<form action="{{ route('frontend.comment.store', $news->id) }}" method="POST" class="comment-form">
+<form action="{{ route('frontend.comment.store', $news->id) }}" method="POST">
     @csrf
     <textarea name="noidung" rows="4" placeholder="Viết bình luận..." required></textarea>
     <button type="submit">Gửi bình luận</button>
 </form>
 
-
-
-    @else
-    <p><a href="{{ route('login') }}">Đăng nhập</a> để bình luận.</p>
-    @endauth
 
     {{-- Danh sách bình luận --}}
     <div class="comment-list">
@@ -365,6 +365,12 @@
         </div>
         @endforeach
     </div>
+
+    @else
+    <p><a href="{{ route('login') }}">Đăng nhập</a> để bình luận.</p>
+    @endauth
+
+    
 </div>
 
 

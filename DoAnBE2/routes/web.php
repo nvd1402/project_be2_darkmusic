@@ -114,7 +114,11 @@ Route::delete('album/{id}', [AlbumController::class, 'destroy'])->name('album.de
 // Hiển thị danh sách bình luận (admin)
 Route::get('/admin/comments', [CommentsController::class, 'index'])->name('admin.comments.index');
 Route::get('/admin/comments/create', [CommentsController::class, 'create'])->name('admin.comments.create');
+
+// Đổi từ route có {id} → không có
 Route::post('/admin/comments/store', [CommentsController::class, 'store'])->name('admin.comments.store');
+
+
 Route::get('/admin/comments/edit/{id}', [CommentsController::class, 'edit'])->name('admin.comments.edit');
 Route::put('/admin/comments/update/{id}', [CommentsController::class, 'update'])->name('admin.comments.update');
 Route::delete('/admin/comments/{id}', [CommentsController::class, 'destroy'])->name('admin.comments.destroy');
@@ -139,7 +143,10 @@ Route::get('category/{tentheloai}', [HomeController::class, 'categoryDetail'])->
     Route::get('/news', [HomeController::class, 'news'])->name('news');
 
 
-Route::post('news/{id}/comment', [CommentsController::class, 'store'])->name('comment.store');
+
+Route::post('/news/{id}/comment', [CommentsController::class, 'store'])->name('comment.store');
+
+
 
 
 

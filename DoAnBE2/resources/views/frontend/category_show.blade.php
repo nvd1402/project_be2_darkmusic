@@ -166,7 +166,7 @@ main {
 }
 .artist-card:hover {
     transform: translateY(-8px) scale(1.05);
-    box-shadow: 0 12px 28px rgba(255, 204, 0, 0.7);
+    box-shadow: 0 12px 28px rgba(255, 255, 255, 0.7);
 }
 .artist-card img {
     width: 100%;
@@ -183,7 +183,7 @@ main {
     margin-top: 12px;
     font-weight: 600;
     font-size: 16px;
-    color: #ffcc00;
+    color:rgb(255, 255, 255);
 }
 
 /* --- SONGS --- */
@@ -233,11 +233,12 @@ main {
 .group-title1 {
     font-size: 18px;
     font-weight: 700;
-    color: rgb(255, 0, 0);
+    color: rgb(255, 255, 255);
     text-align: right;
     margin-bottom: 20px;
     user-select: none;
     float: right;
+    padding-top:50px ;
 }
 
 </style>
@@ -267,8 +268,8 @@ main {
         </a>
     </div>
     @endif
-<h3 class="group-title">Tên loại nhạc {{ $category->tentheloai }}</h3>
-<a href="{{ route('frontend.category')}}" class="group-title1">← Trở về trang thể loại</a>
+<h3 class="group-title">Tên loại nhạc :{{ $category->tentheloai }}</h3>
+
 
 
     {{-- Section thể loại theo nhóm --}}
@@ -316,13 +317,14 @@ main {
         @if ($songs->count() > 0)
             <ul>
                 @foreach ($songs as $song)
-                    <li><strong>{{ $song->tenbaihat }}</strong> - Nghệ sĩ: {{ $song->nghesi }}</li>
+                    <li><strong>Bài hát:{{ $song->tenbaihat }}</strong> của - Nghệ sĩ: {{  $song->artist->name_artist ?? 'Không rõ' }}</li>
                 @endforeach
             </ul>
         @else
             <p>Chưa có bài hát nào thuộc thể loại này.</p>
         @endif
     </section>
+    <a href="{{ route('frontend.category')}}" class="group-title1">← Trở về trang thể loại</a>
 </main>
 
 <script src="{{ asset('js/script.js') }}"></script>
