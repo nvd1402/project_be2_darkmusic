@@ -50,33 +50,92 @@ class CategoryController extends Controller
         ]);
     }
 
-    // Lưu thể loại mới
-    public function store(Request $request)
-    {
-        $request->validate([
-    'tentheloai' => 'required|string|max:255',
-    'nhom' => 'required|string|in:' . implode(',', $this->nhoms),
-    'description' => 'required|string|max:1000',
-    'status' => 'required|boolean',
-    'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-]);
+// Lưu thể loại mới
+public function store(Request $request)
+{
+    $request->validate([
+        'tentheloai' => 'required|string|max:255',
+        'nhom' => 'required|string|in:' . implode(',', $this->nhoms),
+        'description' => 'required|string|max:1000',
+        'status' => 'required|boolean',
+        'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
 
-
-        $imagePath = null;
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('category', 'public');
-        }
-
-        Category::create([
-            'tentheloai' => $request->tentheloai,
-            'nhom' => $request->nhom,
-            'description' => $request->description,
-            'status' => $request->boolean('status'),  // checkbox: trả về true/false tương ứng 1/0
-            'image' => $imagePath,
-        ]);
-
-        return redirect()->route('admin.categories.index')->with('success', 'Thêm thể loại thành công!');
+    // Kiểm tra tên thể loại đã tồn tại chưa
+    $exists = Category::where('tentheloai', $request->tentheloai)->exists();
+    if ($exists) {
+        return redirect()->back()->withErrors(['tentheloai' => 'Tên thể loại đã tồn tại'])->withInput();
     }
+
+    $imagePath = null;
+    if ($request->hasFile('image')) {
+        $imagePath = $request->file('image')->store('category', 'public');
+    }
+
+    Category::create([
+        'tentheloai' => $request->tentheloai,
+        'nhom' => $request->nhom,
+        'description' => $request->description,
+        'status' => $request->boolean('status'),
+        'image' => $imagePath,
+    ]);
+
+    return redirect()->route('admin.categories.index')->with('success', 'Thêm thể loại thành công!');
+}
+
+
+// Cập nhật thể loại
+public function update(Request $request, $id)
+{
+    $request->validate([
+        'tentheloai' => 'required|string|max:255',
+        'nhom' => 'required|string|in:' . implode(',', $this->nhoms),
+        'description' => 'required|string|max:1000',
+        'status' => 'required|boolean',
+        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'updated_at' => 'required', // kiểm tra xung đột
+    ]);
+
+    $category = Category::findOrFail($id);
+
+    // So sánh updated_at để kiểm tra xung đột
+    if ($request->updated_at != $category->updated_at->toDateTimeString()) {
+        return redirect()->back()
+            ->withInput()
+            ->withErrors(['conflict' => 'Thể loại đã được chỉnh sửa bởi người dùng khác. Vui lòng tải lại trang để cập nhật dữ liệu mới nhất.']);
+    }
+
+    // Kiểm tra trùng tên thể loại với bản ghi khác
+    $exists = Category::where('tentheloai', $request->tentheloai)
+                      ->where('id', '!=', $id)
+                      ->exists();
+
+    if ($exists) {
+        return redirect()->back()
+            ->withInput()
+            ->withErrors(['tentheloai' => 'Tên thể loại này đã tồn tại. Vui lòng chọn tên khác.']);
+    }
+
+    // Cập nhật dữ liệu
+    $category->tentheloai = $request->tentheloai;
+    $category->nhom = $request->nhom;
+    $category->description = $request->description;
+    $category->status = $request->boolean('status');
+
+    if ($request->hasFile('image')) {
+        // Xóa ảnh cũ nếu có
+        if ($category->image) {
+            Storage::disk('public')->delete($category->image);
+        }
+        // Lưu ảnh mới
+        $category->image = $request->file('image')->store('category', 'public');
+    }
+
+    $category->save();
+
+    return redirect()->route('admin.categories.index')->with('success', 'Cập nhật thể loại thành công!');
+}
+
 
     // Form sửa thể loại
     public function edit($id)
@@ -87,40 +146,6 @@ class CategoryController extends Controller
             'category' => $category,
             'nhoms' => $this->nhoms,
         ]);
-    }
-
-    // Cập nhật thể loại
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-    'tentheloai' => 'required|string|max:255',
-    'nhom' => 'required|string|in:' . implode(',', $this->nhoms),
-    'description' => 'required|string|max:1000',
-    'status' => 'required|boolean',
-    'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-]);
-
-
-        $category = Category::findOrFail($id);
-
-        $category->tentheloai = $request->tentheloai;
-        $category->nhom = $request->nhom;
-        $category->description = $request->description;
-        $category->status = $request->boolean('status');
-
-        // Xử lý upload ảnh mới, nếu có
-        if ($request->hasFile('image')) {
-            // Xóa ảnh cũ nếu có
-            if ($category->image) {
-                Storage::disk('public')->delete($category->image);
-            }
-            // Lưu ảnh mới
-            $category->image = $request->file('image')->store('category', 'public');
-        }
-
-        $category->save();
-
-        return redirect()->route('admin.categories.index')->with('success', 'Cập nhật thể loại thành công!');
     }
 
     // Xóa thể loại

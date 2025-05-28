@@ -33,7 +33,7 @@
                 <form action="{{ route('admin.news.update', $news->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
-
+<input type="hidden" name="updated_at" value="{{ $news->updated_at }}">
                     <!-- Tiêu đề -->
                     <label for="tieude">Tiêu đề</label>
                     <input type="text" id="tieude" name="tieude" value="{{ old('tieude', $news->tieude) }}" required>

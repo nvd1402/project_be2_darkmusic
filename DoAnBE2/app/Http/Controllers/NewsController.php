@@ -45,33 +45,42 @@ public function index()
 
     public function store(Request $request)
 {
-    // Validate dữ liệu đầu vào, bắt buộc phải có ảnh
-   $request->validate([
-    'tieude' => [
-        'required', 
-        'max:1000', 
-        'regex:/^[\p{L}\s0-9][\p{L}\s0-9]*$/u' // giữ nguyên
-    ],
-    'noidung' => 'required',
-    'donvidang' => [
-        'required',
-        'max:255',
-        'regex:/^[\p{L}\s0-9][\p{L}\s0-9]*$/u' // chỉ cho phép chữ, số và khoảng trắng
-    ],
-    'hinhanh' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-], [
-    'tieude.required' => 'Vui lòng nhập tiêu đề.',
-    'tieude.max' => 'Tiêu đề không được vượt quá :max ký tự.',
-    'tieude.regex' => 'Tiêu đề không được bắt đầu bằng ký tự đặc biệt.',
-    'noidung.required' => 'Vui lòng nhập nội dung.',
-    'donvidang.required' => 'Vui lòng nhập đơn vị đăng.',
-    'donvidang.max' => 'Đơn vị đăng không được vượt quá 255 ký tự.',
-    'donvidang.regex' => 'Đơn vị đăng không được chứa ký tự đặc biệt.',
-    'hinhanh.required' => 'Vui lòng chọn ảnh cho tin tức.',
-    'hinhanh.image' => 'Hình ảnh phải là một tệp ảnh hợp lệ.',
-    'hinhanh.mimes' => 'Hình ảnh phải có định dạng: jpeg, png, jpg, gif, svg.',
-    'hinhanh.max' => 'Hình ảnh không được vượt quá 2MB.',
-]);
+    // Validate dữ liệu đầu vào
+    $request->validate([
+        'tieude' => [
+            'required', 
+            'max:1000', 
+            'regex:/^[\p{L}\s0-9][\p{L}\s0-9]*$/u' 
+        ],
+        'noidung' => 'required',
+        'donvidang' => [
+            'required',
+            'max:255',
+            'regex:/^[\p{L}\s0-9][\p{L}\s0-9]*$/u' 
+        ],
+        'hinhanh' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+    ], [
+        'tieude.required' => 'Vui lòng nhập tiêu đề.',
+        'tieude.max' => 'Tiêu đề không được vượt quá :max ký tự.',
+        'tieude.regex' => 'Tiêu đề không được bắt đầu bằng ký tự đặc biệt.',
+        'noidung.required' => 'Vui lòng nhập nội dung.',
+        'donvidang.required' => 'Vui lòng nhập đơn vị đăng.',
+        'donvidang.max' => 'Đơn vị đăng không được vượt quá 255 ký tự.',
+        'donvidang.regex' => 'Đơn vị đăng không được chứa ký tự đặc biệt.',
+        'hinhanh.required' => 'Vui lòng chọn ảnh cho tin tức.',
+        'hinhanh.image' => 'Hình ảnh phải là một tệp ảnh hợp lệ.',
+        'hinhanh.mimes' => 'Hình ảnh phải có định dạng: jpeg, png, jpg, gif, svg.',
+        'hinhanh.max' => 'Hình ảnh không được vượt quá 2MB.',
+    ]);
+
+    // Kiểm tra xem tiêu đề đã tồn tại chưa
+    $exists = News::where('tieude', $request->tieude)->exists();
+
+    if ($exists) {
+        return redirect()->back()
+            ->withInput()
+            ->withErrors(['tieude' => 'Tiêu đề tin tức này đã tồn tại. Vui lòng làm mới trang để cập nhật dữ liệu mới nhất.']);
+    }
 
     $news = new News();
     $news->tieude = $request->tieude;
@@ -80,8 +89,7 @@ public function index()
 
     // Xử lý upload ảnh
     if ($request->hasFile('hinhanh')) {
-        $imagePath = $request->file('hinhanh')->store('news_images', 'public'); 
-        // Lưu đường dẫn ảnh vào db, ví dụ: news/abc.jpg
+        $imagePath = $request->file('hinhanh')->store('news_images', 'public');
         $news->hinhanh = $imagePath;
     }
 
@@ -91,55 +99,64 @@ public function index()
 }
 
 
+
     public function edit($id)
     {
         $news = News::findOrFail($id);
         return view('admin.news.edit', compact('news'));
     }
 
-    public function update(Request $request, $id)
-    {
-         $request->validate([
-    'tieude' => [
-        'required', 
-        'max:1000', 
-        'regex:/^[\p{L}\s0-9][\p{L}\s0-9]*$/u' // giữ nguyên
-    ],
-    'noidung' => 'required',
-    'donvidang' => [
-        'required',
-        'max:255',
-        'regex:/^[\p{L}\s0-9][\p{L}\s0-9]*$/u' // chỉ cho phép chữ, số và khoảng trắng
-    ],
-    'hinhanh' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-], [
-    'tieude.required' => 'Vui lòng nhập tiêu đề.',
-    'tieude.max' => 'Tiêu đề không được vượt quá :max ký tự.',
-    'tieude.regex' => 'Tiêu đề không được bắt đầu bằng ký tự đặc biệt.',
-    'noidung.required' => 'Vui lòng nhập nội dung.',
-    'donvidang.required' => 'Vui lòng nhập đơn vị đăng.',
-    'donvidang.max' => 'Đơn vị đăng không được vượt quá 255 ký tự.',
-    'donvidang.regex' => 'Đơn vị đăng không được chứa ký tự đặc biệt.',
-    'hinhanh.required' => 'Vui lòng chọn ảnh cho tin tức.',
-    'hinhanh.image' => 'Hình ảnh phải là một tệp ảnh hợp lệ.',
-    'hinhanh.mimes' => 'Hình ảnh phải có định dạng: jpeg, png, jpg, gif, svg.',
-    'hinhanh.max' => 'Hình ảnh không được vượt quá 2MB.',
-]);
+public function update(Request $request, $id)
+{
+    // Validate các input
+    $request->validate([
+        'tieude' => ['required', 'max:1000', 'regex:/^[\p{L}\s0-9][\p{L}\s0-9]*$/u'],
+        'noidung' => 'required',
+        'donvidang' => ['required', 'max:255', 'regex:/^[\p{L}\s0-9][\p{L}\s0-9]*$/u'],
+        'hinhanh' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        'updated_at' => 'required', // kiểm tra bắt buộc có
+    ], [
+        // message lỗi như bạn đã đặt
+    ]);
 
-        $news = News::findOrFail($id);
-        $news->tieude = $request->tieude;
-        $news->noidung = $request->noidung;
-        $news->donvidang = $request->donvidang;
+    $news = News::findOrFail($id);
 
-        if ($request->hasFile('hinhanh')) {
-            $imagePath = $request->file('hinhanh')->store('news_images', 'public');
-            $news->hinhanh = $imagePath;
-        }
-
-        $news->save();
-
-        return redirect()->route('admin.news.index')->with('success', 'Tin tức đã được cập nhật thành công!');
+    // So sánh updated_at gửi lên với bản ghi hiện tại trong DB
+    if ($request->updated_at != $news->updated_at->toDateTimeString()) {
+        // Nếu không khớp -> báo lỗi
+        return redirect()->back()
+            ->withInput()
+            ->withErrors(['conflict' => 'Tin tức đã được chỉnh sửa bởi người dùng khác. Vui lòng tải lại trang để cập nhật dữ liệu mới nhất.']);
     }
+
+    // Nếu trùng updated_at, tiếp tục kiểm tra tiêu đề trùng
+    $exists = News::where('tieude', $request->tieude)
+                  ->where('id', '!=', $id)
+                  ->exists();
+
+    if ($exists) {
+        return redirect()->back()
+            ->withInput()
+            ->withErrors(['tieude' => 'Tiêu đề tin tức này đã tồn tại. Vui lòng đổi tiêu đề khác.']);
+    }
+
+    // Cập nhật dữ liệu
+    $news->tieude = $request->tieude;
+    $news->noidung = $request->noidung;
+    $news->donvidang = $request->donvidang;
+
+    if ($request->hasFile('hinhanh')) {
+        $imagePath = $request->file('hinhanh')->store('news_images', 'public');
+        $news->hinhanh = $imagePath;
+    }
+
+    $news->save();
+
+    return redirect()->route('admin.news.index')
+                     ->with('success', 'Tin tức đã được cập nhật thành công!');
+}
+
+
 
     public function destroy($id)
     {

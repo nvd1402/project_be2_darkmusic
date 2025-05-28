@@ -205,7 +205,10 @@
                 @foreach($news->comments()->latest()->get() as $comment)
                     <div class="comment-item">
                         <div class="comment-header">
-                            <strong>{{ $comment->user ? $comment->user->username : 'Khách' }}</strong>
+<strong>{{ $comment->user->username ?? '' }}</strong>
+
+
+
                             <small>{{ $comment->created_at->format('d/m/Y H:i') }}</small>
                         </div>
                         <p>{{ $comment->noidung }}</p>
@@ -252,18 +255,18 @@ document.getElementById('commentForm')?.addEventListener('submit', function(e) {
         const commentList = document.getElementById('commentList');
         const div = document.createElement('div');
         div.classList.add('comment-item');
-        div.innerHTML = `
-            <div class="comment-header">
-                <strong>${data.username ?? 'Khách'}</strong>
-                <small>${data.time}</small>
-            </div>
-            <p>${data.noidung}</p>
-        `;
+       div.innerHTML = `
+    <div class="comment-header">
+        <strong>${data.username}</strong>
+        <small>${data.time}</small>
+    </div>
+    <p>${data.noidung}</p>
+`;
+
         commentList.prepend(div);
         form.reset();
 
-        // Hiển thị thông báo thành công
-        alert('Bình luận đã được gửi!');
+ 
     })
     .catch(error => alert(error.message));
 });
