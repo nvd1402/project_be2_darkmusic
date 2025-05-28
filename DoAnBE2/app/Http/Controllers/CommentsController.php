@@ -38,6 +38,10 @@ public function edit($id)
     }
 public function store(Request $request, $id)
 {
+    if (!auth()->check()) {
+        return response()->json(['message' => 'Bạn cần đăng nhập để bình luận.'], 403);
+    }
+
     $request->validate([
         'noidung' => 'required|string|max:1000',
     ]);
@@ -48,15 +52,15 @@ public function store(Request $request, $id)
         'noidung' => $request->noidung,
     ]);
 
-    // load user relation để lấy tên user
     $comment->load('user');
 
     return response()->json([
-        'username' => $comment->user->name ?? 'Khách',
+        'username' => $comment->user->username,  // hoặc ->name tùy model của bạn
         'noidung' => $comment->noidung,
         'time' => $comment->created_at->diffForHumans(),
     ]);
 }
+
 
 
 

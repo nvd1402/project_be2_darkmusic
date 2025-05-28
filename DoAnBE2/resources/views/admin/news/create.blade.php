@@ -21,16 +21,7 @@
             <section class="news-form">
                 <h3>Thêm tin tức</h3>
 
-                <!-- Hiển thị lỗi nếu có -->
-                @if ($errors->any())
-                    <div class="error">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
+                
 
                 <!-- resources/views/admin/news/create.blade.php -->
 <form action="{{ route('admin.news.store') }}" method="POST" enctype="multipart/form-data">

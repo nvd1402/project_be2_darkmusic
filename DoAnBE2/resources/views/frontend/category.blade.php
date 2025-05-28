@@ -181,38 +181,38 @@
         </header>
 
         <!-- Danh sách thể loại theo nhóm -->
-        <section class="category-section">
+<section class="category-section">
     <h2 class="category-title">Danh sách thể loại</h2>
     <div class="container-group">
         @foreach ($nhoms as $index => $nhom)
-            <div class="group-box" data-index="{{ $index }}">
-                <h3 class="group-title">{{ $nhom }}</h3>
-                <div class="carousel-container">
-                    <button class="carousel-btn btn-prev" data-index="{{ $index }}" aria-label="Prev">&lt;</button>
-                    <ul class="carousel-track" id="carousel-track-{{ $index }}">
-@foreach ($categoriesByNhom[$nhom] as $category)
-    <li class="category-item">
-        @if ($category->status) 
-            <a href="{{ route('frontend.category_show', ['tentheloai' => $category->tentheloai]) }}">
-                <img src="{{ asset('storage/category/' . $category->image) }}" alt="{{ $category->tentheloai }}" style="width: 100%; height: 100px; object-fit: cover; border-radius: 8px; margin-bottom: 8px;">
-                <div style="font-weight: bold; color:rgb(255, 255, 255);">{{ $category->tentheloai }}</div>
-            </a>
-        @else
-            <a href="javascript:void(0)" onclick="alert('Thể loại này hiện không hoạt động!')">
-                <img src="{{ asset('storage/category/' . $category->image) }}" alt="{{ $category->tentheloai }}" style="width: 100%; height: 100px; object-fit: cover; border-radius: 8px; margin-bottom: 8px; opacity: 0.5;">
-                <div style="font-weight: bold; color:rgb(255, 255, 255);">{{ $category->tentheloai }} (Đang khóa)</div>
-            </a>
-        @endif
-    </li>
-@endforeach
+            @php
+                // Lọc chỉ những thể loại đang hoạt động (status = 1)
+                $categories = ($categoriesByNhom[$nhom] ?? collect())->where('status', true);
+            @endphp
 
-                    </ul>
-                    <button class="carousel-btn btn-next" data-index="{{ $index }}" aria-label="Next">&gt;</button>
+            @if ($categories->isNotEmpty())
+                <div class="group-box" data-index="{{ $index }}">
+                    <h3 class="group-title">{{ $nhom }}</h3>
+                    <div class="carousel-container">
+                        <button class="carousel-btn btn-prev" data-index="{{ $index }}" aria-label="Prev">&lt;</button>
+                        <ul class="carousel-track" id="carousel-track-{{ $index }}">
+                            @foreach ($categories as $category)
+                                <li class="category-item">
+                                    <a href="{{ route('frontend.category_show', ['tentheloai' => $category->tentheloai]) }}">
+                                        <img src="{{ asset('storage/category/' . $category->image) }}" alt="{{ $category->tentheloai }}" style="width: 100%; height: 100px; object-fit: cover; border-radius: 8px; margin-bottom: 8px;">
+                                        <div style="font-weight: bold; color: #fff;">{{ $category->tentheloai }}</div>
+                                    </a>
+                                </li>
+                            @endforeach
+                        </ul>
+                        <button class="carousel-btn btn-next" data-index="{{ $index }}" aria-label="Next">&gt;</button>
+                    </div>
                 </div>
-            </div>
+            @endif
         @endforeach
     </div>
 </section>
+
 
     </main>
 </div>

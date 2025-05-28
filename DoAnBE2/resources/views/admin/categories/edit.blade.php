@@ -70,9 +70,18 @@
 
             <section class="category-form">
                 <h3>Chỉnh sửa thể loại</h3>
+                @if ($errors->has('conflict'))
+    <div class="alert alert-danger">
+        {{ $errors->first('conflict') }}
+    </div>
+@endif
+
                 <form action="{{ route('admin.categories.update', $category->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
+               <input type="hidden" name="updated_at" value="{{ $category->updated_at }}">
+
+
 
                     <label for="tentheloai">Tên thể loại</label>
                     <input type="text" name="tentheloai" id="tentheloai" value="{{ old('tentheloai', $category->tentheloai) }}" placeholder="Nhập tên thể loại" required>
