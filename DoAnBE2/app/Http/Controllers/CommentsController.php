@@ -42,14 +42,23 @@ public function store(Request $request, $id)
         'noidung' => 'required|string|max:1000',
     ]);
 
-    Comment::create([
-        'user_id' => auth()->id(),  // lấy id user đang đăng nhập
-        'news_id' => $id,           // lấy id từ URL
+    $comment = Comment::create([
+        'user_id' => auth()->id(),
+        'news_id' => $id,
         'noidung' => $request->noidung,
     ]);
 
-    return redirect()->back()->with('success', 'Bình luận đã được gửi!');
+    // load user relation để lấy tên user
+    $comment->load('user');
+
+    return response()->json([
+        'username' => $comment->user->name ?? 'Khách',
+        'noidung' => $comment->noidung,
+        'time' => $comment->created_at->diffForHumans(),
+    ]);
 }
+
+
 
 
     // Cập nhật bình luận

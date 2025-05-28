@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
+
+
     @include('frontend.partials.head')
     <title>{{ $news->tieude }}</title>
     <style>
@@ -149,6 +151,7 @@
         }
     </style>
 </head>
+
 <body class="text-light">
 <div class="container">
     @include('frontend.partials.sidebar')
@@ -216,20 +219,35 @@
     </main>
 </div>
 
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <script>
 document.getElementById('commentForm')?.addEventListener('submit', function(e) {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
     fetch(form.action, {
         method: 'POST',
         headers: {
-            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'X-CSRF-TOKEN': csrfToken,
             'Accept': 'application/json'
         },
         body: formData
     })
-    .then(res => res.json())
+    .then(async res => {
+        if (!res.ok) {
+            const errorData = await res.json().catch(() => null);
+            let msg = 'Đã có lỗi xảy ra!';
+            if (errorData?.errors) {
+                msg = Object.values(errorData.errors).flat().join(', ');
+            } else if (errorData?.message) {
+                msg = errorData.message;
+            }
+            throw new Error(msg);
+        }
+        return res.json();
+    })
     .then(data => {
         const commentList = document.getElementById('commentList');
         const div = document.createElement('div');
@@ -243,9 +261,14 @@ document.getElementById('commentForm')?.addEventListener('submit', function(e) {
         `;
         commentList.prepend(div);
         form.reset();
+
+        // Hiển thị thông báo thành công
+        alert('Bình luận đã được gửi!');
     })
-    .catch(error => alert('Đã có lỗi xảy ra!'));
+    .catch(error => alert(error.message));
 });
+
 </script>
+
 </body>
 </html>
