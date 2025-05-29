@@ -32,6 +32,7 @@ class Song extends Model
     {
         return $this->belongsTo(Category::class, 'theloai', 'id');
     }
+    
     public function likedByUsers()
     {
         return $this->belongsToMany(
@@ -41,6 +42,7 @@ class Song extends Model
             'user_id'
         );
     }
+    
 
 
 }

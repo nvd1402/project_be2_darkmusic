@@ -9,26 +9,48 @@ class Category extends Model
 {
     use HasFactory;
 
-    // Khai báo tên bảng nếu không theo quy ước Laravel
     protected $table = 'categories';
 
-    // Các trường cho phép gán giá trị hàng loạt
+    // Các trường được phép gán hàng loạt
     protected $fillable = [
         'tentheloai',
         'nhom',
+        'description',
+        'status',  // trạng thái hoạt động (true/false)
+        'image',
     ];
 
-    // Nếu bạn muốn khai báo các trường ngày tháng (mặc định Laravel đã tự hiểu)
+    // Tự động cast kiểu dữ liệu
+    protected $casts = [
+        'status' => 'boolean',
+    ];
+
+    // Các trường ngày giờ (Laravel tự nhận nhưng khai báo cho rõ)
     protected $dates = [
         'created_at',
         'updated_at',
     ];
 
-    // Quan hệ: 1 category có nhiều news (nếu có trường category_id hoặc theo logic của bạn)
-    // Nếu bảng news không có category_id thì bỏ phần này
+    // Quan hệ: Một thể loại có nhiều tin tức
     public function news()
     {
         return $this->hasMany(News::class);
     }
+
+    // Quan hệ: Một thể loại có nhiều nghệ sĩ
+    public function artists()
+    {
+        return $this->hasMany(Artist::class);
+    }
+
+    // Quan hệ: Một thể loại có nhiều bài hát
+    public function songs()
+    {
+        return $this->hasMany(Song::class);
+    }
+    public function artist()
+{
+    return $this->belongsTo(Artist::class, 'nghesi');
+}
 
 }

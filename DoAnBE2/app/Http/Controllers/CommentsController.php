@@ -36,25 +36,35 @@ public function edit($id)
         $news = News::all();
         return view('admin.comments.create', compact('users', 'news'));
     }
-
-    // Lưu bình luận mới
-    public function store(Request $request)
-    {
-        
-  $request->validate([
-    'user_id' => 'required|exists:users,user_id',
-    'news_id' => 'required|exists:news,id',
-    'noidung' => 'required|string|max:1000',
-]);
-
-        Comment::create([
-            'user_id' => $request->user_id,
-            'news_id' => $request->news_id,
-            'noidung' => $request->noidung,
-        ]);
-
-        return redirect()->route('admin.comments.index')->with('success', 'Bình luận đã được thêm.');
+public function store(Request $request, $id)
+{
+    if (!auth()->check()) {
+        return response()->json(['message' => 'Bạn cần đăng nhập để bình luận.'], 403);
     }
+
+    $request->validate([
+        'noidung' => 'required|string|max:1000',
+    ]);
+
+    $comment = Comment::create([
+        'user_id' => auth()->id(),
+        'news_id' => $id,
+        'noidung' => $request->noidung,
+    ]);
+
+    $comment->load('user');
+
+    return response()->json([
+        'username' => $comment->user->username,  // hoặc ->name tùy model của bạn
+        'noidung' => $comment->noidung,
+        'time' => $comment->created_at->diffForHumans(),
+    ]);
+}
+
+
+
+
+
     // Cập nhật bình luận
     public function update(Request $request, $id)
     {
@@ -79,14 +89,23 @@ public function edit($id)
     }
 
     // Tìm kiếm bình luận theo nội dung
-    public function search(Request $request)
-    {
-        $query = $request->input('query');
+public function search(Request $request)
+{
+    $query = $request->input('query');
 
-        $comments = Comment::where('noidung', 'like', '%' . $query . '%')
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
+    $comments = Comment::with(['user', 'news'])
+        ->where(function ($q) use ($query) {
+            $q->where('noidung', 'like', '%' . $query . '%')
+              ->orWhereHas('user', function ($q2) use ($query) {
+                  $q2->where('username', 'like', '%' . $query . '%');
+              })
+              ->orWhereHas('news', function ($q3) use ($query) {
+                  $q3->where('tieude', 'like', '%' . $query . '%');
+              });
+        })
+        ->orderBy('created_at', 'desc')
+        ->paginate(10);
 
-        return view('admin.comments.index', compact('comments'))->with('query', $query);
-    }
+    return view('admin.comments.index', compact('comments'))->with('query', $query);
+}
 }

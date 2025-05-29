@@ -3,29 +3,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Thêm Bootstrap 5 -->
-
-    <style>
-    .btn {
-        padding: 6px 12px;
-        border: none;
-        border-radius: 4px;
-        color: #fff;
-        cursor: pointer;
-        text-decoration: none;
-        font-size: 14px;
-    }
-
-    .btn-primary { background-color: #007bff; }
-    .btn-secondary { background-color: #6c757d; }
-    .btn-success { background-color: #28a745; }
-    .btn-warning { background-color: #ffc107; color: #000; }
-    .btn-danger { background-color: #dc3545; }
-    .btn:hover { opacity: 0.85; }
-</style>
-
-
     @include('admin.partials.head')
+    <style>
+        .btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .btn-primary { background-color: #007bff; }
+        .btn-secondary { background-color: #6c757d; }
+        .btn-success { background-color: #28a745; }
+        .btn-warning { background-color: #ffc107; color: #000; }
+        .btn-danger { background-color: #dc3545; }
+        .btn:hover { opacity: 0.85; }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -38,8 +33,30 @@
                 <h2 class="title">Danh sách tin tức</h2>
             </div>
 
+            {{-- Thông báo flash --}}
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
+
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul style="margin: 0; padding-left: 18px;">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <section class="news-list">
-                {{-- Form tìm kiếm --}}
                 <form action="{{ route('admin.news.search') }}" method="GET" class="mb-3">
                     <input 
                         type="text" 
@@ -53,7 +70,7 @@
                     <a href="{{ route('admin.news.index') }}" class="btn btn-secondary">Xóa bộ lọc</a>
                 </form>
 
-                <div class="add-btn" style="margin-bottom: 10px;">
+                <div class="add-btn mb-3">
                     <a href="{{ route('admin.news.create') }}" class="btn btn-success">Thêm tin tức mới</a>
                 </div>
 
@@ -69,13 +86,21 @@
                     </thead>
                     <tbody id="news-table-body">
                         @forelse ($news as $item)
-                            <tr class="news-item-js">
+                            <tr>
                                 <td>{{ $item->id }}</td>
                                 <td>{{ $item->tieude }}</td>
                                 <td>{{ \Illuminate\Support\Str::limit($item->noidung, 50) }}</td>
                                 <td>
                                     @if ($item->hinhanh)
-                                        <img src="{{ asset('storage/' . $item->hinhanh) }}" alt="Hình ảnh tin tức" width="100" height="100">
+                                        @php
+                                            $hinhanh = $item->hinhanh;
+                                            if (!str_starts_with($hinhanh, 'news_images/')) {
+                                                $hinhanh = 'news_images/' . $hinhanh;
+                                            }
+                                        @endphp
+                                        <img src="{{ asset('storage/' . $hinhanh) }}" alt="Hình ảnh tin tức" width="100" height="100">
+
+                                        
                                     @else
                                         <span>Không có hình ảnh</span>
                                     @endif
