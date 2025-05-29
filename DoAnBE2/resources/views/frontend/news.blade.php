@@ -9,7 +9,10 @@
             color: #fff;
             font-family: Arial, sans-serif;
         }
-
+main {
+            overflow-y: auto; /* Cho phép cuộn nếu nội dung dài */
+            height: 100vh; /* Chiều cao đầy đủ để cuộn */
+        }
         .news-list1 {
             display: flex;
             flex-direction: column;
@@ -126,7 +129,7 @@
                 <h3><a href="{{ route('frontend.news_show', ['id' => $new->id]) }}">{{ $new->tieude }}</a></h3>                          
                 <p>{{ Str::limit($new->noidung, 350) }}</p>
             </div>
-            <img src="{{ asset('storage/artists/' . $new->hinhanh) }}" alt="Hình ảnh" class="album-icon">
+            <img src="{{ asset('storage/news_images/' . $new->hinhanh) }}" alt="Hình ảnh" class="album-icon">
         </li>
     @endforeach
 </ul>

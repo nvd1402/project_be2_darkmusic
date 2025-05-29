@@ -38,23 +38,32 @@ public function edit($id)
     }
 public function store(Request $request, $id)
 {
+    if (!auth()->check()) {
+        return response()->json(['message' => 'Bạn cần đăng nhập để bình luận.'], 403);
+    }
+
     $request->validate([
         'noidung' => 'required|string|max:1000',
     ]);
 
-    Comment::create([
+    $comment = Comment::create([
         'user_id' => auth()->id(),
         'news_id' => $id,
         'noidung' => $request->noidung,
     ]);
 
-    // Nếu là AJAX
-    if ($request->ajax()) {
-        return response()->json(['success' => true, 'message' => 'Bình luận đã gửi!']);
-    }
+    $comment->load('user');
 
-    return redirect()->back()->with('success', 'Bình luận đã được gửi!');
+    return response()->json([
+        'username' => $comment->user->username,  // hoặc ->name tùy model của bạn
+        'noidung' => $comment->noidung,
+        'time' => $comment->created_at->diffForHumans(),
+    ]);
 }
+
+
+
+
 
     // Cập nhật bình luận
     public function update(Request $request, $id)
