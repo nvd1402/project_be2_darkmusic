@@ -5,12 +5,16 @@
     <title>Tin tức</title>
     <style>/* Container chính */
 .container main {
-    max-width: 1200px;
-    margin: 0 auto;
+    max-width: 1400px;
+    
     padding: 20px;
     box-sizing: border-box;
+    margin-right: -438px;
 }
-
+main {
+            overflow-y: auto; /* Cho phép cuộn nếu nội dung dài */
+            height: 100vh; /* Chiều cao đầy đủ để cuộn */
+        }
 /* Phần nhóm thể loại */
 .container-group {
     display: flex;

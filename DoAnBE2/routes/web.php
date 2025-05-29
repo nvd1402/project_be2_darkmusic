@@ -24,6 +24,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\CommentsController;
 
 use App\Http\Controllers\ListeningHistoryController;
+use App\Http\Controllers\SongViewController;
 
 // === Public routes (guest only) ===
 Route::middleware('guest')->group(function () {
@@ -164,6 +165,9 @@ Route::get('/category/{tentheloai}', [CategoryController::class, 'show'])->name(
 
     Route::post('/listening-history/clear-all', [ListeningHistoryController::class, 'clearAll'])->name('listening.history.clearAll');
 
+Route::post('/song/{song}/view', [SongViewController::class, 'incrementView'])->name('song.view.increment');
+
+
 
     Route::get('/vip/register', [VipController::class, 'showRegistrationForm'])->name('vip.register');
     // Route để hiển thị trang thanh toán, nhận tham số gói VIP
@@ -177,6 +181,9 @@ Route::get('/category/{tentheloai}', [CategoryController::class, 'show'])->name(
 //    Route::get('/payment/checkout/{plan}', [PaymentController::class, 'showCheckout'])->name('payment.checkout');
 
     Route::get('/favorite', [HomeController::class, 'favorite'])->name('favorite');
+    Route::delete('/favorites/{favourite}', [HomeController::class, 'destroy'])
+        ->name('favorites.destroy')
+        ->middleware('auth');
 });
 //Route::post('/song/{id}/toggle-like', [AdminController::class, 'toggleLike'])
 //    ->name('song.toggleLike')
