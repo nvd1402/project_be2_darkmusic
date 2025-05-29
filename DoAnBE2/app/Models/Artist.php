@@ -10,6 +10,12 @@ class Artist extends Model
     protected $primaryKey = 'id';
     protected $fillable  = [
         'name_artist',
-        'genre'
+        'image_artist',
+        'category_id'
     ];
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 }

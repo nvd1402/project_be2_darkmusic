@@ -6,9 +6,12 @@
     box-sizing: border-box;
     font-family: "Roboto", sans-serif;
 }
+
 /* news */
 
 /* General Styles */
+
+/*end thanh phan trang*/
 .news-list {
     margin-top: 20px;
     background-color: #fff;
@@ -16,7 +19,6 @@
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-
 
 .add-btn {
     margin-left: auto;
@@ -29,7 +31,8 @@ table {
     margin-top: 20px;
 }
 
-table th, table td {
+table th,
+table td {
     padding: 12px;
     text-align: left;
     border-bottom: 1px solid #ddd;
@@ -64,7 +67,7 @@ table tr:hover {
 }
 
 .btn.edit {
-    background-color: #4CAF50;
+    background-color: #4caf50;
 }
 
 .btn.edit:hover {
@@ -113,7 +116,9 @@ form button:hover {
     color: #333;
 }
 
-.news-form input[type="text"], .news-form input[type="file"], .news-form textarea {
+.news-form input[type="text"],
+.news-form input[type="file"],
+.news-form textarea {
     width: 100%;
     padding: 10px;
     margin-bottom: 15px;
@@ -165,7 +170,8 @@ form button:hover {
         margin-left: 200px;
     }
 
-    table th, table td {
+    table th,
+    table td {
         padding: 8px;
     }
 
@@ -177,7 +183,6 @@ form button:hover {
         padding: 8px 12px;
     }
 }
-
 
 /* category*/
 .category-list {
@@ -220,7 +225,8 @@ form button:hover {
     margin-bottom: 30px;
 }
 
-.category-table th, .category-table td {
+.category-table th,
+.category-table td {
     padding: 12px;
     border: 1px solid #ddd;
 }
@@ -263,7 +269,6 @@ form button:hover {
     background-color: #218838;
 }
 
-
 /*doanh thu*/
 .info-revenue {
     width: 200px;
@@ -305,7 +310,36 @@ form button:hover {
 .revenue-table th {
     background-color: #f2f2f2;
 }
+
 /************************trang artist************************/
+.search-artist {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    font-weight: 600;
+}
+.search-artist input {
+    padding: 2px 5px;
+    font-size: 15px;
+    width: full;
+    height: 30px;
+    width: 400px;
+}
+.search_query {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    font-weight: 600;
+}
+.search_query input {
+    padding: 2px 5px;
+    font-size: 15px;
+    height: 50px;
+    width: 400px;
+    border-radius: 10px;
+}
 .btn--crud--artist {
     padding: 4px 30px;
     background-color: #5a6af9;
@@ -318,6 +352,25 @@ form button:hover {
 .btn--crud--artist:hover {
     scale: 1.05;
     background-color: #5b6bf8;
+}
+.link--artist {
+    color: black;
+}
+
+/************************trang ad************************/
+.search-select {
+    margin-left: 10px;
+    text-align: center;
+    width: 100px;
+    padding: 2px 5px;
+    height: 30px;
+    font-size: 18px;
+    font-weight: 500;
+    border-radius: 5px;
+}
+.search-select option {
+    font-size: 16px;
+    font-weight: 400;
 }
 
 /************************trang user************************/
@@ -359,10 +412,11 @@ td {
 
 .flex-container {
     display: grid;
+
     grid-template-columns: repeat(4, 1fr); /* 3 cột */
-    margin-left: 100px;
     margin-top: 10px;
-    width: 50vw;
+    margin-left: -50px;
+    width: 30vw;
     height: 60vh;
 }
 .flex-container .boxPageAdmin {
@@ -417,6 +471,8 @@ td {
     to {
         transform: scale(105%);
     }
+
+
 }
 
 /************************logo login user************************/
@@ -437,7 +493,7 @@ td {
     box-shadow: 0 0 10px rgba(87, 115, 255, 0.1);
 }
 .song-list .title {
-    margin-top: 10px;
+    margin-top: 5px;
     color: #0020c2;
     margin-bottom: 5px;
 }
@@ -447,6 +503,12 @@ td {
     color: #0020c2;
     margin-bottom: 5px;
 }
+.newTitle {
+    margin-top: 0px;
+    font-size: 34px;
+    color: #0020c2;
+}
+
 
 .subtitle {
     color: #666;
@@ -636,16 +698,16 @@ select.is-invalid {
     padding: 10px;
 }
 
-.song-list .title {
+.song-list .newTitle {
     color: #5773ff;
     font-size: 34px;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
     text-align: center;
 }
 
 .song-list .add-btn {
     text-align: right;
-    margin-bottom: 20px;
+    margin-right: 100px;
 }
 
 .song-list .add-btn a {
@@ -889,9 +951,8 @@ body {
     transition: all 0.3s ease;
 }
 
-
-.container main  .search {
-    margin-right: 25%;
+.container main .search {
+    margin-right: 20%;
     display: flex;
     align-items: center;
     gap: 6px;
@@ -902,7 +963,7 @@ body {
     border-radius: 8px;
 }
 
-.container main header  input {
+.container main header input {
     width: 100%;
     background-color: transparent;
     border: none;

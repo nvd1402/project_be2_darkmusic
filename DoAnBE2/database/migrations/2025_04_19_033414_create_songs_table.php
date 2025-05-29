@@ -15,12 +15,13 @@ return new class extends Migration
             $table->id();
             $table->string('tenbaihat');
             $table->unsignedBigInteger('nghesi')->nullable(); // Thay đổi kiểu dữ liệu của cột 'nghesi'
-            $table->string('theloai');
+            $table->unsignedBigInteger('theloai');
             $table->string('file_amthanh');
             $table->string('anh_daidien')->nullable();
             $table->timestamps();
 
             $table->foreign('nghesi')->references('id')->on('artists')->onDelete('cascade'); // Thêm khóa ngoại
+            $table->foreign('theloai')->references('id')->on('categories')->onDelete('cascade');
         });
     }
 

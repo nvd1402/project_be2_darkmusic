@@ -12,6 +12,7 @@
         <main>
             <!-- include file header -->
             @include('admin.partials.header')
+            
 
             <!-- Content -->
             <div>
@@ -21,20 +22,12 @@
             <section class="news-form">
                 <h3>Thêm tin tức</h3>
 
-                <!-- Hiển thị lỗi nếu có -->
-                @if ($errors->any())
-                    <div class="error">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
+                
 
                 <!-- resources/views/admin/news/create.blade.php -->
 <form action="{{ route('admin.news.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
+    
     <label for="tieude">Tiêu đề(*)</label>
     <input type="text" id="tieude" name="tieude" placeholder="Nhập tiêu đề tin tức" value="{{ old('tieude') }}" required>
     @if ($errors->has('tieude'))

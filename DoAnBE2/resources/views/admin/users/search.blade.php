@@ -11,7 +11,7 @@
 
         <!-- Tìm kiếm người dùng -->
         <form action="{{ route('admin.users.search') }}" method="GET">
-            <input type="text" name="query" placeholder="Tìm kiếm người dùng" value="{{ request()->query('query') }}">
+            <input type="text" name="query" placeholder="Tìm kiếm người dùng." value="{{ request()->query('query') }}">
         </form>
 
 

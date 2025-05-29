@@ -16,22 +16,38 @@
         </div>
         <section class="add-song">
 
-            <form action="{{ route('admin.artist.post.create') }}" method="post" >
+            <form action="{{ route('admin.artist.post.create') }}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="form-group mb-3">
                     <label for="name_artist">Nhập tên nghệ sĩ</label>
                     <input type="text"  placeholder="Name Artist" class="form-control" name="name_artist"
                         required>
+                    @error('name_artist')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
                 </div>
+                
                 <div class="form-group mb-3">
-                    <label for="name_genre">Chọn thể loại âm nhạc</label>
-                    <select id="name_genre" name="name_genre" required>
+                    <label for="category_id">Chọn thể loại âm nhạc</label>
+                    <select id="category_id" name="category_id" required>
                         <option value="" style="display: none;">Chọn thể loại âm nhạc</option>
-                        <option value="1">Nhạc trẻ</option>
-                        <option value="2">Kpop</option>
-                        <option value="3">Rap Việt</option>
+                        @foreach ( $categories as $category )
+                            <option value="{{ $category->id }}">{{ $category->tentheloai }}</option>
+                        @endforeach
                     </select>
+                    @error('category_id')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
                 </div>
+
+                <div class="form-group mb-3">
+                    <label for="image_artist">Ảnh đại diện</label>
+                    <input id="image_artist" type="file" name="image_artist">
+                    @error('image_artist')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+
                 <div class="d-grid mx-auto">
                     <button type="submit" class="btn--crud--artist">Thêm</button>
                 </div>
