@@ -1,20 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>@include('admin.partials.head')</head>
+<head>
+    @include('admin.partials.head')
+    <style>
+        /* Styles cho các thông báo tổng hợp */
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+        .alert-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+        /* Style cho lỗi validation dưới từng trường */
+        .text-danger {
+            color: #e3342f;
+            font-size: 0.875em;
+            margin-top: 5px;
+            display: block;
+        }
+    </style>
+</head>
 <body>
 <div class="container">
-    <!-- Include Sidebar -->
     @include('admin.partials.sidebar')
-    <!-- Main Content -->
     <main>
-        <!-- Include Header -->
         @include('admin.partials.header')
 
-        <!-- Content -->
         <div>
             <h2 class="title">Sửa thông tin bài hát</h2>
             <p class="subtitle">Quản lý bài hát / Sửa thông tin bài hát</p>
         </div>
+
+        {{-- HIỂN THỊ CÁC THÔNG BÁO FLASH MESSAGE (success, error, info) --}}
+        @if (session('success'))
+            <div class="alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+        @if (session('error'))
+            <div class="alert-error">
+                {{ session('error') }}
+            </div>
+        @endif
+        @if (session('info'))
+            <div class="alert-info">
+                {{ session('info') }}
+            </div>
+        @endif
+
+        {{-- HIỂN THỊ TẤT CẢ LỖI VALIDATION TỔNG HỢP --}}
+        @if ($errors->any())
+            <div class="alert-error">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
         <section class="add-song">
             <p class="note">Lưu ý: Những trường hợp (*) là trường hợp bắt buộc.</p>
@@ -22,11 +82,17 @@
             <form action="{{ route('admin.songs.update', $song->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
+                {{-- THÊM TRƯỜNG ẨN CHO OPTIMISTIC LOCKING --}}
+                <input type="hidden" name="updated_at" value="{{ old('updated_at', $song->updated_at) }}">
+
 
                 <div class="form-row">
                     <div class="form-group half">
                         <label for="tenbaihat">Tên bài hát (*)</label>
                         <input type="text" id="tenbaihat" name="tenbaihat" value="{{ old('tenbaihat', $song->tenbaihat) }}" required>
+                        @error('tenbaihat')
+                        <small class="text-danger">{{ $message }}</small>
+                        @enderror
                     </div>
 
                     <div class="form-group half">
@@ -34,27 +100,34 @@
                         <select id="nghesi" name="nghesi" required>
                             <option value="">-- Chọn nghệ sĩ --</option>
                             @foreach ($artists as $artist)
-                                <option value="{{ $artist->id }}" {{ $song->nghesi == $artist->id ? 'selected' : '' }}>
+                                <option value="{{ $artist->id }}" {{ old('nghesi', $song->nghesi) == $artist->id ? 'selected' : '' }}>
                                     {{ $artist->name_artist }}
                                 </option>
                             @endforeach
                         </select>
+                        @error('nghesi')
+                        <small class="text-danger">{{ $message }}</small>
+                        @enderror
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="theloai">Thể loại (*)</label>
                     <select id="theloai" name="theloai" required>
+                        <option value="">-- Chọn thể loại --</option> {{-- Thêm option mặc định --}}
                         @foreach($categories as $category)
-                            <option value="{{ $category->id }}" {{ $song->theloai == $category->id  ? 'selected' : '' }}>
+                            <option value="{{ $category->id }}" {{ old('theloai', $song->theloai) == $category->id  ? 'selected' : '' }}>
                                 {{ $category->tentheloai }}
                             </option>
                         @endforeach
                     </select>
+                    @error('theloai')
+                    <small class="text-danger">{{ $message }}</small>
+                    @enderror
                 </div>
 
                 <div class="form-group full">
-                    <label for="file_amthanh">Tệp file âm thanh (*)</label>
+                    <label for="file_amthanh">Tệp file âm thanh</label> {{-- Không còn bắt buộc cho update --}}
                     <input style="width: 100%" type="file" id="file_amthanh" name="file_amthanh" accept="audio/*">
                     <small>Chỉ chấp nhận file mp3, wav, ogg.</small>
                     @if($song->file_amthanh)
@@ -66,11 +139,14 @@
                             </audio>
                         </div>
                     @endif
+                    @error('file_amthanh')
+                    <small class="text-danger">{{ $message }}</small>
+                    @enderror
                 </div>
 
                 <div class="form-group fullinput">
                     <label for="anh_daidien">Tệp file ảnh đại diện</label>
-                    <input style="width: 100%" type="file" id="anh_daidien" name="anh_daidien" accept="images/*">
+                    <input style="width: 100%" type="file" id="anh_daidien" name="anh_daidien" accept="image/*"> {{-- Đổi accept thành image/* --}}
                     <small>Chỉ chấp nhận ảnh định dạng jpg, png, tối đa 2MB.</small>
                     @if($song->anh_daidien)
                         <div>
@@ -78,6 +154,9 @@
                             <img src="{{ asset('storage/' . $song->anh_daidien) }}" alt="anh_daidien" width="100px">
                         </div>
                     @endif
+                    @error('anh_daidien')
+                    <small class="text-danger">{{ $message }}</small>
+                    @enderror
                 </div>
 
                 <div class="form-actions">

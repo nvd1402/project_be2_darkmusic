@@ -3,146 +3,171 @@
 <head>
     @include('frontend.partials.head')
     <title>Tin tức</title>
-    <style>
-        /* Container chính */
-        .container main {
-            max-width: 1200px;
-            margin: 0px auto;
-            padding: 20px;
-            box-sizing: border-box;
+    <style>/* Container chính */
+.container main {
+    max-width: 1400px;
+    
+    padding: 20px;
+    box-sizing: border-box;
+    margin-right: -438px;
+}
+main {
+            overflow-y: auto; /* Cho phép cuộn nếu nội dung dài */
+            height: 100vh; /* Chiều cao đầy đủ để cuộn */
         }
-
-        /* Phần nhóm thể loại */
-   .container-group {
+/* Phần nhóm thể loại */
+.container-group {
     display: flex;
-    flex-direction: column; /* cho mỗi nhóm 1 dòng theo chiều dọc */
+    flex-direction: column;
     gap: 20px;
-    margin-top: 30px; 
+    margin-top: 30px;
+}
+
+.container {
+    padding: 0 20px;
+    box-sizing: border-box;
 }
 
 
-        .group-box {
-            background: linear-gradient(145deg, #22223b, #1e1e2f);
-          
-       
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
-            color: #fff;
-            display: flex;
-            flex-direction: column;
-            height: 150px;
-        }
+/* Box từng nhóm */
+.group-box {
+    background: linear-gradient(145deg, #1f1f2f, #2a2a40);
+    border-radius: 20px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    height: 220px;
+}
 
-        .group-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: #ffcc00;
-            text-align: center;
-            margin-bottom: 22px;
-            letter-spacing: 1.2px;
-            user-select: none;
-        }
+/* Tên nhóm */
+.group-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 12px 0 4px 20px;
+    letter-spacing: 1px;
+    user-select: none;
+}
 
-        /* Carousel container */
-        .carousel-container {
-            position: relative;
-            overflow: hidden;
-            flex-grow: 1;
-        }
+/* Carousel */
+.carousel-container {
+    position: relative;
+    overflow: hidden;
+    flex-grow: 1;
+    padding: 0 40px;
+}
 
-        /* Track chứa các category */
-        .carousel-track {
-            display: flex;
-            gap: 12px;
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            will-change: transform;
-        }
+/* Track các thể loại */
+.carousel-track {
+    display: flex;
+    gap: 14px;
+    transition: transform 0.4s ease-in-out;
+    will-change: transform;
+}
 
-        /* Item category */
-        .category-item {
-            min-width: 160px;
-            list-style: none;
-            flex-shrink: 0;
-        }
+/* Item category */
+.category-item {
+    min-width: 160px;
+    flex-shrink: 0;
+    list-style: none;
+}
 
-        .category-item a {
-            display: block;
-            background-color: #292942;
-            padding: 14px 18px;
-            border-radius: 12px;
-            color: #fff;
-            font-weight: 600;
-            text-align: center;
-            text-decoration: none;
-            box-shadow: 0 4px 10px rgb(0 0 0 / 0.3);
-            user-select: none;
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
-        }
+.category-item a {
+    display: block;
+    height: 170px;
+    width: 250px;
+    
+    margin: 0 10px 0 40px;
 
-        .category-item a:hover {
-            background-color: #3e3e60;
-            box-shadow: 0 6px 16px rgba(62, 62, 96, 0.7);
-        }
+    background-color: #373757;
+    padding: 14px 18px;
+    border-radius: 14px;
+    color: #ffffff;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    user-select: none;
+    transition: background-color 0.3s, transform 0.3s;
+}
 
-        /* Nút điều hướng carousel */
-        .carousel-btn {
-            position: absolute;
-            top: 70%;
-            transform: translateY(-50%);
-            background-color: #ffcc00;
-            border: none;
-            padding: 8px 14px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 700;
-            color: #222;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.3);
-            user-select: none;
-            opacity: 0.85;
-            transition: opacity 0.3s ease;
-            z-index: 10;
-        }
+.category-item a:hover {
+    background-color: #4b4b74;
+    transform: scale(1.05);
+    box-shadow: 0 6px 16px rgba(80, 80, 120, 0.6);
+}
 
-        .carousel-btn:hover:not(:disabled) {
-            opacity: 1;
-        }
+/* Nút điều hướng */
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(255, 255, 255, 0.15);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    padding: 8px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 700;
+    color: #fff;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+    user-select: none;
+    opacity: 0.7;
+    transition: all 0.3s ease;
+    z-index: 10;
+    backdrop-filter: blur(5px);
+}
 
-        .carousel-btn:disabled {
-            opacity: 0.3;
-            cursor: default;
-        }
+.carousel-btn:hover:not(:disabled) {
+    background-color: rgba(255, 255, 255, 0.35);
+    opacity: 1;
+    transform: translateY(-50%) scale(1.08);
+}
 
-        .btn-prev {
-            left: 8px;
-        }
+.carousel-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
 
-        .btn-next {
-            right: 8px;
-        }
+.btn-prev {
+    left: 10px;
+}
 
-        /* Responsive: giảm số item hiển thị */
-        @media (max-width: 900px) {
-            .container-group {
-                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            }
-            .category-item {
-                min-width: 140px;
-            }
-        }
+.btn-next {
+    right: 10px;
+}
 
-        @media (max-width: 600px) {
-            .container-group {
-                grid-template-columns: 1fr;
-            }
-            .group-box {
-                height: auto;
-            }
-        }
-        .category-title{
-            color:rgb(255, 255, 255);
-            text-align: center;
-            justify-content: center;
-            align-items: center;
-        }
+/* Tiêu đề */
+.category-title {
+    color: #ffffff;
+    text-align: center;
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .category-item {
+        min-width: 140px;
+    }
+
+    .carousel-container {
+        padding: 0 20px;
+    }
+}
+
+@media (max-width: 600px) {
+    .group-box {
+        height: auto;
+        padding-bottom: 20px;
+    }
+
+    .carousel-btn {
+        display: none;
+    }
+}
+
     </style>
 </head>
 <body class="text-light">
@@ -160,35 +185,39 @@
         </header>
 
         <!-- Danh sách thể loại theo nhóm -->
-        <section class="category-section">
-            <h2 class="category-title">Danh sách thể loại</h2>
-            <div class="container-group">
-                @foreach ($nhoms as $index => $nhom)
-                    <div class="group-box" data-index="{{ $index }}">
-                        <h3 class="group-title">{{ $nhom }}</h3>
-                        <div class="carousel-container">
-                            <button class="carousel-btn btn-prev" data-index="{{ $index }}" aria-label="Prev">&lt;</button>
-                            <ul class="carousel-track" id="carousel-track-{{ $index }}">
-                                @foreach ($categoriesByNhom[$nhom] as $category)
-                                    <li class="category-item">
+<section class="category-section">
+    <h2 class="category-title">Danh sách thể loại</h2>
+    <div class="container-group">
+        @foreach ($nhoms as $index => $nhom)
+            @php
+                // Lọc chỉ những thể loại đang hoạt động (status = 1)
+                $categories = ($categoriesByNhom[$nhom] ?? collect())->where('status', true);
+            @endphp
 
-
-<a href="{{ route('frontend.category_show', ['tentheloai' => $category->tentheloai]) }}">
-    {{ $category->tentheloai }}
-</a>
-
-
-
-
-                                    </li>
-                                @endforeach
-                            </ul>
-                            <button class="carousel-btn btn-next" data-index="{{ $index }}" aria-label="Next">&gt;</button>
-                        </div>
+            @if ($categories->isNotEmpty())
+                <div class="group-box" data-index="{{ $index }}">
+                    <h3 class="group-title">{{ $nhom }}</h3>
+                    <div class="carousel-container">
+                        <button class="carousel-btn btn-prev" data-index="{{ $index }}" aria-label="Prev">&lt;</button>
+                        <ul class="carousel-track" id="carousel-track-{{ $index }}">
+                            @foreach ($categories as $category)
+                                <li class="category-item">
+                                    <a href="{{ route('frontend.category_show', ['tentheloai' => $category->tentheloai]) }}">
+                                        <img src="{{ asset('storage/category/' . $category->image) }}" alt="{{ $category->tentheloai }}" style="width: 100%; height: 100px; object-fit: cover; border-radius: 8px; margin-bottom: 8px;">
+                                        <div style="font-weight: bold; color: #fff;">{{ $category->tentheloai }}</div>
+                                    </a>
+                                </li>
+                            @endforeach
+                        </ul>
+                        <button class="carousel-btn btn-next" data-index="{{ $index }}" aria-label="Next">&gt;</button>
                     </div>
-                @endforeach
-            </div>
-        </section>
+                </div>
+            @endif
+        @endforeach
+    </div>
+</section>
+
+
     </main>
 </div>
 

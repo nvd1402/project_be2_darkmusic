@@ -36,25 +36,35 @@ public function edit($id)
         $news = News::all();
         return view('admin.comments.create', compact('users', 'news'));
     }
-
-    // Lưu bình luận mới
-    public function store(Request $request)
-    {
-        
-  $request->validate([
-    'user_id' => 'required|exists:users,user_id',
-    'news_id' => 'required|exists:news,id',
-    'noidung' => 'required|string|max:1000',
-]);
-
-        Comment::create([
-            'user_id' => $request->user_id,
-            'news_id' => $request->news_id,
-            'noidung' => $request->noidung,
-        ]);
-
-        return redirect()->route('admin.comments.index')->with('success', 'Bình luận đã được thêm.');
+public function store(Request $request, $id)
+{
+    if (!auth()->check()) {
+        return response()->json(['message' => 'Bạn cần đăng nhập để bình luận.'], 403);
     }
+
+    $request->validate([
+        'noidung' => 'required|string|max:1000',
+    ]);
+
+    $comment = Comment::create([
+        'user_id' => auth()->id(),
+        'news_id' => $id,
+        'noidung' => $request->noidung,
+    ]);
+
+    $comment->load('user');
+
+    return response()->json([
+        'username' => $comment->user->username,  // hoặc ->name tùy model của bạn
+        'noidung' => $comment->noidung,
+        'time' => $comment->created_at->diffForHumans(),
+    ]);
+}
+
+
+
+
+
     // Cập nhật bình luận
     public function update(Request $request, $id)
     {

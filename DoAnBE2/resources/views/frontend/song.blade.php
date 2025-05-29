@@ -3,7 +3,13 @@
 <head>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @include('frontend.partials.head')
+
     <style>
+        main {
+            overflow-y: auto; /* Cho phép cuộn nếu nội dung dài */
+            height: 100vh; /* Chiều cao đầy đủ để cuộn */
+        }
+
         .heart-float {
             position: absolute;
             animation: floatUp 1s ease-out;
@@ -68,9 +74,22 @@
                             <div class="song-audio">
                                 <audio id="audio-{{ $song->id }}" src="{{ asset('storage/'. $song->file_amthanh) }}"></audio>
                                 <div class="audio-controls">
-                                    <button class="play-pause-button" data-audio-id="audio-{{ $song->id }}">
-                                        <i class="fas fa-play"></i> </button>
-                                    <span class="audio-duration">0:00 / 0:00</span>
+                                    <button class="play-pause-button " data-audio-id="audio-{{ $song->id }}">
+                                        <i class='bx bx-play-circle'></i>
+                                    </button>
+                      <span class="audio-duration">0:00 / 0:00
+    <br>
+
+
+
+</span>
+<small class="view-count" data-song-id="{{ $song->id }}">
+    Lượt xem: {{ $song->songView->views ?? 0 }}
+</small>
+
+
+
+
                                 </div>
                             </div>
                             <div>
@@ -119,5 +138,10 @@
 
 <script type='text/javascript' src="script.js"></script>
 <script type='text/javascript' src="{{ asset('assets/frontend/js/songs.js') }}"></script>
+
+
+
+
+
 </body>
 </html>

@@ -9,7 +9,10 @@
             color: #fff;
             font-family: Arial, sans-serif;
         }
-
+main {
+            overflow-y: auto; /* Cho phép cuộn nếu nội dung dài */
+            height: 100vh; /* Chiều cao đầy đủ để cuộn */
+        }
         .news-list1 {
             display: flex;
             flex-direction: column;
@@ -118,23 +121,28 @@
             </div>
 
             <div class="genre-content">
-                <ul class="news-list1">
-                    @foreach($news as $new)
-                        <li class="song-item">
-                            <div class="song-info">
-                                <span class="donvidang">{{ $new->donvidang }}</span>
-                               <h3><a href="{{ route('frontend.news_show', ['id' => $new->id]) }}">{{ $new->tieude }}</a></h3>                          
-                                <p>{{ Str::limit($new->noidung, 350) }}</p>
-                            </div>
-                            <img src="{{ asset('storage/' . $new->hinhanh) }}" alt="Hình ảnh" class="album-icon">
-                        </li>
-                    @endforeach
-                </ul>
+        <ul class="news-list1" id="news-list-container">
+    @foreach($news as $new)
+        <li class="song-item news-item-js">
+            <div class="song-info">
+                <span class="donvidang">{{ $new->donvidang }}</span>
+                <h3><a href="{{ route('frontend.news_show', ['id' => $new->id]) }}">{{ $new->tieude }}</a></h3>                          
+                <p>{{ Str::limit($new->noidung, 350) }}</p>
             </div>
+            <img src="{{ asset('storage/news_images/' . $new->hinhanh) }}" alt="Hình ảnh" class="album-icon">
+        </li>
+    @endforeach
+</ul>
+            </div>
+<div id="pagination-controls" style="margin-top: 15px; text-align: center;"></div>
+
+
         </section>
     </main>
 </div>
 
 <script src="{{ asset('js/script.js') }}"></script>
+    <script src="{{ asset('assets/frontend/js/news-pagination.js') }}"></script>
+
 </body>
 </html>

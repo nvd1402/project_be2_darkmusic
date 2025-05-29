@@ -4,6 +4,10 @@
 <head>
     @include('admin.partials.head')
     <style>
+        main {
+            overflow-y: auto; /* Cho phép cuộn nếu nội dung dài */
+            height: 100vh; /* Chiều cao đầy đủ để cuộn */
+        }
         .btn {
             padding: 6px 12px;
             border: none;
@@ -36,6 +40,7 @@
             padding: 10px;
             border: 1px solid #ddd;
             text-align: left;
+            vertical-align: middle;
         }
 
         th {
@@ -59,6 +64,20 @@
             justify-content: space-between;
             align-items: center;
         }
+
+        /* Style ảnh đại diện */
+        .category-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        form.inline-form {
+            display: inline-block;
+            margin: 0;
+        }
     </style>
 </head>
 
@@ -68,6 +87,22 @@
 
         <main>
             @include('admin.partials.header')
+            @if ($errors->any())
+    <div style="background-color: #f8d7da; color: #842029; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+        <ul style="margin: 0; padding-left: 20px;">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
+@if (session('success'))
+    <div style="background-color: #d1e7dd; color: #0f5132; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+        {{ session('success') }}
+    </div>
+@endif
+
 
             <div>
                 <h2 class="title">Quản lý thể loại</h2>
@@ -96,33 +131,59 @@
                 </form>
 
                 {{-- Bảng danh sách thể loại --}}
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Tên thể loại</th>
-                            <th>Nhóm</th>
-                            <th>Hành động</th>
-                        </tr>
-                    </thead>
-                    <tbody id="category-list-container">
-                        @foreach($categories as $category)
-                            <tr class="category-item-js">
-                                <td>{{ $category->id }}</td>
-                                <td>{{ $category->tentheloai }}</td>
-                                <td>{{ $category->nhom }}</td>
-                                <td>
-                                    <a href="{{ route('admin.categories.edit', $category->id) }}" class="btn btn-warning">Sửa</a>
-                                    <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST" style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa?')">Xóa</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+               <table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Ảnh</th>
+            <th>Tên thể loại</th>
+            <th>Nhóm</th>
+            <th>Mô tả</th>
+            <th>Trạng thái</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody id="category-list-container">
+        @foreach($categories as $category)
+            <tr class="category-item-js">
+                <td>{{ $category->id }}</td>
+   <td>
+    @if ($category->image)
+        @php
+            $image = $category->image;
+            if (!str_starts_with($image, 'category/')) {
+                $image = 'category/' . $image;
+            }
+        @endphp
+        <img src="{{ asset('storage/' . $image) }}" alt="{{ $category->tentheloai }}" width="100" height="100">
+    @else
+        <span>Chưa có ảnh</span>
+    @endif
+</td>
+                <td>{{ $category->tentheloai }}</td>
+                <td>{{ $category->nhom }}</td>
+                <td>{{ Str::limit($category->description, 50) }}</td>
+                <td>
+                    @if ($category->status)
+                        <span style="color: green;">Hoạt động</span>
+                    @else
+                        <span style="color: red;">Không hoạt động</span>
+                    @endif
+                </td>
+                <td>
+                    <a href="{{ route('admin.categories.edit', $category->id) }}" class="btn btn-warning">Sửa</a>
+                    <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST" class="inline-form" onsubmit="return confirm('Bạn có chắc chắn muốn xóa?')">
+                        @csrf
+                        @method('DELETE')
+                         <input type="hidden" name="updated_at" value="{{ $category->updated_at }}">
+                        <button type="submit" class="btn btn-danger">Xóa</button>
+                    </form>
+                </td>
+            </tr>
+        @endforeach
+    </tbody>
+</table>
+
 
                 <div id="pagination-controls" style="margin-top: 15px;"></div>
             </section>
