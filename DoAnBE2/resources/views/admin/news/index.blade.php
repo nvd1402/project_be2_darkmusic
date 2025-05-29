@@ -7,6 +7,7 @@
             overflow-y: auto; /* Cho phép cuộn nếu nội dung dài */
             height: 100vh; /* Chiều cao đầy đủ để cuộn */
         }
+        /* Bạn có thể dần thay thế .btn sang Tailwind, hoặc giữ như hiện tại */
         .btn {
             padding: 6px 12px;
             border: none;
@@ -22,7 +23,30 @@
         .btn-warning { background-color: #ffc107; color: #000; }
         .btn-danger { background-color: #dc3545; }
         .btn:hover { opacity: 0.85; }
-    </style>
+   
+nav[role="navigation"] ul {
+    display: inline-flex !important;
+    flex-direction: row !important;
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+}
+nav[role="navigation"] ul {
+  gap: 0.5rem; /* khoảng cách giữa các số */
+  /* hoặc dùng padding margin cho li */
+}
+
+nav[role="navigation"] ul > li {
+  margin-left: 0.5rem; /* cách trái 0.5rem */
+}
+
+/* Nếu muốn bỏ khoảng cách âm mặc định của -space-x-px */
+nav[role="navigation"] ul {
+     margin-left: 1050px;
+    margin-top: 38px;
+}
+</style>
+
 </head>
 <body>
     <div class="container">
@@ -63,7 +87,6 @@
                 </div>
             @endif
 
-
             <section class="news-list">
                 <form action="{{ route('admin.news.search') }}" method="GET" class="mb-3">
                     <input 
@@ -102,8 +125,6 @@
                                     @if ($item->hinhanh)
                                         @php
                                             $hinhanh = $item->hinhanh;
-                                            // Kiểm tra nếu đường dẫn không bắt đầu bằng 'news_images/', thì thêm vào
-                                            // Đây là một biện pháp phòng ngừa, tùy thuộc vào cách bạn lưu đường dẫn ảnh
                                             if (!str_starts_with($hinhanh, 'news_images/')) {
                                                 $hinhanh = 'news_images/' . $hinhanh;
                                             }
@@ -123,9 +144,7 @@
                                     >
                                         @csrf
                                         @method('DELETE')
-                                        {{-- THÊM DÒNG NÀY ĐỂ GỬI updated_at KHI XÓA --}}
                                         <input type="hidden" name="updated_at" value="{{ $item->updated_at->toDateTimeString() }}">
-                                        
                                         <button type="submit" class="btn btn-danger btn-sm">Xóa</button>
                                     </form>
                                 </td>
@@ -138,12 +157,13 @@
                     </tbody>
                 </table>
 
-                <div id="pagination-controls" style="margin-top: 15px;"></div>
+                {{-- Phân trang Laravel + Tailwind --}}
+   <div class="mt-4 flex justify-center">
+    {{ $news->links('pagination::tailwind') }}
+</div>
+
             </section>
         </main>
     </div>
-
-    <script src="{{ asset('js/script.js') }}"></script>
-    <script src="{{ asset('assets/frontend/js/new-pagination.js') }}"></script>
 </body>
 </html>

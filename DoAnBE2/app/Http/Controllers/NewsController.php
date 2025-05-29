@@ -15,13 +15,14 @@ class NewsController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function index()
-    {
-        // Lấy danh sách news sắp xếp theo updated_at giảm dần (mới nhất lên đầu)
-        $news = News::orderBy('updated_at', 'desc')->get();
+public function index()
+{
+    // Thay vì get() lấy tất cả, dùng paginate để phân trang 10 bản tin/trang
+    $news = News::orderBy('updated_at', 'desc')->paginate(10);
 
-        return view('admin.news.index', compact('news'));
-    }
+    return view('admin.news.index', compact('news'));
+}
+
 
     /**
      * Tìm kiếm tin tức theo từ khóa (trang admin).
