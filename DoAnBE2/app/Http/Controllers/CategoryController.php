@@ -29,11 +29,12 @@ class CategoryController extends Controller
     }
 
     // Hiển thị danh sách thể loại
-    public function index()
-    {
-        $categories = Category::orderByDesc('updated_at')->get();
-        return view('admin.categories.index', compact('categories'));
-    }
+public function index()
+{
+    $categories = Category::orderByDesc('updated_at')->paginate(10); // mỗi trang 10 mục
+    return view('admin.categories.index', compact('categories'));
+}
+
 
     // Tìm kiếm thể loại
     public function search(Request $request)

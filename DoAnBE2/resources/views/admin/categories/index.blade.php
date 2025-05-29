@@ -78,6 +78,28 @@
             display: inline-block;
             margin: 0;
         }
+
+  nav[role="navigation"] ul {
+    display: inline-flex !important;
+    flex-direction: row !important;
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+}
+nav[role="navigation"] ul {
+  gap: 0.5rem; /* khoảng cách giữa các số */
+  /* hoặc dùng padding margin cho li */
+}
+
+nav[role="navigation"] ul > li {
+  margin-left: 0.5rem; /* cách trái 0.5rem */
+}
+
+/* Nếu muốn bỏ khoảng cách âm mặc định của -space-x-px */
+nav[role="navigation"] ul {
+     margin-left: 1050px;
+    margin-top: 38px; 
+}
     </style>
 </head>
 
@@ -87,22 +109,22 @@
 
         <main>
             @include('admin.partials.header')
+            
             @if ($errors->any())
-    <div style="background-color: #f8d7da; color: #842029; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
-        <ul style="margin: 0; padding-left: 20px;">
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
+                <div style="background-color: #f8d7da; color: #842029; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                    <ul style="margin: 0; padding-left: 20px;">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
-@if (session('success'))
-    <div style="background-color: #d1e7dd; color: #0f5132; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
-        {{ session('success') }}
-    </div>
-@endif
-
+            @if (session('success'))
+                <div style="background-color: #d1e7dd; color: #0f5132; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                    {{ session('success') }}
+                </div>
+            @endif
 
             <div>
                 <h2 class="title">Quản lý thể loại</h2>
@@ -117,7 +139,7 @@
                 </div>
 
                 {{-- Form tìm kiếm --}}
-                <form action="{{ route('admin.categories.search') }}" method="GET" class="d-flex mb-3">
+                <form action="{{ route('admin.categories.search') }}" method="GET" class="d-flex mb-3" style="gap:10px;">
                     <input 
                         type="text" 
                         name="query" 
@@ -131,66 +153,69 @@
                 </form>
 
                 {{-- Bảng danh sách thể loại --}}
-               <table>
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Ảnh</th>
-            <th>Tên thể loại</th>
-            <th>Nhóm</th>
-            <th>Mô tả</th>
-            <th>Trạng thái</th>
-            <th>Hành động</th>
-        </tr>
-    </thead>
-    <tbody id="category-list-container">
-        @foreach($categories as $category)
-            <tr class="category-item-js">
-                <td>{{ $category->id }}</td>
-   <td>
-    @if ($category->image)
-        @php
-            $image = $category->image;
-            if (!str_starts_with($image, 'category/')) {
-                $image = 'category/' . $image;
-            }
-        @endphp
-        <img src="{{ asset('storage/' . $image) }}" alt="{{ $category->tentheloai }}" width="100" height="100">
-    @else
-        <span>Chưa có ảnh</span>
-    @endif
-</td>
-                <td>{{ $category->tentheloai }}</td>
-                <td>{{ $category->nhom }}</td>
-                <td>{{ Str::limit($category->description, 50) }}</td>
-                <td>
-                    @if ($category->status)
-                        <span style="color: green;">Hoạt động</span>
-                    @else
-                        <span style="color: red;">Không hoạt động</span>
-                    @endif
-                </td>
-                <td>
-                    <a href="{{ route('admin.categories.edit', $category->id) }}" class="btn btn-warning">Sửa</a>
-                    <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST" class="inline-form" onsubmit="return confirm('Bạn có chắc chắn muốn xóa?')">
-                        @csrf
-                        @method('DELETE')
-                         <input type="hidden" name="updated_at" value="{{ $category->updated_at }}">
-                        <button type="submit" class="btn btn-danger">Xóa</button>
-                    </form>
-                </td>
-            </tr>
-        @endforeach
-    </tbody>
-</table>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Ảnh</th>
+                            <th>Tên thể loại</th>
+                            <th>Nhóm</th>
+                            <th>Mô tả</th>
+                            <th>Trạng thái</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody id="category-list-container">
+                        @forelse($categories as $category)
+                            <tr>
+                                <td>{{ $category->id }}</td>
+                                <td>
+                                    @if ($category->image)
+                                        @php
+                                            $image = $category->image;
+                                            if (!str_starts_with($image, 'category/')) {
+                                                $image = 'category/' . $image;
+                                            }
+                                        @endphp
+                                        <img src="{{ asset('storage/' . $image) }}" alt="{{ $category->tentheloai }}" width="100" height="100" class="category-image">
+                                    @else
+                                        <span>Chưa có ảnh</span>
+                                    @endif
+                                </td>
+                                <td>{{ $category->tentheloai }}</td>
+                                <td>{{ $category->nhom }}</td>
+                                <td>{{ Str::limit($category->description, 50) }}</td>
+                                <td>
+                                    @if ($category->status)
+                                        <span style="color: green;">Hoạt động</span>
+                                    @else
+                                        <span style="color: red;">Không hoạt động</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    <a href="{{ route('admin.categories.edit', $category->id) }}" class="btn btn-warning">Sửa</a>
+                                    <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST" class="inline-form" onsubmit="return confirm('Bạn có chắc chắn muốn xóa?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <input type="hidden" name="updated_at" value="{{ $category->updated_at }}">
+                                        <button type="submit" class="btn btn-danger">Xóa</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="7" class="text-center">Chưa có thể loại nào.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
 
-
-                <div id="pagination-controls" style="margin-top: 15px;"></div>
+                {{-- Phân trang Laravel + Tailwind --}}
+                <div class="pagination-wrapper">
+                    {{ $categories->withQueryString()->links('pagination::tailwind') }}
+                </div>
             </section>
         </main>
     </div>
-
-    <script src="{{ asset('js/script.js') }}"></script>
-    <script src="{{ asset('assets/frontend/js/category-pagination.js') }}"></script>
 </body>
 </html>
