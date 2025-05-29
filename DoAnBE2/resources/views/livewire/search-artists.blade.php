@@ -34,7 +34,6 @@
                 </tbody>
             </table>
     </div>
-    <!-- Pagination -->
     <div class="mt-6">
         {{ $artists->links() }}
     </div>
