@@ -31,7 +31,7 @@
                     </td>
                     <td>
                         @if($song->file_amthanh)
-                            <a href="{{ asset('storage/'.$song->file_amthanh) }}" target="_blank">{{ $song->file_amthanh }}</a>
+                            <a href="{{ asset('storage/'.$song->file_amthanh) }}" target="_blank">▶ Play</a>
                         @else
                             <p>Không có âm thanh</p>
                         @endif
