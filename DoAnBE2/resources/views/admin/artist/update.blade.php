@@ -12,7 +12,7 @@
 
         <!--content-->
         <div>
-            <h2 class="title ">Sữa nghệ sĩ</h2>
+            <h2 class="title ">Sửa nghệ sĩ</h2>
         </div>
         <section class="add-song">
 
@@ -20,11 +20,14 @@
                 @csrf
 
                 <input name="id" type="hidden" value="{{ $artist->id }}">
+                <input type="hidden" name="original_updated_at" value="{{ $artist->updated_at }}">
+
                 <div class="form-group mb-3">
                     <label for="name_artist">Tên nghệ sĩ</label>
-                    <input type="text"  placeholder="Name Artist" class="form-control" name="name_artist"
-                      value="{{ $artist->name_artist }}">
-                    @error('name_artist')
+                    <input type="text"  placeholder="Name Artist" class="form-control" @error('name_artist') is-invalid @enderror"
+                            name="name_artist" id="name_artist"
+                            value="{{ old('name_artist', $artist->name_artist) }}">
+                   @error('name_artist')
                         <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
@@ -55,12 +58,12 @@
                     <label for="image_artist">Ảnh mới (tùy chọn):</label>
                     <input type="file" name="image_artist" class="form-control">
                     @error('image_artist')
-                        <div class="text-danger">{{ $message }}</div>
+                        <div class="text-danger">{{ $error }}</div>
                     @enderror
                 </div>
 
                 <div class="d-grid mx-auto">
-                    <button type="submit" class="btn--crud--artist">Sữa</button>
+                    <button type="submit" class="btn--crud--artist">Sửa</button>
                 </div>
             </form>
         </section>
