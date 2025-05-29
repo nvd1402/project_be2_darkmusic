@@ -1,6 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>@include('frontend.partials.head') </head>
+<head>@include('frontend.partials.head')
+    <style>
+        /* CSS nội tuyến của bạn nếu có */
+        /* ... giữ nguyên các style đã có cho body, container, main, header, search, v.v. ... */
+
+        /* CSS cho phần "Thể loại" (bao gồm cả cái cũ và cái mới) */
+        .genres .header h5 {
+            color: #E0E0E0; /* Màu chữ tiêu đề */
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .genres .items {
+            display: flex;
+            flex-wrap: wrap; /* Cho phép các mục xuống dòng */
+            gap: 10px; /* Khoảng cách giữa các mục thể loại */
+            background-color: #282828; /* Màu nền cho box tổng */
+            padding: 20px; /* Khoảng đệm bên trong box */
+            border-radius: 8px; /* Bo góc box */
+        }
+
+        .genres .item {
+            background-color: #384252; /* Màu nền cho mỗi nút thể loại, giống màu xanh đậm trong ảnh */
+            border-radius: 5px;
+            padding: 8px 15px;
+            font-size: 14px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .genres .item:hover {
+            background-color: #4c5a6d; /* Màu khi hover */
+        }
+
+        .genres .item p {
+            margin: 0;
+        }
+
+        .genres .item a {
+            color: #E0E0E0; /* Màu chữ cho liên kết bên trong nút */
+            text-decoration: none;
+        }
+        .genres .item a:hover {
+            text-decoration: underline;
+        }
+
+        /* Giữ nguyên CSS cho recommended-songs-scroll-container nếu bạn vẫn muốn nó cuộn */
+        .recommended-songs-scroll-container {
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        .recommended-songs-scroll-container::-webkit-scrollbar { width: 8px; }
+        .recommended-songs-scroll-container::-webkit-scrollbar-track { background: #282828; border-radius: 10px; }
+        .recommended-songs-scroll-container::-webkit-scrollbar-thumb { background: #555; border-radius: 10px; }
+        .recommended-songs-scroll-container::-webkit-scrollbar-thumb:hover { background: #888; }
+
+    </style>
+</head>
 <body>
 @empty(!$ads)
     <div class="banner-wrapper">
@@ -88,50 +147,24 @@
         <div class="playlist">
             <div class="genres">
                 <div class="header">
-                    <h5>Genres</h5>
-                    <a> See all </a>
+                    <h5>Top 5 thể loại mới nhất</h5>
                 </div>
 
                 <div class="items">
-                    <div class="item pop">
-                        <p>Electro Pop</p>
-                        <div class="music-items__list">
-
+                    @forelse($latestCategories as $category)
+                        <div class="item">
+                            <p>
+{{--                                <a href="{{ route('frontend.category_show', ['tentheloai' => $category->tentheloai]) }}">--}}
+                                <a href="{{ route('frontend.category_show', ['tentheloai' => $category->tentheloai]) }}">{{ $category->tentheloai }}</a></p>
+                            <div class="music-items__list">
+                            </div>
                         </div>
-                    </div>
-
-                    <div class="item beat">
-                        <p>Dance Beat</p>
-                        <div class="music-items__list">
-
-                        </div>
-                    </div>
-
-                    <div class="item remix">
-                        <p>Clubhouse Remix</p>
-                        <div class="music-items__list">
-
-                        </div>
-                    </div>
-
-                    <div class="item rap">
-                        <p>Hip Hop Rap</p>
-                        <div class="music-items__list">
-
-                        </div>
-                    </div>
-
-                    <div class="item indie">
-                        <p>Alternative Indie</p>
-                        <div class="music-items__list">
-
-                        </div>
-                    </div>
-
+                    @empty
+                        <p>Không có thể loại mới nào được tìm thấy.</p>
+                    @endforelse
                     <div class="item period">
                         <p>Classical Period</p>
                         <div class="music-items__list">
-
                         </div>
                     </div>
                 </div>

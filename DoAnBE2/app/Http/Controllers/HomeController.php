@@ -38,9 +38,9 @@ class HomeController extends Controller
             ->skip(1)
             ->take(4)
             ->get();
+        $latestCategories = category::latest()->take(5)->get();
 
-
-        return view('frontend.index', compact('ads', 'latestSong', 'recommendedSongs', 'artists'));
+        return view('frontend.index', compact('ads', 'latestSong', 'recommendedSongs', 'artists', 'latestCategories'));
     }
 
 
