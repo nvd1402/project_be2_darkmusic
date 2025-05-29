@@ -67,7 +67,7 @@ class CategorySeeder extends Seeder
                 'nhom' => Arr::random($nhoms),
                 'image' => $item['image'],
                 'description' => $item['description'],
-                'status' => rand(0, 1),
+                'status' =>  1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
