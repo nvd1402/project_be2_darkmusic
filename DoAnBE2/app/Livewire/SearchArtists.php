@@ -23,7 +23,7 @@ class SearchArtists extends Component
                 })
                 ->get();
         } else {
-            $artists = Artist::paginate(10);
+            $artists =  Artist::paginate(10);
         }
         return view('livewire.search-artists', compact('artists'));
     }

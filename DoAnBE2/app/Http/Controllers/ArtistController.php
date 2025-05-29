@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Artist;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Storage;
 
 class ArtistController extends Controller
@@ -12,6 +13,9 @@ class ArtistController extends Controller
     public function indexArtist()
     {
         $artists = Artist::with('category')->get();
+        if ($artists->isEmpty()) {
+            abort(404);
+        }
         return view('admin.artist.index', ['artists' => $artists]);
     }
     public function createArtist()
@@ -93,14 +97,21 @@ class ArtistController extends Controller
     public function deleteArtist(Request $request)
     {
         $artist_id = $request->get('id');
-        $artist = Artist::findOrFail($artist_id);
 
-        if ($artist->image_artist && Storage::disk('public')->exists('artists/' . $artist->image_artist)) {
-            Storage::disk('public')->delete('artists/' . $artist->image_artist);
+        try {
+            $artist = Artist::findOrFail($artist_id);
+
+            if ($artist->image_artist && Storage::disk('public')->exists('artists/' . $artist->image_artist)) {
+                Storage::disk('public')->delete('artists/' . $artist->image_artist);
+            }
+
+            $artist->delete();
+
+            return redirect()->route('admin.artist.index')->with('success', 'Xoá nghệ sĩ thành công');
+        } catch (ModelNotFoundException $e) {
+            abort(404);
+        } catch (\Exception $e) {
+            abort(500, 'Đã xảy ra lỗi khi xoá nghệ sĩ');
         }
-
-        $artist->delete();
-
-        return redirect()->route('admin.artist.index')->with('success', 'Xoá thành công');
     }
 }

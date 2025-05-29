@@ -11,11 +11,11 @@
     <main>
         <!--include file header-->
     @include('admin.partials.header')
-
         <!--content-->
         <div>
             <h2 class="newTitle">Quản lý nghệ sĩ</h2>
         </div>
+
         <section class="song-list">
             <h2 class="newTitle" style="margin-top: -100px">Danh sách nghệ sĩ</h2>
 
@@ -27,8 +27,7 @@
         </section>
     </main>
 </div>
-    <script src="{{ asset('js/script.js') }}"></script>
-    <script type='text/javascript' src="{{ asset('assets/frontend/js/artist.js') }}"></script>
+<script src="https://cdn.tailwindcss.com"></script>
 </body>
 
 </html>
