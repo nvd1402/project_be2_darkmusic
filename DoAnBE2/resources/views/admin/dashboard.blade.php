@@ -20,7 +20,7 @@
                 </div>
                 <div class="admincount">
                     <i class="bi bi-list-ol icon"></i>
-                    <h4>Tổng số lượng người dùng: <span>#</span></h4>
+                    <h4>Tổng số lượng người dùng: <span>{{ $soluongnguoidung ?? '#' }}</span></h4>
                 </div>
             </a>
             <!-- box 2-->
@@ -31,7 +31,7 @@
                 </div>
                 <div class="admincount">
                     <i class="bi bi-music-note-list icon"></i>
-                    <h4>Tổng số lượng bài hát: <span>{{ $soLuongBaiHat }}</span></h4>
+                    <h4>Tổng số lượng bài hát: <span>{{ $soLuongBaiHat ?? '#'}}</span></h4>
                 </div>
             </a>
             <!-- box 3-->
@@ -42,7 +42,7 @@
                 </div>
                 <div class="admincount">
                     <i class="bi bi-music-note-list icon"></i>
-                                        <h4>Tổng số lượng tin tức: <span>{{ $soLuongAlbum ?? '#'}}</h4>
+                                        <h4>Tổng số lượng tin tức: <span>{{ $soluongalbum ?? '#'}}</h4>
 
                 </div>
             </a>
@@ -56,8 +56,8 @@
                 <div class="admincount">
                <i class="bi bi-list-ul icon"></i>
 
-                   
-                    <h4>Tổng số lượng thể loại: <span>{{ $soLuongTheLoai ?? '#' }}</span></h4>
+
+                    <h4>Tổng số lượng thể loại: <span>{{ $soluongtheloai ?? '#' }}</span></h4>
                 </div>
             </a>
             <!-- box 5-->
@@ -68,7 +68,7 @@
                 </div>
                 <div class="admincount">
                     <i class="bi bi-person-lines-fill icon"></i>
-                    <h4>Tổng số lượng nghệ sĩ: <span>#</span></h4>
+                    <h4>Tổng số lượng nghệ sĩ: <span>{{ $soluongnghesi ?? '#' }}</span></h4>
                 </div>
             </a>
             <!-- box 6-->
@@ -79,7 +79,7 @@
                 </div>
                 <div class="admincount">
                     <i class="bi bi-view-list icon"></i>
-                    <h4>Tổng số lượng quảng cáo: <span>#</span></h4>
+                    <h4>Tổng số lượng quảng cáo: <span>{{ $soluongquangcao ?? '#' }}</span></h4>
                 </div>
             </a>
             <!-- box 7-->
@@ -90,7 +90,7 @@
                 </div>
                 <div class="admincount">
                     <i class="bi bi-view-list icon"></i>
-                  <h4>Tổng số lượng tin tức: <span>{{ $soLuongTinTuc ?? '#' }}</span></h4>
+                  <h4>Tổng số lượng tin tức: <span>{{ $soluongtintuc ?? '#' }}</span></h4>
 
                 </div>
             </a>
@@ -103,11 +103,11 @@
     <div class="admincount">
         <!-- icon thống kê danh sách (bi-list-check) -->
         <i class="bi bi-list-check icon"></i>
-        <h4>Tổng số lượng bình luận: <span>{{ $soLuongComment ?? '#' }}</span></h4>
+        <h4>Tổng số lượng bình luận: <span>{{ $soluongcomment ?? '#' }}</span></h4>
     </div>
 </a>
 
-            
+
         </div>
     </main>
         </div>
