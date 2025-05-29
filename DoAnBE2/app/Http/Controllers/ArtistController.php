@@ -30,9 +30,22 @@ class ArtistController extends Controller
     public function postArtist(Request $request)
     {
         $request->validate([
-            'name_artist' => 'required|min:4|max:50|string',
+            'name_artist' => 'required|min:4|max:50|string|regex:/^[a-zA-Z0-9\s]+$/',
             'image_artist' => 'nullable|image|mimes:jpg,png,jpeg,gif|max:2048',
-            'category_id' => 'required|exists:categories,id'
+            'category_id' => 'required|exists:categories,id',
+        ], [
+            'name_artist.required' => 'Vui lòng nhập tên nghệ sĩ.',
+            'name_artist.min' => 'Ít nhất 4 ký tự',
+            'name_artist.max' => 'Tối đa 50 ký tự',
+            'name_artist.string' => 'Tên nghệ sĩ phải là chuỗi văn bản',
+            'name_artist.regex' => 'Không được chứa ký tự đặc biệt.',
+
+            'image_artist.image' => 'File tải lên phải là hình ảnh.',
+            'image_artist.mimes' => 'Ảnh chỉ chấp nhận định dạng jpg, png, jpeg, gif.',
+            'image_artist.max' => 'Kích thước ảnh không được vượt quá 2MB.',
+
+            'category_id.required' => 'Vui lòng chọn thể loại âm nhạc.',
+            'category_id.exists' => 'Thể loại đã chọn không hợp lệ.',
         ]);
 
         $fileName = null;
