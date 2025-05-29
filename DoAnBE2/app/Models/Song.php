@@ -35,7 +35,7 @@ class Song extends Model
     {
         return $this->belongsTo(Category::class, 'theloai', 'id');
     }
-    
+
     // Quan hệ nhiều-nhiều với người dùng thích bài hát
     public function likedByUsers()
     {
@@ -58,4 +58,15 @@ public function songView()
     {
         return $this->view ? $this->view->views : 0;
     }
+    public function usersWhoLiked()
+    {
+        // Tham số 1: Model liên quan (User::class)
+        // Tham số 2: Tên bảng pivot (song_user_likes)
+        // Tham số 3: Khóa ngoại của Song trong bảng pivot (song_id)
+        // Tham số 4: Khóa ngoại của User trong bảng pivot (user_id)
+        // Tham số 5: Khóa chính của model hiện tại (Song) - 'id' (mặc định, có thể bỏ qua)
+        // Tham số 6: Khóa chính của model liên quan (User) - 'user_id' (THAY THẾ BẰNG TÊN KHÓA CHÍNH THỰC TẾ CỦA BẢNG USERS)
+        return $this->belongsToMany(User::class, 'song_user_likes', 'song_id', 'user_id', 'id', 'user_id');
+    }
+
 }

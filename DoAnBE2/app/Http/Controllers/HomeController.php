@@ -39,10 +39,33 @@ class HomeController extends Controller
             ->take(4)
             ->get();
         $latestCategories = category::latest()->take(5)->get();
+// Lấy bài hát nổi bật được yêu thích nhất (Top Liked Song)
+        $topLikedSong = Song::with(['artist', 'category'])
+            ->withCount('usersWhoLiked')
+            ->orderByDesc('users_who_liked_count')
+            ->first(); // Lấy chỉ một bài hát
 
-        return view('frontend.index', compact('ads', 'latestSong', 'recommendedSongs', 'artists', 'latestCategories'));
+       //Lấy danh sách các bài hát yêu thích nhiều nhất (Most Liked Songs)
+        $mostLikedSongs = Song::with(['artist', 'category'])
+            ->withCount('usersWhoLiked')
+            ->orderByDesc('users_who_liked_count')
+            ->limit(5) // Lấy 5 bài
+            ->get();
+
+
+
+        // Truyền TẤT CẢ các biến cần thiết sang view
+        return view('frontend.index', compact(
+            'ads',
+            'latestSong',
+            'recommendedSongs',
+            'artists',
+            'latestCategories',
+            'topLikedSong',    // Biến mới
+            'mostLikedSongs'   // Biến mới
+        // 'featuredNews'   // Bỏ qua nếu bạn đã comment dòng truy vấn News
+        ));
     }
-
 
     public function song(string $slug): View
     {
