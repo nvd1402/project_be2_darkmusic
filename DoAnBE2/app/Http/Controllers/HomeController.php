@@ -61,9 +61,9 @@ class HomeController extends Controller
             'recommendedSongs',
             'artists',
             'latestCategories',
-            'topLikedSong',    // Biến mới
-            'mostLikedSongs'   // Biến mới
-        // 'featuredNews'   // Bỏ qua nếu bạn đã comment dòng truy vấn News
+            'topLikedSong',
+            'mostLikedSongs'
+
         ));
     }
 
