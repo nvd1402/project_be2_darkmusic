@@ -71,7 +71,8 @@ Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
     Route::resource('users', UserController::class)->except(['show']);
     Route::get('users/search', [UserController::class, 'search'])->name('users.search');
     Route::get('users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
-    Route::get('users/destroy', [UserController::class, 'destroy'])->name('users.destroy');
+    Route::delete('users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+
 
 
 
