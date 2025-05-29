@@ -52,19 +52,8 @@ class HomeController extends Controller
             ->limit(5) // Lấy 5 bài
             ->get();
 
-
-
-        // Truyền TẤT CẢ các biến cần thiết sang view
-        return view('frontend.index', compact(
-            'ads',
-            'latestSong',
-            'recommendedSongs',
-            'artists',
-            'latestCategories',
-            'topLikedSong',
-            'mostLikedSongs'
-
-        ));
+        return view('frontend.index', compact('ads', 'latestSong', 'recommendedSongs', 'artists', 'latestCategories','topLikedSong',
+            'mostLikedSongs'));
     }
 
     public function song(string $slug): View
