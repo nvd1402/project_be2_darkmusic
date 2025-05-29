@@ -195,8 +195,7 @@
                         <li>Tạo playlist không giới hạn</li>
                         <li>Nghe nhạc được tất cả các nhạc bản quyền</li>
                     </ul>
-                    {{-- Thay đổi onclick để gọi hàm JavaScript --}}
-                    <button type="button" onclick="submitVnpayForm('plus')" style="margin-top: 60px">Đăng ký gói</button>
+                    <button onclick="window.location='{{ route('frontend.payment.checkout', ['plan' => 'plus']) }}'" style="margin-top: 60px">Đăng ký gói</button>
                 </div>
                 <div class="membership-card">
                     <h3>DarkMusic Premium</h3>
@@ -207,8 +206,7 @@
                         <li>Nghe nhạc được tất cả các nhạc bản quyền</li>
                         <li>Được nghe demo trước các bản nhạc của nghệ sĩ sắp ra mắt</li>
                     </ul>
-                    {{-- Thay đổi onclick để gọi hàm JavaScript --}}
-                    <button type="button" onclick="submitVnpayForm('premium')">Đăng ký gói</button>
+                    <button onclick="window.location='{{ route('frontend.payment.checkout', ['plan' => 'premium']) }}'">Đăng ký gói</button>
                 </div>
             </div>
         </div>
@@ -221,48 +219,5 @@
 
 <script type='text/javascript' src="script.js"></script>
 <script type='text/javascript' src="{{ asset('assets/frontend/js/songs.js') }}"></script>
-
-{{-- Đoạn mã JavaScript để xử lý gửi POST request cho VNPAY --}}
-<script>
-    function submitVnpayForm(plan) {
-        let orderInfo = '';
-        if (plan === 'plus') {
-            orderInfo = 'Dang ky goi DarkMusic Plus';
-        } else if (plan === 'premium') {
-            orderInfo = 'Dang ky goi DarkMusic Premium';
-        }
-
-        // Tạo một form ẩn
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = '{{ route('frontend.vnpay.create') }}'; // Đảm bảo route này trỏ đến PaymentController@createPayment
-        form.style.display = 'none'; // Ẩn form đi
-
-        // Thêm CSRF token (rất quan trọng cho Laravel)
-        const csrfInput = document.createElement('input');
-        csrfInput.type = 'hidden';
-        csrfInput.name = '_token';
-        csrfInput.value = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        form.appendChild(csrfInput);
-
-        // Thêm input cho 'plan'
-        const planInput = document.createElement('input');
-        planInput.type = 'hidden';
-        planInput.name = 'plan';
-        planInput.value = plan;
-        form.appendChild(planInput);
-
-        // Thêm input cho 'order_info'
-        const orderInfoInput = document.createElement('input');
-        orderInfoInput.type = 'hidden';
-        orderInfoInput.name = 'order_info';
-        orderInfoInput.value = orderInfo;
-        form.appendChild(orderInfoInput);
-
-        // Thêm form vào body và submit
-        document.body.appendChild(form);
-        form.submit();
-    }
-</script>
 </body>
 </html>

@@ -164,16 +164,18 @@ Route::get('/category/{tentheloai}', [CategoryController::class, 'show'])->name(
 
     Route::post('/listening-history/clear-all', [ListeningHistoryController::class, 'clearAll'])->name('listening.history.clearAll');
 
-// Route hiển thị trang đăng ký VIP
+
     Route::get('/vip/register', [VipController::class, 'showRegistrationForm'])->name('vip.register');
+    // Route để hiển thị trang thanh toán, nhận tham số gói VIP
+    Route::get('/payment/checkout/{plan}', [PaymentController::class, 'showCheckout'])->name('payment.checkout');
 
-    Route::post('/vnpay/create-payment', [PaymentController::class, 'createPayment'])->name('vnpay.create');
-    Route::get('/vnpay/return', [PaymentController::class, 'paymentReturn'])->name('vnpay.return');
-    Route::get('/vnpay/ipn', [PaymentController::class, 'vnpayIpn'])->name('vnpay.ipn'); // IPN thường là GET hoặc POST
+    // Route để xử lý việc gửi form thanh toán (ví dụ: gửi đến cổng thanh toán VNPAY)
+    Route::post('/payment/process', [PaymentController::class, 'processPayment'])->name('payment.process');
 
-    Route::get('/favorite', [HomeController::class, 'favorite'])->name('favorite');
+    // Route này là cần thiết cho VNPAY gọi về sau khi thanh toán, bạn sẽ cần triển khai logic xử lý phản hồi ở đây
+    Route::get('/payment/return', [PaymentController::class, 'paymentReturn'])->name('payment.return');
+//    Route::get('/payment/checkout/{plan}', [PaymentController::class, 'showCheckout'])->name('payment.checkout');
 
-    // ... các route frontend.partials ...
     Route::get('/favorite', [HomeController::class, 'favorite'])->name('favorite');
 });
 //Route::post('/song/{id}/toggle-like', [AdminController::class, 'toggleLike'])
