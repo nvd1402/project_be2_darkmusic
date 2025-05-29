@@ -12,10 +12,15 @@ class LoginController extends Controller
      * Hiển thị form đăng nhập
      */
 
-    public function showLoginForm()
-    {
-        return view('auth.login');
+   public function showLoginForm(Request $request)
+{
+    if ($request->has('redirect')) {
+        session(['url.intended' => $request->query('redirect')]);
     }
+
+    return view('auth.login');
+}
+
 
     /**
      * Xử lý đăng nhập
@@ -29,23 +34,23 @@ class LoginController extends Controller
 
         $remember = $request->boolean('remember');
 
-        if (Auth::attempt($credentials, $remember)) {
-            $request->session()->regenerate();
+   if (Auth::attempt($credentials, $remember)) {
+    $request->session()->regenerate();
 
-            $user = Auth::user();
+    $user = Auth::user();
 
-            // Kiểm tra trạng thái tài khoản
-            if ($user->status === 'inactive') {
-                Auth::logout();
-                return back()->withErrors(['email' => 'Tài khoản của bạn đã bị khóa.']);
-            }
+    if ($user->status === 'inactive') {
+        Auth::logout();
+        return back()->withErrors(['email' => 'Tài khoản của bạn đã bị khóa.']);
+    }
 
-            if ($user->role === 'Admin') {
-                return redirect()->route('admin.dashboard');
-            }
+    if ($user->role === 'Admin') {
+        return redirect()->route('admin.dashboard');
+    }
 
-            return redirect()->route('frontend.home');
-        }
+    // redirect()->intended() sẽ lấy URL từ session 'url.intended'
+    return redirect()->intended(route('frontend.home'));
+}
 
         return back()
             ->withInput($request->only('email', 'remember'))
@@ -65,6 +70,7 @@ class LoginController extends Controller
         $request->session()->regenerateToken();
 
         // Quay về trang login
-        return redirect()->route('login');
+return redirect()->intended(route('frontend.home'));
+
     }
 }

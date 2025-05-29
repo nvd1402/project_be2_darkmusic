@@ -83,6 +83,22 @@
 
         <main>
             @include('admin.partials.header')
+            @if ($errors->any())
+    <div style="background-color: #f8d7da; color: #842029; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+        <ul style="margin: 0; padding-left: 20px;">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
+@if (session('success'))
+    <div style="background-color: #d1e7dd; color: #0f5132; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+        {{ session('success') }}
+    </div>
+@endif
+
 
             <div>
                 <h2 class="title">Quản lý thể loại</h2>
@@ -155,6 +171,7 @@
                     <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST" class="inline-form" onsubmit="return confirm('Bạn có chắc chắn muốn xóa?')">
                         @csrf
                         @method('DELETE')
+                         <input type="hidden" name="updated_at" value="{{ $category->updated_at }}">
                         <button type="submit" class="btn btn-danger">Xóa</button>
                     </form>
                 </td>
