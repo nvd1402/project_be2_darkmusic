@@ -6,79 +6,24 @@ use App\Models\User;
 use App\Models\Song;
 use App\Models\Artist;
 use App\Models\Category;
-use App\Models\Userss;
-use App\Models\News;
-use App\Models\Ad;
-use App\Models\Album;
-use App\Models\Comment;
+use App\Models\Userss; // Có vẻ như đây là một Model không chuẩn, hãy kiểm tra lại tên Model User của bạn
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\ModelNotFoundException; // Đảm bảo đã import này
 
 class AdminController extends Controller
 {
     public $data = [];
-    public function index()
-    {
-        $songs = Song::with(['artist', 'category'])->get();
-
-        $user = auth()->user();
-        $userLikedSongIds = $user ? $user->likedSongs->pluck('id')->toArray() : [];
-
-        return view('frontend.song', compact('songs', 'userLikedSongIds'));
-    }
-    public function showLikedSongs()
-    {
-        $user = auth()->user();  // hoặc lấy user bằng cách khác
-
-        if (!$user) {
-            return redirect()->route('login');  // hoặc xử lý khi chưa đăng nhập
-        }
-
-        $likedSongs = $user->likedSongs()->get();
-
-        return view('liked_songs', compact('likedSongs'));
-    }
-    public function toggleLike($id)
-    {
-        $user = auth()->user();
-
-        if (!$user) {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
-
-        $action = request('action');
-
-        if ($action === 'like') {
-            $user->likedSongs()->syncWithoutDetaching([$id]);
-        } elseif ($action === 'unlike') {
-            $user->likedSongs()->detach($id);
-        }
-
-        return response()->json(['message' => 'Thành công']);
-    }
-
-
-
 
     // Dashboard
     public function adminindex()
     {
         $soLuongBaiHat = Song::count();
         $this->data['soLuongBaiHat'] = $soLuongBaiHat;
-$this->data['soLuongAlbum'] = Album::count();
-
-        
-        $this->data['soLuongComment'] = Comment::count();
-        $this->data['soLuongTheLoai'] = Category::count();
-     
-        $this->data['soLuongTinTuc'] = News::count();
-
-return view('admin.dashboard', $this->data);
-
         return view('admin.dashboard', $this->data);
     }
 
-    // Song
+    // Song CRUD Operations
     public function createsong()
     {
         $this->data['categories'] = Category::all();
@@ -123,75 +68,100 @@ return view('admin.dashboard', $this->data);
 
     public function indexsong()
     {
-        // Thay đổi dòng này để phân trang
-        $this->data['songs'] = Song::paginate(7);  // Lấy 7 bài hát mỗi trang
+        $this->data['songs'] = Song::paginate(7);
         return view('admin.songs.index', $this->data);
     }
 
-
     public function editsong($id)
     {
-        $this->data['song'] = Song::findOrFail($id);
-        $this->data['categories'] = Category::all();
-        $this->data['artists'] = Artist::all();
-        return view('admin.songs.edit', $this->data);
+        try {
+            $this->data['song'] = Song::findOrFail($id); // Bắt ModelNotFoundException ở đây
+            $this->data['categories'] = Category::all();
+            $this->data['artists'] = Artist::all();
+            return view('admin.songs.edit', $this->data);
+        } catch (ModelNotFoundException $e) {
+            // Nếu không tìm thấy bài hát, chuyển hướng về trang index với thông báo
+            return redirect()->route('admin.songs.index')
+                ->with('info', 'Bài hát bạn muốn chỉnh sửa không tồn tại hoặc đã bị xóa.');
+        }
     }
 
 
     public function updatesong(Request $request, $id)
     {
-        $validated = $request->validate([
-            'tenbaihat' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z0-9\s]+$/u'],
-            'nghesi' => 'required|exists:artists,id',
-            'theloai' => 'required|exists:categories,id',
-            'file_amthanh' => 'nullable|file|mimes:mp3,wav,ogg',
-            'anh_daidien' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
-        ]);
-        $song = Song::findOrFail($id);
-        $song->tenbaihat = $validated['tenbaihat'];
-        $song->nghesi = $validated['nghesi'];
-        $song->theloai = $validated['theloai'];
+        try {
+            $song = Song::findOrFail($id); // Bắt ModelNotFoundException ở đây
 
-        if ($request->hasFile('file_amthanh')) {
-            if ($song->file_amthanh && Storage::disk('public')->exists($song->file_amthanh)) {
-                Storage::disk('public')->delete($song->file_amthanh);
+            $validated = $request->validate([
+                'tenbaihat' => ['required', 'string', 'max:255', 'regex:/^[\p{L}\p{M}\d\s\-\'\.]+$/u'], // Đã sửa regex cho phép tiếng Việt và dấu câu cơ bản
+                'nghesi' => 'required|exists:artists,id',
+                'theloai' => 'required|exists:categories,id',
+                'file_amthanh' => 'nullable|file|mimes:mp3,wav,ogg',
+                'anh_daidien' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+            ]);
+
+            $song->tenbaihat = $validated['tenbaihat'];
+            $song->nghesi = $validated['nghesi'];
+            $song->theloai = $validated['theloai'];
+
+            if ($request->hasFile('file_amthanh')) {
+                if ($song->file_amthanh && Storage::disk('public')->exists($song->file_amthanh)) {
+                    Storage::disk('public')->delete($song->file_amthanh);
+                }
+                $song->file_amthanh = $request->file('file_amthanh')->store('songs/audio', 'public');
             }
-            $song->file_amthanh = $request->file('file_amthanh')->store('songs/audio', 'public');
-        }
 
-        if ($request->hasFile('anh_daidien')) {
-            if ($song->anh_daidien && Storage::disk('public')->exists($song->anh_daidien)) {
-                Storage::disk('public')->delete($song->anh_daidien);
+            if ($request->hasFile('anh_daidien')) {
+                if ($song->anh_daidien && Storage::disk('public')->exists($song->anh_daidien)) {
+                    Storage::disk('public')->delete($song->anh_daidien);
+                }
+                $song->anh_daidien = $request->file('anh_daidien')->store('songs/images', 'public');
             }
-            $song->anh_daidien = $request->file('anh_daidien')->store('songs/images', 'public');
+
+            $song->save();
+
+            return redirect()->route('admin.songs.index')->with('success', 'Cập nhật bài hát thành công!');
+
+        } catch (ModelNotFoundException $e) {
+            return redirect()->route('admin.songs.index')
+                ->with('info', 'Bài hát bạn muốn cập nhật không tồn tại hoặc đã bị xóa.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Đã xảy ra lỗi không mong muốn khi cập nhật bài hát. Vui lòng thử lại.');
         }
-
-        $song->save();
-
-        return redirect()->route('admin.songs.index')->with('success', 'Cập nhật bài hát thành công!');
     }
+
 
     public function deletesong($id)
     {
-        $song = Song::findOrFail($id);
+        try {
+            $song = Song::findOrFail($id); // Bắt ModelNotFoundException ở đây
 
-        if ($song->file_amthanh && Storage::disk('public')->exists($song->file_amthanh)) {
-            Storage::disk('public')->delete($song->file_amthanh);
+            if ($song->file_amthanh && Storage::disk('public')->exists($song->file_amthanh)) {
+                Storage::disk('public')->delete($song->file_amthanh);
+            }
+
+            if ($song->anh_daidien && Storage::disk('public')->exists($song->anh_daidien)) {
+                Storage::disk('public')->delete($song->anh_daidien);
+            }
+
+            $song->delete();
+
+            return redirect()->route('admin.songs.index')->with('success', 'Xóa bài hát thành công!');
+
+        } catch (ModelNotFoundException $e) {
+            // Nếu bài hát không tìm thấy (có thể đã bị xóa ở tab khác)
+            return redirect()->route('admin.songs.index')
+                ->with('info', 'Bài hát này đã được xóa hoặc không còn tồn tại trên hệ thống.');
+        } catch (\Exception $e) {
+            // Xử lý các lỗi chung khác
+            return redirect()->back()->with('error', 'Đã xảy ra lỗi không mong muốn khi xóa bài hát. Vui lòng thử lại.');
         }
-
-        if ($song->anh_daidien && Storage::disk('public')->exists($song->anh_daidien)) {
-            Storage::disk('public')->delete($song->anh_daidien);
-        }
-
-        $song->delete();
-
-        return redirect()->route('admin.songs.index')->with('success', 'Xóa bài hát thành công!');
     }
 
-    // User
+    // User Management
     public function indexuser()
     {
-        $this->data['users'] = User::all();
+        $this->data['users'] = User::all(); // Sử dụng User Model chính xác
         return view('admin.users.index', $this->data);
     }
 
@@ -202,13 +172,60 @@ return view('admin.dashboard', $this->data);
 
     public function edituser($id)
     {
-        $this->data['user'] = User::findOrFail($id);
-        return view('admin.users.edit', $this->data);
+        try {
+            $this->data['user'] = User::findOrFail($id);
+            return view('admin.users.edit', $this->data);
+        } catch (ModelNotFoundException $e) {
+            return redirect()->route('admin.users.index')
+                ->with('info', 'Người dùng bạn muốn chỉnh sửa không tồn tại hoặc đã bị xóa.');
+        }
     }
 
-    // Doanh thu
+    // Revenue
     public function revenue()
     {
         return view('admin.revenue.index', $this->data);
     }
+
+    // Các phương thức khác của bạn từ frontend (tạm thời giữ nguyên hoặc di chuyển sang HomeController nếu chúng chỉ dùng cho frontend)
+    public function index()
+    {
+        $songs = Song::with(['artist', 'category'])->get();
+
+        $user = auth()->user();
+        $userLikedSongIds = $user ? $user->likedSongs->pluck('id')->toArray() : [];
+
+        return view('frontend.song', compact('songs', 'userLikedSongIds'));
+    }
+    public function showLikedSongs()
+    {
+        $user = auth()->user();
+
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        $likedSongs = $user->likedSongs()->get();
+
+        return view('liked_songs', compact('likedSongs'));
+    }
+    public function toggleLike($id)
+    {
+        $user = auth()->user();
+
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $action = request('action');
+
+        if ($action === 'like') {
+            $user->likedSongs()->syncWithoutDetaching([$id]);
+        } elseif ($action === 'unlike') {
+            $user->likedSongs()->detach($id);
+        }
+
+        return response()->json(['message' => 'Thành công']);
+    }
+
 }
