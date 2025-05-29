@@ -145,6 +145,11 @@ public function index()
                         $fail('Tên thể loại không được nhập chuỗi chỉ gồm một ký tự lặp lại nhiều lần. Ví dụ: "aaaaa", "---".');
                     }
                 },
+                      function ($attribute, $value, $fail) {
+                    if ($value !== strip_tags($value)) {
+                        $fail('Mô tả không được chứa mã HTML. Vui lòng loại bỏ các thẻ HTML.');
+                    }
+                }
             ],
             'nhom' => 'required|string|in:' . implode(',', $this->nhoms),
             'description' => [
