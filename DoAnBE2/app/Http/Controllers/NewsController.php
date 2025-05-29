@@ -15,13 +15,13 @@ class NewsController extends Controller
      *
      * @return \Illuminate\View\View
      */
-public function index()
-{
-    // Thay vì get() lấy tất cả, dùng paginate để phân trang 10 bản tin/trang
-    $news = News::orderBy('updated_at', 'desc')->paginate(10);
+    public function index()
+    {
+        // Thay vì get() lấy tất cả, dùng paginate để phân trang 10 bản tin/trang
+        $news = News::orderBy('updated_at', 'desc')->paginate(10);
 
-    return view('admin.news.index', compact('news'));
-}
+        return view('admin.news.index', compact('news'));
+    }
 
 
     /**
@@ -93,7 +93,17 @@ public function index()
                     // và so sánh với giá trị gốc để phát hiện khoảng trắng thừa ở giữa
                     $cleanedValue = preg_replace('/[\s\x{3000}]+/u', ' ', $value);
                     if ($cleanedValue !== $value) {
-                         $fail('Tiêu đề không được chứa nhiều khoảng trắng liền kề hoặc các ký tự khoảng trắng không hợp lệ ở giữa.');
+                        $fail('Tiêu đề không được chứa nhiều khoảng trắng liền kề hoặc các ký tự khoảng trắng không hợp lệ ở giữa.');
+                    }
+                },
+                // Rule 3: KHÔNG cho tiêu đề chứa ký tự đặc biệt
+                function ($attribute, $value, $fail) {
+                    // Biểu thức chính quy này cho phép chữ cái (bao gồm tiếng Việt), số, và khoảng trắng.
+                    // Nếu bạn muốn cho phép một số ký tự đặc biệt cụ thể (ví dụ: dấu gạch ngang, dấu phẩy),
+                    // bạn sẽ cần sửa đổi biểu thức này.
+                    // Ví dụ: `!preg_match('/^[a-zA-Z0-9\p{L}\s-]+$/u', $value)` để cho phép dấu gạch ngang.
+                    if (!preg_match('/^[a-zA-Z0-9\p{L}\s]+$/u', $value)) {
+                        $fail('Tiêu đề không được chứa ký tự đặc biệt.');
                     }
                 },
             ],
@@ -119,7 +129,7 @@ public function index()
                 function ($attribute, $value, $fail) {
                     $cleanedValue = preg_replace('/[\s\x{3000}]+/u', ' ', $value);
                     if ($cleanedValue !== $value) {
-                         $fail('Đơn vị đăng không được chứa nhiều khoảng trắng liền kề hoặc các ký tự khoảng trắng không hợp lệ ở giữa.');
+                        $fail('Đơn vị đăng không được chứa nhiều khoảng trắng liền kề hoặc các ký tự khoảng trắng không hợp lệ ở giữa.');
                     }
                 },
             ],
@@ -226,7 +236,13 @@ public function index()
                 function ($attribute, $value, $fail) {
                     $cleanedValue = preg_replace('/[\s\x{3000}]+/u', ' ', $value);
                     if ($cleanedValue !== $value) {
-                         $fail('Tiêu đề không được chứa nhiều khoảng trắng liền kề hoặc các ký tự khoảng trắng không hợp lệ ở giữa.');
+                        $fail('Tiêu đề không được chứa nhiều khoảng trắng liền kề hoặc các ký tự khoảng trắng không hợp lệ ở giữa.');
+                    }
+                },
+                // Rule 3: KHÔNG cho tiêu đề chứa ký tự đặc biệt
+                function ($attribute, $value, $fail) {
+                    if (!preg_match('/^[a-zA-Z0-9\p{L}\s]+$/u', $value)) {
+                        $fail('Tiêu đề không được chứa ký tự đặc biệt.');
                     }
                 },
             ],
@@ -252,7 +268,7 @@ public function index()
                 function ($attribute, $value, $fail) {
                     $cleanedValue = preg_replace('/[\s\x{3000}]+/u', ' ', $value);
                     if ($cleanedValue !== $value) {
-                         $fail('Đơn vị đăng không được chứa nhiều khoảng trắng liền kề hoặc các ký tự khoảng trắng không hợp lệ ở giữa.');
+                        $fail('Đơn vị đăng không được chứa nhiều khoảng trắng liền kề hoặc các ký tự khoảng trắng không hợp lệ ở giữa.');
                     }
                 },
             ],
