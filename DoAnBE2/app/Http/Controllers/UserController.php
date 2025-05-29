@@ -143,6 +143,7 @@ class UserController extends Controller
 
         return redirect()->route('admin.users.index')->with('success', 'Cập nhật tài khoản thành công!');
     }
+    //Hàm tìm kiếm user
     public function search(Request $request)
     {
         $query = $request->input('query');
@@ -154,6 +155,5 @@ class UserController extends Controller
 
         return view('admin.users.index', compact('users'));
     }
-
 }
 
