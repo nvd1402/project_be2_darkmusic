@@ -18,6 +18,7 @@ class CategoryController extends Controller
         'Nhạc Remix',
         'Nhạc Nổi Bật',
         'Nhạc Mới',
+        'Nhạc Cũ',
     ];
 
     // Hiển thị danh sách thể loại
