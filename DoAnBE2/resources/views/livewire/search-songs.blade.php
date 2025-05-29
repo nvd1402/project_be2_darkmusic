@@ -31,10 +31,7 @@
                     </td>
                     <td>
                         @if($song->file_amthanh)
-                            <audio controls>
-                                <source src="{{ asset('storage/'.$song->file_amthanh) }}" type="audio/mpeg">
-                                Your browser does not support the audio element.
-                            </audio>
+                            <a href="{{ asset('storage/'.$song->file_amthanh) }}" target="_blank">{{ $song->file_amthanh }}</a>
                         @else
                             <p>Không có âm thanh</p>
                         @endif
@@ -51,7 +48,7 @@
                 </tr>
             @endforeach
             </tbody>
-        </table> 
+        </table>
     </div>
     <div id="pagination-controls"></div>
 </div>
