@@ -181,6 +181,9 @@ Route::post('/song/{song}/view', [SongViewController::class, 'incrementView'])->
 //    Route::get('/payment/checkout/{plan}', [PaymentController::class, 'showCheckout'])->name('payment.checkout');
 
     Route::get('/favorite', [HomeController::class, 'favorite'])->name('favorite');
+    Route::delete('/favorites/{favourite}', [HomeController::class, 'destroy'])
+        ->name('favorites.destroy')
+        ->middleware('auth');
 });
 //Route::post('/song/{id}/toggle-like', [AdminController::class, 'toggleLike'])
 //    ->name('song.toggleLike')

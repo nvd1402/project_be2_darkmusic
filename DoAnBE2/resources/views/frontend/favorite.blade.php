@@ -206,7 +206,25 @@
                 <input type="text" placeholder="Tìm kiếm thông tin bài hát">
             </div>
         </header>
+        {{-- THÊM PHẦN HIỂN THỊ THÔNG BÁO Ở ĐÂY --}}
+        @if (session('success'))
+            <div style="background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 10px; margin-bottom: 15px; border-radius: 5px;">
+                {{ session('success') }}
+            </div>
+        @endif
 
+        @if (session('error'))
+            <div style="background-color: #ff0018; color: #721c24; border: 1px solid #f5c6cb; padding: 10px; margin-bottom: 15px; border-radius: 5px;">
+                {{ session('error') }}
+            </div>
+        @endif
+
+        {{-- DÒNG NÀY ĐƯỢC THÊM VÀO --}}
+        @if (session('info'))
+            <div style="background-color: #ffeeba; color: #856404; border: 1px solid #ffc107; padding: 10px; margin-bottom: 15px; border-radius: 5px;">
+                {{ session('info') }}
+            </div>
+        @endif
         <div class="favorite-songs-section">
             <div class="favorite-songs-header">
                 <h2>Danh sách nhạc yêu thích</h2>
@@ -239,7 +257,19 @@
                                     <span class="audio-duration">0:00 / 0:00</span>
                                 </div>
                             </div>
-                            <button style="margin-right: 10px;"><i class='bx bx-x-circle'></i></button>
+                            <div class="song-item-actions">
+                                <form action="{{ route('frontend.favorites.destroy', $favorite->id) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"
+                                            class="delete-favorite-btn"
+                                            onclick="return confirm('Bạn có chắc chắn muốn xóa bài hát này khỏi danh sách yêu thích?')"
+                                            style="background: none; border: none; color: #B3B3B3; font-size: 20px; cursor: pointer; transition: color 0.2s; padding: 0; margin-right: 10px;"
+                                            title="Xóa khỏi yêu thích">
+                                        <i class='bx bx-x-circle'></i>
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </li>
                     @endif
@@ -255,6 +285,8 @@
 <script type='text/javascript' src="{{ asset('assets/frontend/js/script.js') }}"></script>
 <script type='text/javascript' src="{{ asset('assets/frontend/js/audio-controls.js') }}"></script>
 <script src="{{ asset('assets/frontend/js/handle-ad.js') }}"></script>
+<script type='text/javascript' src="{{ asset('assets/frontend/js/songs.js') }}"></script>
+
 
 </body>
 </html>
