@@ -61,6 +61,20 @@
         <main>
             @include('admin.partials.header')
 
+            {{-- Hiển thị thông báo thành công --}}
+@if(session('success'))
+    <div class="alert alert-success" style="margin: 15px 0; padding: 10px; border-radius: 4px; background-color: #d4edda; color: #155724;">
+        {{ session('success') }}
+    </div>
+@endif
+
+{{-- Hiển thị thông báo lỗi --}}
+@if(session('error'))
+    <div class="alert alert-danger" style="margin: 15px 0; padding: 10px; border-radius: 4px; background-color: #f8d7da; color: #721c24;">
+        {{ session('error') }}
+    </div>
+@endif
+
             <div class="page-header">
                 <h2 class="title">Quản lý bình luận</h2>
             </div>
@@ -90,7 +104,7 @@
                             <th style="width:30%;">Nội dung bình luận</th>
                             <th style="width:25%;">Tin tức liên quan</th>
                             <th style="width:15%;">Ngày tạo</th>
-                            <th style="width:10%;">Thao tác</th>
+  
                         </tr>
                     </thead>
                  <tbody id="comments-list-container">
@@ -112,14 +126,7 @@
                 @endif
             </td>
             <td>{{ $comment->created_at->format('d/m/Y H:i') }}</td>
-            <td>
-                <a href="{{ route('admin.comments.edit', $comment->id) }}" class="btn btn-warning btn-sm mb-1">Sửa</a>
-                <form action="{{ route('admin.comments.destroy', $comment->id) }}" method="POST" class="inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa bình luận này?')">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger btn-sm">Xóa</button>
-                </form>
-            </td>
+
         </tr>
     @empty
         <tr><td colspan="6" class="text-center">Chưa có bình luận nào.</td></tr>

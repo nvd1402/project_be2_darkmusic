@@ -4,7 +4,271 @@
     <style>
         /* CSS nội tuyến của bạn nếu có */
         /* ... giữ nguyên các style đã có cho body, container, main, header, search, v.v. ... */
+        Tuyệt vời! Bạn muốn viết CSS cho phần topliked và cả phần featured-liked-song (bài hát nổi bật được thích nhất) nếu bạn muốn thêm nó vào. Dựa trên cấu trúc HTML và phong cách của trang web của bạn, tôi sẽ cung cấp CSS tương tự để phù hợp với giao diện tổng thể.
 
+        Trước hết, bạn cần quyết định vị trí cho phần featured-liked-song nếu bạn muốn hiển thị nó. Ví dụ, bạn có thể đặt nó ngay dưới phần trending hoặc trên phần topliked.
+
+        Tôi sẽ cung cấp CSS cho cả hai phần:
+
+        featured-liked-song: Cho một bài hát duy nhất, nổi bật nhất (nếu bạn quyết định hiển thị nó).
+                                                                                                    topliked: Cho danh sách các bài hát được thích nhiều nhất.
+                                                                                                    Cập nhật frontend/index.blade.php (Phần CSS và HTML)
+        Bạn sẽ đặt CSS này vào thẻ <style> trong phần <head> của file frontend/index.blade.php.
+
+                                                                               HTML
+
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+        @include('frontend.partials.head')
+<style>
+                 /* CSS nội tuyến của bạn nếu có */
+                 /* ... giữ nguyên các style đã có cho body, container, main, header, search, v.v. ... */
+
+                 /* CSS cho phần "Thể loại" (bao gồm cả cái cũ và cái mới) */
+                 /* ... giữ nguyên phần CSS này ... */
+
+                 /* Giữ nguyên CSS cho recommended-songs-scroll-container nếu bạn vẫn muốn nó cuộn */
+                 /* ... giữ nguyên phần CSS này ... */
+
+                 /* --- BỔ SUNG CSS MỚI CHO TOP LIKED SONGS --- */
+
+                 /* CSS cho phần "Bài hát nổi bật được yêu thích nhất" (Featured Liked Song) */
+             .featured-liked-song {
+                 background-color: #384252; /* Màu nền tương tự các khối khác */
+                 border-radius: 8px;
+                 padding: 20px;
+                 margin-top: 30px; /* Khoảng cách với phần trước đó */
+                 display: flex;
+                 align-items: center;
+                 gap: 20px; /* Khoảng cách giữa các phần tử bên trong */
+                 color: #E0E0E0;
+                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                 transition: transform 0.2s ease-in-out;
+                 cursor: pointer; /* Để tạo hiệu ứng hover như một card */
+             }
+
+        .featured-liked-song:hover {
+            transform: translateY(-5px); /* Hiệu ứng nâng nhẹ khi hover */
+        }
+
+        .featured-liked-song .thumbnail {
+            flex-shrink: 0; /* Đảm bảo hình ảnh không bị co lại */
+        }
+
+        .featured-liked-song .thumbnail img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .featured-liked-song .details {
+            flex-grow: 1; /* Cho phép chi tiết bài hát chiếm không gian còn lại */
+        }
+
+        .featured-liked-song .details h3 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            color: #007bff; /* Màu xanh của tiêu đề bài hát */
+            font-size: 22px; /* Kích thước lớn hơn cho bài hát nổi bật */
+            white-space: nowrap; /* Ngăn không cho tên bài hát xuống dòng */
+            overflow: hidden; /* Ẩn phần bị tràn */
+            text-overflow: ellipsis; /* Hiển thị dấu ba chấm nếu tràn */
+        }
+
+        .featured-liked-song .details p {
+            margin: 0;
+            color: #b0b0b0;
+            font-size: 15px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .featured-liked-song .like-info {
+            display: flex;
+            align-items: center;
+            font-size: 18px; /* Kích thước lớn hơn cho thông tin lượt thích */
+            color: #e74c3c; /* Màu đỏ cho lượt thích */
+            margin-left: auto; /* Đẩy sang bên phải */
+            flex-shrink: 0;
+        }
+
+        .featured-liked-song .like-info i {
+            margin-right: 8px; /* Khoảng cách giữa icon và số */
+        }
+
+        /* CSS cho nút Play/Pause và thời lượng trong featured-liked-song */
+        .featured-liked-song .song-audio {
+            display: flex;
+            align-items: center;
+            margin-left: 20px; /* Khoảng cách từ like-info */
+            flex-shrink: 0;
+        }
+
+        .featured-liked-song .song-audio .play-pause-button {
+            background-color: #007bff; /* Nút play màu xanh */
+            color: white;
+            border: none;
+            border-radius: 50%; /* Nút tròn */
+            width: 45px; /* Kích thước nút */
+            height: 45px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 20px;
+            transition: background-color 0.2s;
+        }
+
+        .featured-liked-song .song-audio .play-pause-button:hover {
+            background-color: #0056b3;
+        }
+
+        .featured-liked-song .song-audio .audio-duration {
+            margin-left: 10px;
+            color: #b0b0b0;
+            font-size: 14px;
+        }
+
+
+        /* --- CSS cho danh sách "Most Liked Songs" (Top Liked Songs) --- */
+        .topliked {
+            margin-top: 30px;
+            background-color: #282828; /* Màu nền tương tự các khối khác */
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .topliked .header h5 {
+            color: #E0E0E0;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .topliked .songs-items-wrapper {
+            display: flex;
+            flex-direction: column; /* Sắp xếp các bài hát theo cột */
+            gap: 15px; /* Khoảng cách giữa các bài hát */
+        }
+
+        .topliked .songs-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background-color: #384252; /* Nền cho mỗi item bài hát */
+            border-radius: 6px;
+            transition: background-color 0.2s;
+            cursor: pointer;
+        }
+
+        .topliked .songs-item:hover {
+            background-color: #4c5a6d; /* Màu khi hover */
+        }
+
+        .topliked .song-thumbnail img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-right: 15px;
+        }
+
+        .topliked .song-details {
+            flex-grow: 1; /* Cho phép chi tiết bài hát chiếm không gian còn lại */
+        }
+
+        .topliked .song-details .nameArtist {
+            color: #E0E0E0;
+            font-size: 16px;
+            font-weight: bold;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
+        }
+
+        .topliked .song-details small span {
+            color: #b0b0b0;
+            font-size: 12px;
+        }
+
+        .topliked .song-likes-count {
+            display: flex;
+            align-items: center;
+            color: #e74c3c; /* Màu đỏ cho lượt thích */
+            font-size: 14px;
+            margin-left: 20px; /* Khoảng cách từ chi tiết bài hát */
+            flex-shrink: 0;
+        }
+
+        .topliked .song-likes-count i {
+            margin-right: 5px;
+        }
+
+        .topliked .song-audio {
+            display: flex;
+            align-items: center;
+            margin-left: 20px; /* Khoảng cách từ lượt thích */
+            flex-shrink: 0;
+        }
+
+        .topliked .song-audio .play-pause-button {
+            background-color: transparent;
+            color: #007bff; /* Nút play màu xanh */
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            margin-right: 8px;
+            transition: color 0.2s;
+        }
+
+        .topliked .song-audio .play-pause-button:hover {
+            color: #0056b3;
+        }
+
+        .topliked .song-audio .audio-duration {
+            color: #b0b0b0;
+            font-size: 12px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .featured-liked-song {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+            .featured-liked-song .thumbnail {
+                margin-bottom: 10px;
+            }
+            .featured-liked-song .details h3 {
+                font-size: 18px;
+            }
+            .featured-liked-song .like-info,
+            .featured-liked-song .song-audio {
+                margin-left: 0;
+            }
+            .topliked .songs-item {
+                flex-wrap: wrap;
+                justify-content: center;
+                text-align: center;
+            }
+            .topliked .song-thumbnail {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+            .topliked .song-details,
+            .topliked .song-likes-count,
+            .topliked .song-audio {
+                width: 100%;
+                justify-content: center;
+                margin-left: 0;
+            }
+        }
         /* CSS cho phần "Thể loại" (bao gồm cả cái cũ và cái mới) */
         .genres .header h5 {
             color: #E0E0E0; /* Màu chữ tiêu đề */
@@ -61,6 +325,7 @@
     </style>
 </head>
 <body>
+
 @empty(!$ads)
     <div class="banner-wrapper">
         <div class="banner-container">
@@ -229,6 +494,48 @@
             </div>
         </div>
 
+        <div class="topliked">
+            <div class="header">
+                <h5>Most Liked Songs</h5>
+            </div>
+            <div class="songs-items-wrapper">
+                @forelse ($mostLikedSongs as $song)
+                    {{-- ... Code hiển thị danh sách Most Liked Songs (như bạn đã có) ... --}}
+                    <div class="songs-list songs-item" data-song-id="{{ $song->id }}">
+                        <div class="song-thumbnail">
+                            @if($song->anh_daidien)
+                                <img src="{{ asset('storage/' . $song->anh_daidien) }}" width="50" alt="{{ $song->tenbaihat }}">
+                            @else
+                                <img src="{{ asset('assets/frontend/images/default_song_50x50.png') }}" width="50" alt="no image">
+                            @endif
+                        </div>
+
+                        <div class="song-details">
+                            <span class="nameArtist">{{ $song->tenbaihat }}</span>
+                            <br>
+                            <small><span>{{ $song->artist->name_artist ?? 'Unknown Artist' }}</span></small>
+                        </div>
+
+                        <div class="song-likes-count">
+                            <i class='bx bxs-heart'></i>
+                            <span>{{ $song->users_who_liked_count ?? 0 }}</span>
+                        </div>
+
+                        <div class="song-audio">
+                            <audio id="audio-mostliked-{{ $song->id }}" src="{{ asset('storage/'. $song->file_amthanh) }}"></audio>
+                            <div class="audio-controls">
+                                <button class="play-pause-button" data-audio-id="audio-mostliked-{{ $song->id }}">
+                                    <i class="fas fa-play"></i>
+                                </button>
+                                <span class="audio-duration">0:00 / 0:00</span>
+                            </div>
+                        </div>
+                    </div>
+                @empty
+                    <p style="color: #E0E0E0; text-align: center; padding: 20px;">Không có bài hát nào được yêu thích.</p>
+                @endforelse
+            </div>
+        </div>
     </main>
 
 

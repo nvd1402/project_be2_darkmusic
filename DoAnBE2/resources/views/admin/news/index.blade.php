@@ -1,5 +1,3 @@
-<!-- resources/views/admin/news/index.blade.php -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,6 +7,7 @@
             overflow-y: auto; /* Cho phép cuộn nếu nội dung dài */
             height: 100vh; /* Chiều cao đầy đủ để cuộn */
         }
+        /* Bạn có thể dần thay thế .btn sang Tailwind, hoặc giữ như hiện tại */
         .btn {
             padding: 6px 12px;
             border: none;
@@ -24,7 +23,30 @@
         .btn-warning { background-color: #ffc107; color: #000; }
         .btn-danger { background-color: #dc3545; }
         .btn:hover { opacity: 0.85; }
-    </style>
+   
+nav[role="navigation"] ul {
+    display: inline-flex !important;
+    flex-direction: row !important;
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+}
+nav[role="navigation"] ul {
+  gap: 0.5rem; /* khoảng cách giữa các số */
+  /* hoặc dùng padding margin cho li */
+}
+
+nav[role="navigation"] ul > li {
+  margin-left: 0.5rem; /* cách trái 0.5rem */
+}
+
+/* Nếu muốn bỏ khoảng cách âm mặc định của -space-x-px */
+nav[role="navigation"] ul {
+     margin-left: 500px;
+    margin-top: 38px;
+}
+</style>
+
 </head>
 <body>
     <div class="container">
@@ -57,6 +79,11 @@
                             <li>{{ $error }}</li>
                         @endforeach
                     </ul>
+                </div>
+            @endif
+            @if (session('warning'))
+                <div class="alert alert-warning">
+                    {{ session('warning') }}
                 </div>
             @endif
 
@@ -103,8 +130,6 @@
                                             }
                                         @endphp
                                         <img src="{{ asset('storage/' . $hinhanh) }}" alt="Hình ảnh tin tức" width="100" height="100">
-
-                                        
                                     @else
                                         <span>Không có hình ảnh</span>
                                     @endif
@@ -119,6 +144,7 @@
                                     >
                                         @csrf
                                         @method('DELETE')
+                                        <input type="hidden" name="updated_at" value="{{ $item->updated_at->toDateTimeString() }}">
                                         <button type="submit" class="btn btn-danger btn-sm">Xóa</button>
                                     </form>
                                 </td>
@@ -131,12 +157,13 @@
                     </tbody>
                 </table>
 
-                <div id="pagination-controls" style="margin-top: 15px;"></div>
+                {{-- Phân trang Laravel + Tailwind --}}
+   <div class="mt-4 flex justify-center">
+    {{ $news->links('pagination::tailwind') }}
+</div>
+
             </section>
         </main>
     </div>
-
-    <script src="{{ asset('js/script.js') }}"></script>
-    <script src="{{ asset('assets/frontend/js/new-pagination.js') }}"></script>
 </body>
 </html>

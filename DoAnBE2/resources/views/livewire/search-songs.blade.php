@@ -50,5 +50,7 @@
             </tbody>
         </table>
     </div>
-    <div id="pagination-controls"></div>
+    <div class="mt-6">
+        {{ $songs->links() }}
+    </div>
 </div>

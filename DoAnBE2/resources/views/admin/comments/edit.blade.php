@@ -74,6 +74,8 @@
                 <form action="{{ route('admin.comments.update', $comment->id) }}" method="POST">
                     @csrf
                     @method('PUT')
+                    <input type="hidden" name="updated_at" value="{{ $comment->updated_at }}">
+
 
                     <label for="user_id">Người dùng</label>
                     <select name="user_id" id="user_id" required>

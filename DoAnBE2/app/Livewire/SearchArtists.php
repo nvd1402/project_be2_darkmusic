@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Artist;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class SearchArtists extends Component
 {
@@ -22,9 +23,8 @@ class SearchArtists extends Component
                 })
                 ->get();
         } else {
-            $artists = Artist::all();
+            $artists =  Artist::paginate(10);
         }
-
         return view('livewire.search-artists', compact('artists'));
     }
 }

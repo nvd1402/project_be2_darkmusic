@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log; // Để ghi log gỡ lỗi
 
 class SongViewController extends Controller
 {
+
     public function incrementView(Request $request, Song $song) // Laravel tự động inject Song model
     {
         Log::info('incrementView: Bắt đầu xử lý cho Song ID: ' . $song->id);
