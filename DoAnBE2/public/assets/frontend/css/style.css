@@ -1478,7 +1478,7 @@ main{
     position: relative;
     background-color: #202026;
     border-radius: 6px;
-    height: 700px;
+    height: 600px;
     display: flex;
     flex-direction: column;
 }
