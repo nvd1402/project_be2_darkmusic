@@ -26,9 +26,30 @@ class UserController extends Controller
     {
         // Validate dữ liệu
         $validated = $request->validate([
-            'username' => 'required|max:255|unique:users,username',
-            'password' => 'required|confirmed|min:8',
-            'email' => 'required|email|unique:users,email',
+            'username' => [
+                'required',
+                'min:3',
+                'max:50',
+                'regex:/^(?!\s)[\p{L}0-9]+(?: [\p{L}0-9]+)*(?!\s)$/u'
+            ],
+            'password' => [
+                'required',
+                'min:6',
+                'max:20',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+])[A-Za-z\d!@#$%^&*()\-_=+]+$/', // Bắt buộc có chữ hoa, chữ thường, số và ký tự đặc biệt
+            ],
+
+            'email' => [
+                'required',
+                'min:12',
+                'max:50',
+                'regex:/^(?!.*\.\.)(?!^\.)(?!\.$)[A-Za-z0-9._-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/',
+                'unique:users,email',
+            ],
+            'password_confirmation' => [
+                'required',                       // Bắt buộc
+                'same:password',                   // Phải giống với trường 'password'
+            ],
             'status' => 'required',
             'role' => 'required',
             'avatar' => 'nullable|image|mimes:jpg,png|max:2048',
@@ -117,6 +138,6 @@ class UserController extends Controller
 
         return view('admin.users.index', compact('users'));
     }
-    
+
 }
 
