@@ -75,7 +75,8 @@
                                 <audio id="audio-{{ $song->id }}" src="{{ asset('storage/'. $song->file_amthanh) }}"></audio>
                                 <div class="audio-controls">
                                     <button class="play-pause-button " data-audio-id="audio-{{ $song->id }}">
-                                        <i class="fas fa-play"></i> </button>
+                                        <i class='bx bx-play-circle'></i>
+                                    </button>
                       <span class="audio-duration">0:00 / 0:00
     <br>
 
@@ -88,7 +89,7 @@
 
 
 
-                              
+
                                 </div>
                             </div>
                             <div>
