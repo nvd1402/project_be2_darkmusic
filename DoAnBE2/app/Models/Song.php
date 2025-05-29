@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use HasFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 class Song extends Model
 {
+    use HasFactory;
 
     protected $table = 'songs';
 
@@ -15,24 +17,26 @@ class Song extends Model
         'theloai',
         'file_amthanh',
         'anh_daidien',
-        // Bạn nên thêm các cột này vào đây nếu bạn đã tạo chúng trong migration
+        // Nếu bạn dùng các trường này, hãy chắc là đã tạo trong migration
         // 'slug',
         // 'luotnghe',
         // 'thoiluong',
         // 'loibaihat',
     ];
 
+    // Quan hệ với nghệ sĩ (Artist)
     public function artist()
     {
         return $this->belongsTo(Artist::class, 'nghesi', 'id');
     }
 
-    // Cần thêm mối quan hệ với Category nếu bạn muốn truy cập tên thể loại
+    // Quan hệ với thể loại (Category)
     public function category()
     {
         return $this->belongsTo(Category::class, 'theloai', 'id');
     }
     
+    // Quan hệ nhiều-nhiều với người dùng thích bài hát
     public function likedByUsers()
     {
         return $this->belongsToMany(
@@ -42,7 +46,16 @@ class Song extends Model
             'user_id'
         );
     }
-    
 
+    // Quan hệ 1-1 với bảng song_views
+public function songView()
+{
+    return $this->hasOne(SongView::class);
+}
 
+    // Thuộc tính truy cập lượt view, trả về 0 nếu chưa có bản ghi song_view
+    public function getViewCountAttribute()
+    {
+        return $this->view ? $this->view->views : 0;
+    }
 }
