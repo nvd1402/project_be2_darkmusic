@@ -161,7 +161,7 @@
 
                 <div class="form-actions">
                     <button type="submit" class="btn primary">Chỉnh sửa</button>
-                    <button type="reset" class="btn">Hủy</button>
+                    <button type="reset" class="btn primary"><a href="{{ route('admin.songs.index') }}">Hủy</a></button>
                 </div>
             </form>
         </section>
