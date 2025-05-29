@@ -1,5 +1,3 @@
-<!-- resources/views/admin/news/index.blade.php -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -59,6 +57,12 @@
                     </ul>
                 </div>
             @endif
+            @if (session('warning'))
+                <div class="alert alert-warning">
+                    {{ session('warning') }}
+                </div>
+            @endif
+
 
             <section class="news-list">
                 <form action="{{ route('admin.news.search') }}" method="GET" class="mb-3">
@@ -98,13 +102,13 @@
                                     @if ($item->hinhanh)
                                         @php
                                             $hinhanh = $item->hinhanh;
+                                            // Kiểm tra nếu đường dẫn không bắt đầu bằng 'news_images/', thì thêm vào
+                                            // Đây là một biện pháp phòng ngừa, tùy thuộc vào cách bạn lưu đường dẫn ảnh
                                             if (!str_starts_with($hinhanh, 'news_images/')) {
                                                 $hinhanh = 'news_images/' . $hinhanh;
                                             }
                                         @endphp
                                         <img src="{{ asset('storage/' . $hinhanh) }}" alt="Hình ảnh tin tức" width="100" height="100">
-
-                                        
                                     @else
                                         <span>Không có hình ảnh</span>
                                     @endif
@@ -119,6 +123,9 @@
                                     >
                                         @csrf
                                         @method('DELETE')
+                                        {{-- THÊM DÒNG NÀY ĐỂ GỬI updated_at KHI XÓA --}}
+                                        <input type="hidden" name="updated_at" value="{{ $item->updated_at->toDateTimeString() }}">
+                                        
                                         <button type="submit" class="btn btn-danger btn-sm">Xóa</button>
                                     </form>
                                 </td>

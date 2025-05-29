@@ -12,6 +12,7 @@
         <main>
             <!-- include file header -->
             @include('admin.partials.header')
+            
 
             <!-- Content -->
             <div>
@@ -26,6 +27,7 @@
                 <!-- resources/views/admin/news/create.blade.php -->
 <form action="{{ route('admin.news.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
+    
     <label for="tieude">Tiêu đề(*)</label>
     <input type="text" id="tieude" name="tieude" placeholder="Nhập tiêu đề tin tức" value="{{ old('tieude') }}" required>
     @if ($errors->has('tieude'))
