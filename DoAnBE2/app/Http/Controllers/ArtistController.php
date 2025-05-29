@@ -7,6 +7,9 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class ArtistController extends Controller
 {
@@ -27,9 +30,22 @@ class ArtistController extends Controller
     public function postArtist(Request $request)
     {
         $request->validate([
-            'name_artist' => 'required|min:4|max:50|string',
+            'name_artist' => 'required|min:4|max:50|string|regex:/^[a-zA-Z0-9\s]+$/',
             'image_artist' => 'nullable|image|mimes:jpg,png,jpeg,gif|max:2048',
-            'category_id' => 'required|exists:categories,id'
+            'category_id' => 'required|exists:categories,id',
+        ], [
+            'name_artist.required' => 'Vui lòng nhập tên nghệ sĩ.',
+            'name_artist.min' => 'Ít nhất 4 ký tự',
+            'name_artist.max' => 'Tối đa 50 ký tự',
+            'name_artist.string' => 'Tên nghệ sĩ phải là chuỗi văn bản',
+            'name_artist.regex' => 'Không được chứa ký tự đặc biệt.',
+
+            'image_artist.image' => 'File tải lên phải là hình ảnh.',
+            'image_artist.mimes' => 'Ảnh chỉ chấp nhận định dạng jpg, png, jpeg, gif.',
+            'image_artist.max' => 'Kích thước ảnh không được vượt quá 2MB.',
+
+            'category_id.required' => 'Vui lòng chọn thể loại âm nhạc.',
+            'category_id.exists' => 'Thể loại đã chọn không hợp lệ.',
         ]);
 
         $fileName = null;
@@ -54,13 +70,18 @@ class ArtistController extends Controller
     public function updateArtist(Request $request)
     {
         $artist_id = $request->get('id');
-        $artist = Artist::find($artist_id);
-        $categories = Category::all();
 
-        return view('admin.artist.update', [
-            'artist' => $artist,
-            'categories' => $categories
-        ]);
+        try {
+            $artist = Artist::findOrFail($artist_id);
+            $categories = Category::all();
+
+            return view('admin.artist.update', [
+                'artist' => $artist,
+                'categories' => $categories
+            ]);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            abort(404, 'Nghệ sĩ không tồn tại hoặc đã bị xoá.');
+        }
     }
     public function postUpdateArtist(Request $request)
     {
@@ -68,13 +89,27 @@ class ArtistController extends Controller
             'id' => 'required|exists:artists,id',
             'name_artist' => 'required|min:3|max:50|string',
             'image_artist' => 'nullable|image|mimes:jpg,png,jpeg,gif|max:2048',
-            'category_id' => 'required|exists:categories,id',
+            'category_id' => 'exists:categories,id',
+            'original_updated_at' => 'required|date',
+        ], [
+            'name_artist.required' => 'Tên nghệ sĩ là bắt buộc',
+            'name_artist.min' => 'Tên nghệ sĩ tối thiểu 3 ký tự',
+            'name_artist.max' => 'Tên nghệ sĩ tối đa 50 ký tự',
+            'image_artist.image' => 'Ảnh không đúng định dạng',
+            'image_artist.mimes' => 'Ảnh chỉ được jpg, png, jpeg, gif',
+            'image_artist.max' => 'Kích thước ảnh không được vượt quá 2MB',
+            'category_id.exists' => 'Thể loại không tồn tại',
         ]);
 
         $artist = Artist::findOrFail($request->id);
 
-        $fileName = null;
+        if ($artist->updated_at->ne(Carbon::parse($request->original_updated_at))) {
+            return redirect()->back()
+                ->with('error', 'Nội dung nghệ sĩ này đã bị người khác thay đổi. Vui lòng tải lại trang để xem phiên bản mới nhất.')
+                ->withInput();
+        }
 
+        $fileName = null;
         if ($request->hasFile('image_artist')) {
             if ($artist->image_artist && Storage::disk('public')->exists('artists/' . $artist->image_artist)) {
                 Storage::disk('public')->delete('artists/' . $artist->image_artist);
