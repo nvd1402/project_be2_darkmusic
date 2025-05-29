@@ -97,7 +97,7 @@ nav[role="navigation"] ul > li {
 
 /* Nếu muốn bỏ khoảng cách âm mặc định của -space-x-px */
 nav[role="navigation"] ul {
-     margin-left: 1050px;
+     margin-left: 500px;
     margin-top: 38px; 
 }
     </style>
