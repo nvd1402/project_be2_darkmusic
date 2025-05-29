@@ -169,7 +169,7 @@
             <div class="news-content">
                 <h1 class="news-title">{{ $news->tieude }}</h1>
                 <div class="news-unit">Đơn vị đăng: {{ $news->donvidang }}</div>
-                <img src="{{ asset('storage/artists/' . $news->hinhanh) }}" alt="Hình ảnh tin tức" class="news-image">
+                <img src="{{ asset('storage/news_images/' . $news->hinhanh) }}" alt="Hình ảnh tin tức" class="news-image">
                 <div class="news-body">{!! nl2br(e($news->noidung)) !!}</div>
                 <a href="{{ route('frontend.news') }}" class="btn-back">← Quay lại danh sách tin tức</a>
             </div>
@@ -216,7 +216,9 @@
                 @endforeach
             </div>
             @else
-                <p><a href="{{ route('login') }}">Đăng nhập</a> để bình luận.</p>
+               <a href="{{ route('login') }}?redirect={{ urlencode(request()->fullUrl()) }}">
+    Đăng nhập
+</a>
             @endauth
         </div>
     </main>
