@@ -80,7 +80,7 @@ class ArtistSeeder extends Seeder
             $data[] = [
                 'name_artist' => $randomName,
                 'image_artist' => basename($randomImage),
-                'category_id' => rand(1, 50),
+                'category_id' => rand(1, 12),
                 'created_at' => now(),
                 'updated_at' => now(),
             ];

@@ -11,17 +11,22 @@ class LoginController extends Controller
     /**
      * Hiển thị form đăng nhập
      */
-    public function showLoginForm()
-    {
-        return view('auth.login');
+
+   public function showLoginForm(Request $request)
+{
+    if ($request->has('redirect')) {
+        session(['url.intended' => $request->query('redirect')]);
     }
+
+    return view('auth.login');
+}
+
 
     /**
      * Xử lý đăng nhập
      */
     public function login(Request $request)
     {
-        // Validate dữ liệu
         $credentials = $request->validate([
             'email'    => 'required|email',
             'password' => 'required',
@@ -29,27 +34,29 @@ class LoginController extends Controller
 
         $remember = $request->boolean('remember');
 
-        if (Auth::attempt($credentials, $remember)) {
-            // Chống session fixation
-            $request->session()->regenerate();
+   if (Auth::attempt($credentials, $remember)) {
+    $request->session()->regenerate();
 
-            // Lấy user vừa đăng nhập
-            $user = Auth::user();
+    $user = Auth::user();
 
-            // Nếu là Admin thì vào dashboard
-            if ($user->role === 'Admin') {
-                return redirect()->route('admin.dashboard');
-            }
+    if ($user->status === 'inactive') {
+        Auth::logout();
+        return back()->withErrors(['email' => 'Tài khoản của bạn đã bị khóa.']);
+    }
 
-            // Nếu là User thì vào trang home frontend
-            return redirect()->route('frontend.home');
-        }
+    if ($user->role === 'Admin') {
+        return redirect()->route('admin.dashboard');
+    }
 
-        // Nếu login thất bại
+    // redirect()->intended() sẽ lấy URL từ session 'url.intended'
+    return redirect()->intended(route('frontend.home'));
+}
+
         return back()
             ->withInput($request->only('email', 'remember'))
             ->withErrors(['email' => 'Email hoặc mật khẩu không đúng.']);
     }
+
 
     /**
      * Đăng xuất
@@ -63,6 +70,7 @@ class LoginController extends Controller
         $request->session()->regenerateToken();
 
         // Quay về trang login
-        return redirect()->route('login');
+return redirect()->intended(route('frontend.home'));
+
     }
 }

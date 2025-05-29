@@ -7,18 +7,74 @@ use App\Models\Song;
 use App\Models\Artist;
 use App\Models\Category;
 use App\Models\Userss;
+use App\Models\News;
+use App\Models\Ad;
+use App\Models\Album;
+use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller
 {
     public $data = [];
+    public function index()
+    {
+        $songs = Song::with(['artist', 'category'])->get();
+
+        $user = auth()->user();
+        $userLikedSongIds = $user ? $user->likedSongs->pluck('id')->toArray() : [];
+
+        return view('frontend.song', compact('songs', 'userLikedSongIds'));
+    }
+    public function showLikedSongs()
+    {
+        $user = auth()->user();  // hoặc lấy user bằng cách khác
+
+        if (!$user) {
+            return redirect()->route('login');  // hoặc xử lý khi chưa đăng nhập
+        }
+
+        $likedSongs = $user->likedSongs()->get();
+
+        return view('liked_songs', compact('likedSongs'));
+    }
+    public function toggleLike($id)
+    {
+        $user = auth()->user();
+
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $action = request('action');
+
+        if ($action === 'like') {
+            $user->likedSongs()->syncWithoutDetaching([$id]);
+        } elseif ($action === 'unlike') {
+            $user->likedSongs()->detach($id);
+        }
+
+        return response()->json(['message' => 'Thành công']);
+    }
+
+
+
 
     // Dashboard
     public function adminindex()
     {
         $soLuongBaiHat = Song::count();
         $this->data['soLuongBaiHat'] = $soLuongBaiHat;
+$this->data['soLuongAlbum'] = Album::count();
+
+        
+        $this->data['soLuongComment'] = Comment::count();
+        $this->data['soLuongTheLoai'] = Category::count();
+     
+        $this->data['soLuongTinTuc'] = News::count();
+
+return view('admin.dashboard', $this->data);
+
         return view('admin.dashboard', $this->data);
     }
 

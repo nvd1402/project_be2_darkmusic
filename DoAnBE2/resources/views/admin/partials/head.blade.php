@@ -5,5 +5,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/frontend/css/adminSong.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/frontend/css/artist.css') }}">
+
 
     <title>Dark Music</title>

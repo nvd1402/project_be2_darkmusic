@@ -32,4 +32,17 @@ class Song extends Model
     {
         return $this->belongsTo(Category::class, 'theloai', 'id');
     }
+    
+    public function likedByUsers()
+    {
+        return $this->belongsToMany(
+            Userss::class,
+            'song_user_likes',
+            'song_id',
+            'user_id'
+        );
+    }
+    
+
+
 }
