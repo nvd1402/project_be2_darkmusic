@@ -27,12 +27,15 @@
                         </td>
                         <td>{{ $artist->name_artist }}</td>
                         <td>{{ $artist->category->tentheloai ?? 'Không có danh mục' }}</td>
-                        <td><a href={{ route('admin.artist.update',['id'=> $artist->id]) }} class="btn edit">Sửa</a> |
-                            <a href={{ route('admin.artist.delete',['id' => $artist->id]) }} class="btn delete">Xoá</a> </td>
+                        <td><a href={{ route('admin.artist.update',['id'=> $artist->id]) }} class="btn edit" >Sửa</a> |
+                            <a href={{ route('admin.artist.delete',['id' => $artist->id]) }} class="btn delete"  onclick="return confirm('Bạn có chắc chắn muốn xoá nghệ sĩ này không?')">Xoá</a> </td>
                     </tr>
                 @endforeach 
                 </tbody>
             </table>
     </div>
-    <div id="pagination-controls"></div>
+    <!-- Pagination -->
+    <div class="mt-6">
+        {{ $artists->links() }}
+    </div>
 </div>

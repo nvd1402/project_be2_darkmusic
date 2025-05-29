@@ -1,20 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>@include('admin.partials.head')</head>
-<body>
-    <div class="container">
-     <!--include file sidebar-->
-     @include('admin.partials.sidebar')
-    <!-- phân chính -->
-    <main>
-        <!--include file header-->
-    @include('admin.partials.header')
+<head>
+    @include('admin.partials.head')
+    <style>
+        /* Styles cho các thông báo tổng hợp */
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+        .alert-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+        /* Style cho lỗi validation dưới từng trường */
+        .text-danger {
+            color: #e3342f;
+            font-size: 0.875em;
+            margin-top: 5px;
+            display: block;
+        }
 
-        <!--content-->
+    </style>
+</head>
+<body>
+<div class="container">
+    @include('admin.partials.sidebar')
+    <main>
+        @include('admin.partials.header')
+
         <div>
             <h2 class="title">Thêm bài hát</h2>
             <p class="subtitle">Quản lý bài hát / Thêm bài hát</p>
         </div>
+
+        {{-- HIỂN THỊ CÁC THÔNG BÁO FLASH MESSAGE (success, error, info) --}}
+        @if (session('success'))
+            <div class="alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+        @if (session('error'))
+            <div class="alert-error">
+                {{ session('error') }}
+            </div>
+        @endif
+        @if (session('info'))
+            <div class="alert-info">
+                {{ session('info') }}
+            </div>
+        @endif
+
+        {{-- HIỂN THỊ TẤT CẢ LỖI VALIDATION TỔNG HỢP --}}
+        @if ($errors->any())
+            <div class="alert-error">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <section class="add-song">
             <p class="note">Lưu ý: Những trường hợp (*) là trường hợp bắt buộc.</p>
             <form action="{{ route('admin.songs.store') }}" method="POST" enctype="multipart/form-data">
@@ -58,6 +120,7 @@
                 <div class="form-group full">
                     <label for="file_amthanh">Tệp file âm thanh (*)</label>
                     <input style="width: 100%" type="file" id="file_amthanh" name="file_amthanh" accept="audio/*" required>
+                    <small>Chỉ chấp nhận file mp3, wav, ogg.</small>
                     @error('file_amthanh')
                     <small class="text-danger">{{ $message }}</small>
                     @enderror
@@ -66,6 +129,7 @@
                 <div class="form-group fullinput">
                     <label for="anh_daidien">Tệp file ảnh đại diện</label>
                     <input style="width: 100%" type="file" id="anh_daidien" name="anh_daidien" accept="image/*">
+                    <small>Chỉ chấp nhận ảnh định dạng jpg, png, tối đa 2MB.</small>
                     @error('anh_daidien')
                     <small class="text-danger">{{ $message }}</small>
                     @enderror
@@ -80,10 +144,6 @@
         </section>
     </main>
 </div>
-
-</div>
-
-
 
 <script src="{{ asset('js/script.js') }}"></script>
 </body>

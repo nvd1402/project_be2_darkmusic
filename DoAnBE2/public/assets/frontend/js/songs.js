@@ -1,208 +1,154 @@
+// assets/frontend/js/songs.js
+
+// Lấy CSRF token một lần ở đầu file, nó sẽ được sử dụng cho tất cả các yêu cầu fetch
+const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
 document.addEventListener('DOMContentLoaded', function() {
+    // --- 1. Logic Phân trang Danh sách Bài hát (Không liên quan trực tiếp đến lỗi phát nhạc) ---
     const songsContainer = document.getElementById('songs-list-container');
-    // Vẫn chọn songs-item-js, nhưng giờ nó là div thay vì ul
-    const songs = Array.from(songsContainer.getElementsByClassName('songs-item-js'));
-    const paginationControls = document.getElementById('pagination-controls');
-    const songsPerPage = 5; // You can change this number
-    const maxPageButtons = 5; // How many numbered buttons to show (e.g., 1 2 3 ... 10)
+    // Kiểm tra xem songsContainer có tồn tại không trước khi truy cập các thuộc tính của nó
+    let songs = [];
+    let paginationControls = null;
+    let songsPerPage = 5;
+    let maxPageButtons = 5;
     let currentPage = 1;
-    const pageCount = Math.ceil(songs.length / songsPerPage);
+    let pageCount = 0;
 
-    function displaySongs(page) {
-        const start = (page - 1) * songsPerPage;
-        const end = start + songsPerPage;
+    if (songsContainer) {
+        songs = Array.from(songsContainer.getElementsByClassName('songs-item-js'));
+        paginationControls = document.getElementById('pagination-controls');
+        pageCount = Math.ceil(songs.length / songsPerPage);
 
-        songs.forEach((song, index) => {
-            if (index >= start && index < end) {
-                song.classList.remove('hidden-song');
-            } else {
-                song.classList.add('hidden-song');
+        function displaySongs(page) {
+            const start = (page - 1) * songsPerPage;
+            const end = start + songsPerPage;
+
+            songs.forEach((song, index) => {
+                if (index >= start && index < end) {
+                    song.classList.remove('hidden-song');
+                } else {
+                    song.classList.add('hidden-song');
+                }
+            });
+        }
+
+        function createPaginationButton(text, pageNum, isActive = false, isDisabled = false) {
+            const button = document.createElement('button');
+            button.innerText = text;
+            if (isActive) {
+                button.classList.add('active');
             }
-        });
+            if (isDisabled) {
+                button.disabled = true;
+            }
+            button.addEventListener('click', () => {
+                if (!isDisabled) {
+                    currentPage = pageNum;
+                    displaySongs(currentPage);
+                    setupPagination(); // Render lại các nút phân trang
+                }
+            });
+            return button;
+        }
+
+        function setupPagination() {
+            if (!paginationControls) return; // Đảm bảo paginationControls tồn tại
+            paginationControls.innerHTML = ''; // Xóa các nút cũ
+
+            // Nút 'Previous'
+            const prevButton = createPaginationButton('<', currentPage - 1, false, currentPage === 1);
+            paginationControls.appendChild(prevButton);
+
+            // Xác định phạm vi các số trang để hiển thị
+            let startPage = Math.max(1, currentPage - Math.floor(maxPageButtons / 2));
+            let endPage = Math.min(pageCount, startPage + maxPageButtons - 1);
+
+            if (endPage - startPage + 1 < maxPageButtons) {
+                startPage = Math.max(1, endPage - maxPageButtons + 1);
+            }
+
+            // Luôn hiển thị trang đầu tiên nếu không nằm trong phạm vi
+            if (startPage > 1) {
+                paginationControls.appendChild(createPaginationButton('1', 1, currentPage === 1));
+                if (startPage > 2) { // Thêm dấu ... nếu có khoảng trống
+                    const ellipsis = document.createElement('span');
+                    ellipsis.innerText = '...';
+                    paginationControls.appendChild(ellipsis);
+                }
+            }
+
+            // Các nút số trang
+            for (let i = startPage; i <= endPage; i++) {
+                paginationControls.appendChild(createPaginationButton(i.toString(), i, currentPage === i));
+            }
+
+            // Luôn hiển thị trang cuối cùng nếu không nằm trong phạm vi
+            if (endPage < pageCount) {
+                if (endPage < pageCount - 1) { // Thêm dấu ... nếu có khoảng trống
+                    const ellipsis = document.createElement('span');
+                    ellipsis.innerText = '...';
+                    paginationControls.appendChild(ellipsis);
+                }
+                paginationControls.appendChild(createPaginationButton(pageCount.toString(), pageCount, currentPage === pageCount));
+            }
+
+            // Nút 'Next'
+            const nextButton = createPaginationButton('>', currentPage + 1, false, currentPage === pageCount);
+            paginationControls.appendChild(nextButton);
+        }
+
+        // Thiết lập phân trang và hiển thị bài hát ban đầu
+        setupPagination();
+        displaySongs(currentPage);
     }
+    // --- KẾT THÚC LOGIC PHÂN TRANG ---
 
-    function createPaginationButton(text, pageNum, isActive = false, isDisabled = false) {
-        const button = document.createElement('button');
-        button.innerText = text;
-        if (isActive) {
-            button.classList.add('active');
-        }
-        if (isDisabled) {
-            button.disabled = true;
-        }
-        button.addEventListener('click', () => {
-            if (!isDisabled) {
-                currentPage = pageNum;
-                displaySongs(currentPage);
-                setupPagination(); // Re-render pagination buttons
-            }
-        });
-        return button;
-    }
-
-    function setupPagination() {
-        paginationControls.innerHTML = ''; // Clear previous buttons
-
-        // Previous button
-        const prevButton = createPaginationButton('<', currentPage - 1, false, currentPage === 1);
-        paginationControls.appendChild(prevButton);
-
-        // Determine the range of page numbers to display
-        let startPage = Math.max(1, currentPage - Math.floor(maxPageButtons / 2));
-        let endPage = Math.min(pageCount, startPage + maxPageButtons - 1);
-
-        if (endPage - startPage + 1 < maxPageButtons) {
-            startPage = Math.max(1, endPage - maxPageButtons + 1);
-        }
-
-        // Always show the first page if not in the range
-        if (startPage > 1) {
-            paginationControls.appendChild(createPaginationButton('1', 1, currentPage === 1));
-            if (startPage > 2) { // Add ellipsis if there's a gap
-                const ellipsis = document.createElement('span');
-                ellipsis.innerText = '...';
-                paginationControls.appendChild(ellipsis);
-            }
-        }
-
-        // Numbered page buttons
-        for (let i = startPage; i <= endPage; i++) {
-            paginationControls.appendChild(createPaginationButton(i.toString(), i, currentPage === i));
-        }
-
-        // Always show the last page if not in the range
-        if (endPage < pageCount) {
-            if (endPage < pageCount - 1) { // Add ellipsis if there's a gap
-                const ellipsis = document.createElement('span');
-                ellipsis.innerText = '...';
-                paginationControls.appendChild(ellipsis);
-            }
-            paginationControls.appendChild(createPaginationButton(pageCount.toString(), pageCount, currentPage === pageCount));
-        }
-
-        // Next button
-        const nextButton = createPaginationButton('>', currentPage + 1, false, currentPage === pageCount);
-        paginationControls.appendChild(nextButton);
-    }
-
-    // Initial setup
-    setupPagination();
-    displaySongs(currentPage);
-});
-
-
-//am thanh thanh
-document.addEventListener('DOMContentLoaded', function() {
-    const playPauseButtons = document.querySelectorAll('.play-pause-button');
-
-    playPauseButtons.forEach(button => {
+    // --- 2. Logic Phát/Dừng Nhạc, Thời lượng và Lưu Lịch sử Nghe/Tăng Lượt Xem ---
+    document.querySelectorAll('.play-pause-button').forEach(button => {
         button.addEventListener('click', function() {
             const audioId = this.dataset.audioId;
             const audio = document.getElementById(audioId);
-            const durationDisplay = this.nextElementSibling; // Lấy phần tử kế tiếp (span.audio-duration)
 
-            if (audio.paused) {
-                audio.play();
-                this.classList.add('playing'); // Thêm class 'playing' để thay đổi icon
-                this.querySelector('i').classList.remove('fa-play');
-                this.querySelector('i').classList.add('fa-pause');
-            } else {
-                audio.pause();
-                this.classList.remove('playing');
-                this.querySelector('i').classList.remove('fa-pause');
-                this.querySelector('i').classList.add('fa-play');
+            if (!audio) {
+                console.error(`Không tìm thấy phần tử audio với id: ${audioId}`);
+                return;
             }
-        });
-    });
-
-    // Hiển thị thời lượng
-    document.querySelectorAll('audio').forEach(audio => {
-        const durationDisplay = audio.nextElementSibling.querySelector('.audio-duration');
-        audio.addEventListener('loadedmetadata', function() {
-            const totalDuration = formatTime(audio.duration);
-            durationDisplay.textContent = `0:00 / ${totalDuration}`;
-        });
-
-        audio.addEventListener('timeupdate', function() {
-            const currentTime = formatTime(audio.currentTime);
-            const totalDuration = formatTime(audio.duration);
-            durationDisplay.textContent = `${currentTime} / ${totalDuration}`;
-        });
-    });
-
-    // Hàm định dạng thời gian (ví dụ: 120 giây thành 2:00)
-    function formatTime(seconds) {
-        const minutes = Math.floor(seconds / 60);
-        const remainingSeconds = Math.floor(seconds % 60);
-        const formattedSeconds = remainingSeconds < 10 ? '0' + remainingSeconds : remainingSeconds;
-        return minutes + ':' + formattedSeconds;
-    }
-});
-document.querySelectorAll('.btn-like').forEach(button => {
-    button.addEventListener('click', function(e) {
-        e.preventDefault();
-
-        const songId = this.dataset.songId;
-        const isLiked = this.textContent.trim() === '♥';
-        const action = isLiked ? 'unlike' : 'like';
-
-        fetch(`/song/${songId}/like`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            },
-            body: JSON.stringify({ action })
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not OK');
-                }
-                return response.json();
-            })
-            .then(data => {
-                // Toggle icon
-                this.textContent = isLiked ? '♡' : '♥';
-                this.style.color = isLiked ? 'gray' : 'gray';
-
-                // Hiệu ứng trái tim bay
-                if (!isLiked) {
-                    const heart = document.createElement('span');
-                    heart.textContent = '❤';
-                    heart.classList.add('heart-float');
-                    this.appendChild(heart);
-
-                    setTimeout(() => {
-                        heart.remove();
-                    }, 1000);
-                }
-            })
-            .catch(error => {
-                alert('Lỗi kết nối hoặc xử lý. Vui lòng thử lại.');
-                console.error('Fetch error:', error);
-            });
-    });
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-    document.querySelectorAll('.play-pause-button').forEach(button => {
-        button.addEventListener('click', function () {
-            const audioId = this.dataset.audioId;
-            const audio = document.getElementById(audioId);
-            if (!audio) return;
 
             const icon = this.querySelector('i');
+            const songId = this.dataset.songId || audioId.replace('audio-', ''); // Ưu tiên data-song-id, nếu không thì trích xuất từ audioId
+
 
             if (audio.paused) {
-                audio.play();
+                // Tạm dừng tất cả các audio khác đang phát
+                document.querySelectorAll('audio').forEach(a => {
+                    if (!a.paused && a !== audio) { // Nếu đang phát và không phải audio hiện tại
+                        a.pause();
+                        const otherBtn = document.querySelector(`button[data-audio-id="${a.id}"]`);
+                        if (otherBtn) {
+                            const otherIcon = otherBtn.querySelector('i');
+                            // SỬA: Đảm bảo sử dụng Boxicons class cho các nút khác
+                            otherIcon.classList.remove('bx-pause-circle');
+                            otherIcon.classList.add('bx-play-circle');
+                        }
+                    }
+                });
 
-                // Lấy songId từ id audio
-                const songId = audioId.replace('audio-', '');
+                audio.play(); // Bắt đầu phát bài hát hiện tại
+                // SỬA: Đảm bảo sử dụng Boxicons class cho nút hiện tại
+                icon.classList.remove('bx-play-circle');
+                icon.classList.add('bx-pause-circle');
 
-                // Gọi API lưu lịch sử nghe bài hát
+                // --- Gửi sự kiện 'songPlayed' để kích hoạt tăng lượt xem ---
+                console.log(`[songs.js] Phát nhạc và gửi sự kiện 'songPlayed' cho Song ID: ${songId}`);
+                const songPlayedEvent = new CustomEvent('songPlayed', {
+                    detail: {
+                        songId: songId,
+                        button: this // Truyền nút để xử lý data-viewed
+                    }
+                });
+                document.dispatchEvent(songPlayedEvent);
+
+                // --- Gọi API lưu lịch sử nghe ---
                 fetch('/listening-history/save', {
                     method: 'POST',
                     headers: {
@@ -210,95 +156,168 @@ document.addEventListener('DOMContentLoaded', () => {
                         'Content-Type': 'application/json',
                         'Accept': 'application/json',
                     },
+                    credentials: 'same-origin', // Đảm bảo gửi cookie (ví dụ: phiên)
                     body: JSON.stringify({ song_id: songId }),
                 })
-                    .then(res => res.json())
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.json().then(errorData => {
+                                console.warn('Lưu lịch sử nghe thất bại:', errorData);
+                            });
+                        }
+                        return response.json();
+                    })
                     .then(data => {
-                        if (!data.success) {
-                            console.warn('Lưu lịch sử nghe thất bại');
+                        if (data.success) {
+                            console.log('Lịch sử nghe đã lưu thành công');
                         } else {
-                            console.log('Lưu lịch sử nghe thành công');
+                            console.warn('Lưu lịch sử nghe thất bại: Phản hồi không thành công', data);
                         }
                     })
-                    .catch(() => {
-                        console.warn('Lỗi kết nối khi lưu lịch sử nghe');
+                    .catch(error => {
+                        console.error('Lỗi khi gửi yêu cầu lưu lịch sử nghe:', error);
                     });
 
-                icon.classList.remove('fa-play');
-                icon.classList.add('fa-pause');
             } else {
+                // Tạm dừng bài hát
                 audio.pause();
-                icon.classList.remove('fa-pause');
-                icon.classList.add('fa-play');
+                // SỬA: Đảm bảo sử dụng Boxicons class
+                icon.classList.remove('bx-pause-circle');
+                icon.classList.add('bx-play-circle');
+                // Không gửi sự kiện 'songPlayed' khi tạm dừng
             }
         });
     });
-});
-// Xử lý nút play/pause và lưu lịch sử nghe
-document.querySelectorAll('.play-pause-button').forEach(button => {
-    button.addEventListener('click', function () {
-        const audioId = this.dataset.audioId;
-        const audio = document.getElementById(audioId);
 
-        if (!audio) {
-            console.error(`Không tìm thấy audio với id ${audioId}`);
-            return;
+    // --- Logic hiển thị thời lượng và cập nhật thời gian bài hát ---
+    document.querySelectorAll('audio').forEach(audio => {
+        // Trong rankings.blade.php, .audio-duration nằm trực tiếp trong li.song-item, không phải trong .song-audio
+        // Cần điều chỉnh cách tìm kiếm .audio-duration cho phù hợp với cả hai trang
+        let durationDisplay = audio.closest('.song-item')?.querySelector('.audio-duration');
+        // Nếu không tìm thấy trong .song-item (như trường hợp của all_songs.blade.php), thử tìm trong .song-audio
+        if (!durationDisplay) {
+            durationDisplay = audio.closest('.song-audio')?.querySelector('.audio-duration');
         }
 
-        const icon = this.querySelector('i');
 
-        if (audio.paused) {
-            // Pause hết các audio khác trước
-            document.querySelectorAll('audio').forEach(a => {
-                if (!a.paused) {
-                    a.pause();
-                    const btn = document.querySelector(`button[data-audio-id="${a.id}"]`);
-                    if (btn) {
-                        btn.querySelector('i').classList.remove('fa-pause');
-                        btn.querySelector('i').classList.add('fa-play');
-                    }
-                }
+        if (durationDisplay) {
+            audio.addEventListener('loadedmetadata', function() {
+                const totalDuration = formatTime(audio.duration);
+                durationDisplay.textContent = `0:00 / ${totalDuration}`;
             });
 
-            audio.play();
-            icon.classList.remove('fa-play');
-            icon.classList.add('fa-pause');
+            audio.addEventListener('timeupdate', function() {
+                const currentTime = formatTime(audio.currentTime);
+                const totalDuration = formatTime(audio.duration);
+                durationDisplay.textContent = `${currentTime} / ${totalDuration}`;
+            });
+        } else {
+            console.warn('Không tìm thấy phần tử .audio-duration cho audio:', audio.id);
+        }
+    });
 
-            // Gọi API chỉ khi play
-            const songId = audioId.replace('audio-', '');
-            fetch('/listening-history/save', {
+    // Hàm định dạng thời gian (ví dụ: 120 giây thành 2:00)
+    function formatTime(seconds) {
+        if (isNaN(seconds) || seconds < 0) {
+            return '0:00'; // Xử lý trường hợp không hợp lệ
+        }
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = Math.floor(seconds % 60);
+        const formattedSeconds = remainingSeconds < 10 ? '0' + remainingSeconds : remainingSeconds;
+        return minutes + ':' + formattedSeconds;
+    }
+
+    // --- 3. Logic Nút Like ---
+    document.querySelectorAll('.btn-like').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            const songId = this.dataset.songId;
+            const isLiked = this.textContent.trim() === '♥';
+            const action = isLiked ? 'unlike' : 'like';
+
+            fetch(`/song/${songId}/like`, {
                 method: 'POST',
                 headers: {
-                    'X-CSRF-TOKEN': csrfToken,
                     'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
                     'Accept': 'application/json',
                 },
                 credentials: 'same-origin',
-                body: JSON.stringify({ song_id: songId }),
+                body: JSON.stringify({ action })
             })
                 .then(response => {
-                    if (response.ok) {
-                        console.log('Listening history saved successfully');
-                    } else {
-                        console.warn('Failed to save listening history');
+                    if (!response.ok) {
+                        throw new Error('Lỗi mạng hoặc server không phản hồi OK');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    this.textContent = isLiked ? '♡' : '♥';
+                    this.style.color = 'gray';
+
+                    if (!isLiked) {
+                        const heart = document.createElement('span');
+                        heart.textContent = '❤';
+                        heart.classList.add('heart-float');
+                        this.appendChild(heart);
+
+                        setTimeout(() => {
+                            heart.remove();
+                        }, 1000);
                     }
                 })
                 .catch(error => {
-                    console.error('Request failed', error);
+                    alert('Có lỗi xảy ra khi xử lý lượt thích. Vui lòng thử lại.');
+                    console.error('Lỗi fetch like:', error);
                 });
-
-        } else {
-            // Chỉ pause, không gọi fetch
-            audio.pause();
-            icon.classList.remove('fa-pause');
-            icon.classList.add('fa-play');
-        }
+        });
     });
-});
 
+    // --- 4. Logic Tăng Lượt Xem (Đã di chuyển từ songs_view.js) ---
+    document.addEventListener('songPlayed', (event) => {
+        const { songId, button } = event.detail;
 
+        if (button.dataset.viewed === 'true') {
+            console.log(`[songs.js - View Logic] Song ID ${songId} đã được xem từ nút này. Bỏ qua.`);
+            return;
+        }
 
+        console.log(`[songs.js - View Logic] Đang gửi yêu cầu tăng lượt xem cho Song ID: ${songId}`);
+        fetch(`/song/${songId}/view`, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            credentials: 'same-origin',
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Cố gắng tìm kiếm lượt xem bằng data-song-id của viewElement
+                    const viewElement = document.querySelector(`.views-count[data-song-id="${songId}"]`);
+                    // Fallback nếu .views-count không phải là class duy nhất
+                    if (!viewElement) {
+                        const alternativeViewElement = document.querySelector(`.view-count[data-song-id="${songId}"]`);
+                        if (alternativeViewElement) {
+                            viewElement = alternativeViewElement;
+                        }
+                    }
 
+                    if (viewElement) {
+                        viewElement.textContent = `Lượt xem: ${data.views}`;
+                        console.log(`[songs.js - View Logic] Cập nhật lượt xem UI cho Song ID ${songId}: ${data.views}`);
+                    }
+                    button.dataset.viewed = 'true'; // Đánh dấu nút là đã xử lý lượt xem
+                } else {
+                    console.warn(`[songs.js - View Logic] Cập nhật lượt xem thất bại cho Song ID ${songId}:`, data);
+                }
+            })
+            .catch(error => {
+                console.error(`[songs.js - View Logic] Lỗi fetch view cho Song ID ${songId}:`, error);
+            });
+    });
 
-
-
+}); // Kết thúc DOMContentLoaded cho toàn bộ file songs.js

@@ -3,7 +3,6 @@
 use App\Http\Controllers\FavoriteController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
-
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ProfileController;
@@ -24,6 +23,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\CommentsController;
 
 use App\Http\Controllers\ListeningHistoryController;
+use App\Http\Controllers\SongViewController;
 
 // === Public routes (guest only) ===
 Route::middleware('guest')->group(function () {
@@ -163,6 +163,9 @@ Route::get('/category/{tentheloai}', [CategoryController::class, 'show'])->name(
     Route::delete('/listening-history/{id}', [ListeningHistoryController::class, 'destroy'])->name('listening.history.destroy');
 
     Route::post('/listening-history/clear-all', [ListeningHistoryController::class, 'clearAll'])->name('listening.history.clearAll');
+
+Route::post('/song/{song}/view', [SongViewController::class, 'incrementView'])->name('song.view.increment');
+
 
 
     Route::get('/vip/register', [VipController::class, 'showRegistrationForm'])->name('vip.register');

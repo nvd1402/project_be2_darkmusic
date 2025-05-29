@@ -79,6 +79,8 @@
                         <option value="Nhạc Remix" {{ old('nhom') == 'Nhạc Remix' ? 'selected' : '' }}>Nhạc Remix</option>
                         <option value="Nhạc Nổi Bật" {{ old('nhom') == 'Nhạc Nổi Bật' ? 'selected' : '' }}>Nhạc Nổi Bật</option>
                         <option value="Nhạc Mới" {{ old('nhom') == 'Nhạc Mới' ? 'selected' : '' }}>Nhạc Mới</option>
+                        <option value="Nhạc Cũ" {{ old('nhom') == 'Nhạc Cũ' ? 'selected' : '' }}>Nhạc Cũ</option>
+
                     </select>
                     @if ($errors->has('nhom'))
                         <div class="text-danger">{{ $errors->first('nhom') }}</div>

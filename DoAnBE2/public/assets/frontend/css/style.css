@@ -455,7 +455,10 @@ body {
     text-wrap: nowrap;
     margin-top: 20px;
 }
-
+main{
+    max-height: 700px;
+    overflow-y: auto;
+}
 .container .sidebar .logo a:hover,
 .container .sidebar .logo > i:hover,
 .container .sidebar .menu ul li:hover a,
@@ -1475,7 +1478,7 @@ body {
     position: relative;
     background-color: #202026;
     border-radius: 6px;
-    height: 88%;
+    height: 600px;
     display: flex;
     flex-direction: column;
 }

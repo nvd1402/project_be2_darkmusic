@@ -3,6 +3,7 @@
 <head>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @include('frontend.partials.head')
+
     <style>
         main {
             overflow-y: auto; /* Cho phép cuộn nếu nội dung dài */
@@ -68,14 +69,18 @@
                             <div class="song-genre">
                                 <span style="text-align: center; font-size:15px;">{{ $song->category ? $song->category->tentheloai : 'Không có thể loại' }}</span>
                             </div>
-
-
                             <div class="song-audio">
                                 <audio id="audio-{{ $song->id }}" src="{{ asset('storage/'. $song->file_amthanh) }}"></audio>
                                 <div class="audio-controls">
-                                    <button class="play-pause-button" data-audio-id="audio-{{ $song->id }}">
-                                        <i class="fas fa-play"></i> </button>
-                                    <span class="audio-duration">0:00 / 0:00</span>
+                                    <button class="play-pause-button " data-audio-id="audio-{{ $song->id }}">
+                                        <i class='bx bx-play-circle'></i>
+                                    </button>
+                                  <span class="audio-duration">0:00 / 0:00
+                                        <br>
+                                </span>
+                                    <small class="view-count" data-song-id="{{ $song->id }}">
+                                            Lượt xem: {{ $song->songView->views ?? 0 }}
+                                    </small>
                                 </div>
                             </div>
                             <div>
@@ -92,30 +97,6 @@
             </div>
             <div class="pagination-controls" id="pagination-controls">
             </div>
-        </div>
-
-        <div class="artist-trending">
-            <h2>Các bản nhạc thịnh hành của 92914</h2>
-            <ul class="songs-list">
-                <li class="songs-item">
-                    <span class="rank">1</span>
-                    <img src="./assets/trend.png" alt="">
-                    <span>Okinawa</span>
-                    <span>5:48</span>
-                </li>
-                <li class="songs-item">
-                    <span class="rank">2</span>
-                    <img src="./assets/trend.png" alt="">
-                    <span>Sunset</span>
-                    <span>3:12</span>
-                </li>
-                <li class="songs-item">
-                    <span class="rank">3</span>
-                    <img src="./assets/trend.png" alt="">
-                    <span>Koh</span>
-                    <span>5:21</span>
-                </li>
-            </ul>
         </div>
         </section>
     </main>

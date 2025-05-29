@@ -36,31 +36,6 @@ class ArtistSeeder extends Seeder
             'Thịnh Suy',
             'Phạm Anh Khoa',
             'Hải Sâm',
-            'Phoebe Bridgers',
-            'Sufjan Stevens',
-            'Maggie Rogers',
-            'Bon Iver',
-            'Mac DeMarco',
-            'Conor Oberst',
-            'Clairo Cotton',
-            'Lana Del Rey',
-            'Julien Baker',
-            'Lucy Dacus',
-            'Elliott Smith',
-            'Joji Miller',
-            'AURORA Aksnes',
-            'King Princess',
-            'Kurt Vile',
-            'Beabadoobee',
-            'Rex Orange County',
-            'Ben Howard',
-            'Iron & Wine',
-            'Fleet Foxes',
-            'Alex G',
-            'Faye Webster',
-            'Jose Gonzalez',
-            'Grizzly Bear',
-            'The Japanese House'
         ];
 
         $imageArtists = Storage::disk('public')->files('artists');
@@ -72,6 +47,7 @@ class ArtistSeeder extends Seeder
         }
 
         $data = [];
+
 
         for ($i = 0; $i < 100; $i++) {
             $randomName = $artistNames[array_rand($artistNames)];

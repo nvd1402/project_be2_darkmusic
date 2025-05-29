@@ -9,7 +9,10 @@
             color: #fff;
             font-family: Arial, sans-serif;
         }
-
+main {
+            overflow-y: auto; /* Cho phép cuộn nếu nội dung dài */
+            height: 100vh; /* Chiều cao đầy đủ để cuộn */
+        }
         .news-list1 {
             display: flex;
             flex-direction: column;
