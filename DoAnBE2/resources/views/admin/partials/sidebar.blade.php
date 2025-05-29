@@ -8,7 +8,6 @@
     </div>
 
     <div class="menu">
-        <h5>Menu</h5>
         <ul>
             <li>
                 <i class='bx bxs-bolt-circle'></i>
@@ -21,7 +20,7 @@
             <li>
                 <i class='bx bxs-album'></i>
                 <a href="{{ route('admin.categories.index') }}">Quản lý thể loại</a>
-             
+
             </li>
             <li>
                 <i class='bx bxs-microphone'></i>
@@ -32,7 +31,7 @@
                                 <a href="{{ route('admin.album.index') }}">Quản lý album</a>
             </li>
             <li>
-               
+
             <i class='bx bxs-album'></i>
                 <a href="{{ route('admin.news.index') }}">Quản lý tin tức</a>
             </li>
@@ -47,7 +46,7 @@
                         <li>
 
                             <i class='bx bxs-comment'></i>
-                
+
                 <a href="{{ route('admin.comments.index') }}">Quản lý bình luận </a>
             </li>
             <li>
@@ -57,16 +56,7 @@
         </ul>
     </div>
 
-    <div class="playing">
-        <div class="top">
-            <img src="assets/current.png">
-            <h4>Apple<br>Homepod</h4>
-        </div>
-        <div class="bottom">
-            <i class='bx bx-podcast'></i>
-            <p>Playing On Device</p>
-        </div>
-    </div>
+
 
 
 </aside>

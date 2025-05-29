@@ -118,7 +118,7 @@
         </header>
 
         <section class="bxh-nhac-moi">
-            <h2 class="title">BXH Nhạc Mới <i class='bx bx-play-circle'></i></h2>
+            <h2 class="title">BXH Top Thịnh Hành<i class='bx bx-play-circle'></i></h2>
             <div class="song-columns">
                 <ul class="song-list">
                     @forelse($rankedSongs->take(5) as $index => $song)
