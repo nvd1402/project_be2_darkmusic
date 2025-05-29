@@ -37,8 +37,21 @@ class HomeController extends Controller
             ->take(4)
             ->get();
         $latestCategories = Category::latest()->take(5)->get(); // Sửa category thành Category
+// Lấy bài hát nổi bật được yêu thích nhất (Top Liked Song)
+        $topLikedSong = Song::with(['artist', 'category'])
+            ->withCount('usersWhoLiked')
+            ->orderByDesc('users_who_liked_count')
+            ->first(); // Lấy chỉ một bài hát
 
-        return view('frontend.index', compact('ads', 'latestSong', 'recommendedSongs', 'artists', 'latestCategories'));
+        //Lấy danh sách các bài hát yêu thích nhiều nhất (Most Liked Songs)
+        $mostLikedSongs = Song::with(['artist', 'category'])
+            ->withCount('usersWhoLiked')
+            ->orderByDesc('users_who_liked_count')
+            ->limit(5) // Lấy 5 bài
+            ->get();
+
+        return view('frontend.index', compact('ads', 'latestSong', 'recommendedSongs', 'artists', 'latestCategories','topLikedSong',
+            'mostLikedSongs'));
     }
 
 
