@@ -29,11 +29,11 @@ class CategoryController extends Controller
     }
 
     // Hiển thị danh sách thể loại
-public function index()
-{
-    $categories = Category::orderByDesc('updated_at')->paginate(10); // mỗi trang 10 mục
-    return view('admin.categories.index', compact('categories'));
-}
+    public function index()
+    {
+        $categories = Category::orderByDesc('updated_at')->paginate(10); // mỗi trang 10 mục
+        return view('admin.categories.index', compact('categories'));
+    }
 
 
     // Tìm kiếm thể loại
@@ -145,11 +145,13 @@ public function index()
                         $fail('Tên thể loại không được nhập chuỗi chỉ gồm một ký tự lặp lại nhiều lần. Ví dụ: "aaaaa", "---".');
                     }
                 },
-                      function ($attribute, $value, $fail) {
-                    if ($value !== strip_tags($value)) {
-                        $fail('Mô tả không được chứa mã HTML. Vui lòng loại bỏ các thẻ HTML.');
+                // Rule 4: KHÔNG cho tiêu đề chứa ký tự đặc biệt
+                function ($attribute, $value, $fail) {
+                    // Biểu thức chính quy này cho phép chữ cái (bao gồm tiếng Việt), số, và khoảng trắng.
+                    if (!preg_match('/^[a-zA-Z0-9\p{L}\s]+$/u', $value)) {
+                        $fail('Tên thể loại không được chứa ký tự đặc biệt.');
                     }
-                }
+                },
             ],
             'nhom' => 'required|string|in:' . implode(',', $this->nhoms),
             'description' => [
@@ -282,6 +284,13 @@ public function index()
                         $fail('Tên thể loại không được nhập chuỗi chỉ gồm một ký tự lặp lại nhiều lần. Ví dụ: "aaaaa", "---".');
                     }
                 },
+                // Rule 4: KHÔNG cho tiêu đề chứa ký tự đặc biệt
+                function ($attribute, $value, $fail) {
+                    // Biểu thức chính quy này cho phép chữ cái (bao gồm tiếng Việt), số, và khoảng trắng.
+                    if (!preg_match('/^[a-zA-Z0-9\p{L}\s]+$/u', $value)) {
+                        $fail('Tên thể loại không được chứa ký tự đặc biệt.');
+                    }
+                },
             ],
             'nhom' => 'required|string|in:' . implode(',', $this->nhoms),
             'description' => [
@@ -387,27 +396,27 @@ public function index()
     }
 
     // Xóa thể loại
-   public function destroy(Request $request, $id)
-{
-    try {
-        $category = Category::findOrFail($id);
+    public function destroy(Request $request, $id)
+    {
+        try {
+            $category = Category::findOrFail($id);
 
-        $clientUpdatedAt = $request->input('updated_at');
-        if (!$clientUpdatedAt || $clientUpdatedAt != $category->updated_at->toDateTimeString()) {
-            return redirect()->route('admin.categories.index')
-                ->withErrors(['conflict' => 'Thể loại đã được cập nhật hoặc thay đổi bởi người dùng khác. Vui lòng tải lại trang để có dữ liệu mới nhất.']);
+            $clientUpdatedAt = $request->input('updated_at');
+            if (!$clientUpdatedAt || $clientUpdatedAt != $category->updated_at->toDateTimeString()) {
+                return redirect()->route('admin.categories.index')
+                    ->withErrors(['conflict' => 'Thể loại đã được cập nhật hoặc thay đổi bởi người dùng khác. Vui lòng tải lại trang để có dữ liệu mới nhất.']);
+            }
+
+            $category->delete();
+
+            return redirect()->route('admin.categories.index')->with('success', 'Xóa thể loại thành công!');
+        } catch (ModelNotFoundException $e) {
+            return redirect()->route('admin.categories.index')->withErrors(['delete_error' => 'Không tìm thấy thể loại. Có thể nó đã bị xóa.']);
+        } catch (\Exception $e) {
+            Log::error('Lỗi khi xóa thể loại: ' . $e->getMessage());
+            return redirect()->route('admin.categories.index')->withErrors(['delete_error' => 'Đã xảy ra lỗi khi xóa thể loại. Vui lòng thử lại sau.']);
         }
-
-        $category->delete();
-
-        return redirect()->route('admin.categories.index')->with('success', 'Xóa thể loại thành công!');
-    } catch (ModelNotFoundException $e) {
-        return redirect()->route('admin.categories.index')->withErrors(['delete_error' => 'Không tìm thấy thể loại. Có thể nó đã bị xóa.']);
-    } catch (\Exception $e) {
-        Log::error('Lỗi khi xóa thể loại: ' . $e->getMessage());
-        return redirect()->route('admin.categories.index')->withErrors(['delete_error' => 'Đã xảy ra lỗi khi xóa thể loại. Vui lòng thử lại sau.']);
     }
-}
 
     // Hiển thị chi tiết thể loại
     public function show($tentheloai)
