@@ -154,9 +154,15 @@ Route::post('/news/{id}/comment', [CommentsController::class, 'store'])->name('c
     Route::get('/news/{id}', [App\Http\Controllers\NewsController::class, 'show'])->name('news_show');
 
 Route::get('/category/{tentheloai}', [CategoryController::class, 'show'])->name('category_show');
-    Route::get('/history', [ListeningHistoryController::class, 'index'])
+    Route::get('/listening-history', [ListeningHistoryController::class, 'index'])->name('listening.history');
+
+    Route::post('/listening-history/save', [ListeningHistoryController::class, 'save'])
         ->middleware('auth')
-        ->name('listening.history');
+        ->name('listening.history.save');
+
+    Route::delete('/listening-history/{id}', [ListeningHistoryController::class, 'destroy'])->name('listening.history.destroy');
+
+    Route::post('/listening-history/clear-all', [ListeningHistoryController::class, 'clearAll'])->name('listening.history.clearAll');
 
 
     Route::get('/vip/register', [VipController::class, 'showRegistrationForm'])->name('vip.register');

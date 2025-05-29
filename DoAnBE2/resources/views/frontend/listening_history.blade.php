@@ -135,7 +135,7 @@
             font-size: 1rem;
             font-weight: 600;
             display: inline-flex;
-            align-items: center;
+            align: center;
             gap: 10px;
             transition: background-color 0.3s ease;
         }
@@ -247,63 +247,51 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
 <script>
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-    // Play/Pause audio
+    // KHẮC PHỤC LỖI: Di chuyển khai báo biến này ra ngoài vòng lặp foreach
+    let currentlyPlayingAudio = null; // Lưu trữ phần tử audio đang phát
+
     document.querySelectorAll('.play-pause-button').forEach(button => {
-        button.addEventListener('click', function () {
-            const audioId = this.dataset.audioId;
-            const audio = document.getElementById(audioId);
-            if (!audio) {
-                console.error(`Không tìm thấy audio với id ${audioId}`);
-                return;
+        const audioId = button.dataset.audioId;
+        const audio = document.getElementById(audioId);
+        const icon = button.querySelector('i');
+
+        // Bắt sự kiện khi audio bắt đầu phát
+        audio.addEventListener('play', () => {
+            icon.classList.remove('fa-play');
+            icon.classList.add('fa-pause');
+        });
+
+        // Bắt sự kiện khi audio tạm dừng
+        audio.addEventListener('pause', () => {
+            icon.classList.remove('fa-pause');
+            icon.classList.add('fa-play');
+        });
+
+        // Bắt sự kiện khi audio kết thúc
+        audio.addEventListener('ended', () => {
+            icon.classList.remove('fa-pause');
+            icon.classList.add('fa-play');
+            if (currentlyPlayingAudio === audio) {
+                currentlyPlayingAudio = null; // Reset nếu bài hát hiện tại kết thúc
             }
+        });
 
-            const icon = this.querySelector('i');
-
+        // Xử lý sự kiện click vào nút play/pause
+        button.addEventListener('click', () => {
             if (audio.paused) {
-                // Pause tất cả audio khác trước khi play audio này
-                document.querySelectorAll('audio').forEach(a => {
-                    if (!a.paused) {
-                        a.pause();
-                        const btn = document.querySelector(`button[data-audio-id="${a.id}"]`);
-                        if (btn) {
-                            btn.querySelector('i').classList.remove('fa-pause');
-                            btn.querySelector('i').classList.add('fa-play');
-                        }
-                    }
-                });
-
-                audio.play();
-                icon.classList.remove('fa-play');
-                icon.classList.add('fa-pause');
-
-                // Gọi API lưu lịch sử nghe
-                const songId = audioId.replace('audio-', '');
-                fetch('/listening-history/save', {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken,
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json',
-                    },
-                    credentials: 'same-origin',
-                    body: JSON.stringify({ song_id: songId }),
-                })
-                    .then(res => {
-                        if (res.ok) {
-                            console.log('Lưu lịch sử nghe thành công');
-                        } else {
-                            console.warn('Lưu lịch sử nghe thất bại');
-                        }
-                    })
-                    .catch(() => console.warn('Lỗi kết nối khi lưu lịch sử nghe'));
-
+                // Nếu có audio khác đang phát, dừng nó lại
+                if (currentlyPlayingAudio && currentlyPlayingAudio !== audio) {
+                    currentlyPlayingAudio.pause(); // Lệnh này sẽ kích hoạt sự kiện 'pause' của audio đó, tự động đổi icon
+                }
+                audio.play(); // Phát audio hiện tại
+                currentlyPlayingAudio = audio; // Cập nhật audio đang phát
             } else {
-                audio.pause();
-                icon.classList.remove('fa-pause');
-                icon.classList.add('fa-play');
+                audio.pause(); // Tạm dừng audio hiện tại
+                // Lệnh này sẽ kích hoạt sự kiện 'pause' của audio này, tự động đổi icon
             }
         });
     });
@@ -325,7 +313,23 @@
                 .then(res => res.json())
                 .then(data => {
                     if (data.success) {
-                        this.closest('.history-item').remove();
+                        const historyItem = this.closest('.history-item');
+                        const audioElement = historyItem.querySelector('audio');
+
+                        // Nếu bài hát bị xóa đang phát, dừng nó lại
+                        if (currentlyPlayingAudio === audioElement) {
+                            audioElement.pause();
+                            currentlyPlayingAudio = null;
+                        }
+
+                        historyItem.remove();
+                        // Optional: nếu không còn bài hát nào, hiển thị thông báo
+                        if (document.querySelectorAll('.history-item').length === 0) {
+                            const historyList = document.querySelector('.history-list');
+                            if (historyList) {
+                                historyList.innerHTML = '<p style="text-align: center; color: #fff;">Bạn chưa nghe bài hát nào gần đây.</p>';
+                            }
+                        }
                     } else {
                         alert(data.message || 'Xóa thất bại');
                     }
@@ -354,6 +358,11 @@
                     if (historyList) {
                         historyList.innerHTML = '<p style="text-align: center; color: #fff;">Bạn chưa nghe bài hát nào gần đây.</p>';
                     }
+                    // Dừng audio đang phát (nếu có) khi xóa tất cả lịch sử
+                    if (currentlyPlayingAudio) {
+                        currentlyPlayingAudio.pause(); // Lệnh này sẽ kích hoạt sự kiện 'pause' của audio đó
+                        currentlyPlayingAudio = null;
+                    }
                 } else {
                     alert('Xóa thất bại, vui lòng thử lại.');
                 }
@@ -361,6 +370,5 @@
             .catch(() => alert('Lỗi kết nối, vui lòng thử lại.'));
     });
 </script>
-
 </body>
 </html>
