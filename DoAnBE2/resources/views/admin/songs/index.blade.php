@@ -82,6 +82,7 @@
 </div>
 
 @livewireScripts {{-- Đảm bảo có dòng này nếu bạn dùng Livewire --}}
+<script src="https://cdn.tailwindcss.com"></script>
 <script type='text/javascript' src="{{ asset('assets/frontend/js/adminSong.js') }}"></script>
 </body>
 
