@@ -64,12 +64,12 @@
 
                 <div class="d-grid mx-auto">
                     <button type="submit" class="btn--crud--artist">Sửa</button>
+                    <button type="reset" class="btn--crud--artist"><a href="{{ route('admin.artist.index') }}">Hủy</a></button>
                 </div>
             </form>
         </section>
     </main>
 </div>
-<script src="{{ asset('js/script.js') }}"></script>
 </body>
 
 </html>
