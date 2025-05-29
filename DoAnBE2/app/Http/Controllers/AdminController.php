@@ -6,10 +6,11 @@ use App\Models\User;
 use App\Models\Song;
 use App\Models\Artist;
 use App\Models\Category;
-use App\Models\Userss; // Có vẻ như đây là một Model không chuẩn, hãy kiểm tra lại tên Model User của bạn
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Database\Eloquent\ModelNotFoundException; // Đảm bảo đã import này
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Validation\ValidationException;
+use Carbon\Carbon;
 
 class AdminController extends Controller
 {
@@ -33,17 +34,25 @@ class AdminController extends Controller
 
     public function storesong(Request $request)
     {
+        $cleanedTenBaiHat = preg_replace('/^\s+|\s+$/u', '', $request->input('tenbaihat'));
+        $cleanedTenBaiHat = preg_replace('/\s+/u', ' ', $cleanedTenBaiHat);
+
+        $request->merge([
+            'tenbaihat' => $cleanedTenBaiHat
+        ]);
+
         $validated = $request->validate([
             'tenbaihat' => [
                 'required',
                 'string',
                 'max:255',
-                'regex:/^[\p{L}\p{M}\d\s\-\'\.]+$/u'
+                'regex:/^[\p{L}\p{M}\d\s\-\'\.]+$/u',
+                'unique:songs,tenbaihat'
             ],
             'nghesi' => 'required|exists:artists,id',
             'theloai' => 'required|exists:categories,id',
             'file_amthanh' => 'required|file|mimes:mp3,wav,ogg',
-            'anh_daidien' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+            'anh_daidien' => 'required|image|mimes:jpg,jpeg,png,gif|max:2048',
         ]);
 
         $song = new Song();
@@ -72,15 +81,28 @@ class AdminController extends Controller
         return view('admin.songs.index', $this->data);
     }
 
-    public function editsong($id)
+    public function editsong(Request $request, $id)
     {
         try {
-            $this->data['song'] = Song::findOrFail($id); // Bắt ModelNotFoundException ở đây
+            $song = Song::findOrFail($id);
+
+            $updatedAtFromList = $request->query('updated_at');
+
+            if ($updatedAtFromList) {
+                $formUpdatedAt = Carbon::parse($updatedAtFromList);
+                $dbUpdatedAt = Carbon::parse($song->updated_at);
+
+                if ($formUpdatedAt->ne($dbUpdatedAt)) {
+                    return redirect()->route('admin.songs.index')
+                        ->with('error', 'Bài hát bạn muốn chỉnh sửa đã được cập nhật bởi người dùng khác. Vui lòng tải lại trang để xem phiên bản mới nhất.');
+                }
+            }
+
+            $this->data['song'] = $song;
             $this->data['categories'] = Category::all();
             $this->data['artists'] = Artist::all();
             return view('admin.songs.edit', $this->data);
         } catch (ModelNotFoundException $e) {
-            // Nếu không tìm thấy bài hát, chuyển hướng về trang index với thông báo
             return redirect()->route('admin.songs.index')
                 ->with('info', 'Bài hát bạn muốn chỉnh sửa không tồn tại hoặc đã bị xóa.');
         }
@@ -90,10 +112,31 @@ class AdminController extends Controller
     public function updatesong(Request $request, $id)
     {
         try {
-            $song = Song::findOrFail($id); // Bắt ModelNotFoundException ở đây
+            $song = Song::findOrFail($id);
+
+            $formUpdatedAt = Carbon::parse($request->input('updated_at'));
+            $dbUpdatedAt = Carbon::parse($song->updated_at);
+
+            if ($formUpdatedAt->ne($dbUpdatedAt)) {
+                return redirect()->back()->withInput()
+                    ->with('error', 'Bài hát đã được cập nhật bởi người dùng khác. Vui lòng tải lại trang và thử lại để xem phiên bản mới nhất.');
+            }
+
+            $cleanedTenBaiHat = preg_replace('/^\s+|\s+$/u', '', $request->input('tenbaihat'));
+            $cleanedTenBaiHat = preg_replace('/\s+/u', ' ', $cleanedTenBaiHat);
+
+            $request->merge([
+                'tenbaihat' => $cleanedTenBaiHat
+            ]);
 
             $validated = $request->validate([
-                'tenbaihat' => ['required', 'string', 'max:255', 'regex:/^[\p{L}\p{M}\d\s\-\'\.]+$/u'], // Đã sửa regex cho phép tiếng Việt và dấu câu cơ bản
+                'tenbaihat' => [
+                    'required',
+                    'string',
+                    'max:255',
+                    'regex:/^[\p{L}\p{M}\d\s\-\'\.]+$/u',
+                    'unique:songs,tenbaihat,' . $song->id,
+                ],
                 'nghesi' => 'required|exists:artists,id',
                 'theloai' => 'required|exists:categories,id',
                 'file_amthanh' => 'nullable|file|mimes:mp3,wav,ogg',
@@ -125,16 +168,35 @@ class AdminController extends Controller
         } catch (ModelNotFoundException $e) {
             return redirect()->route('admin.songs.index')
                 ->with('info', 'Bài hát bạn muốn cập nhật không tồn tại hoặc đã bị xóa.');
+        } catch (ValidationException $e) {
+            return redirect()->back()->withErrors($e->errors())->withInput();
         } catch (\Exception $e) {
+            \Log::error("Lỗi cập nhật bài hát: " . $e->getMessage() . " - File: " . $e->getFile() . " - Line: " . $e->getLine());
             return redirect()->back()->with('error', 'Đã xảy ra lỗi không mong muốn khi cập nhật bài hát. Vui lòng thử lại.');
         }
     }
 
 
-    public function deletesong($id)
+    public function deletesong(Request $request, $id) // Thêm Request $request để nhận tham số updated_at
     {
         try {
-            $song = Song::findOrFail($id); // Bắt ModelNotFoundException ở đây
+            $song = Song::findOrFail($id);
+
+            // BẮT ĐẦU PHẦN KIỂM TRA OPTIMISTIC LOCKING KHI XÓA
+            // Lấy updated_at từ URL (khi người dùng click "Xóa" từ danh sách)
+            $updatedAtFromList = $request->query('updated_at');
+
+            if ($updatedAtFromList) { // Chỉ kiểm tra nếu updated_at được truyền
+                $formUpdatedAt = Carbon::parse($updatedAtFromList);
+                $dbUpdatedAt = Carbon::parse($song->updated_at);
+
+                if ($formUpdatedAt->ne($dbUpdatedAt)) {
+                    // Nếu updated_at khác nhau, tức là bản ghi đã được người khác cập nhật/xóa
+                    return redirect()->route('admin.songs.index')
+                        ->with('error', 'Bài hát đã được cập nhật bởi người dùng khác hoặc đã bị xóa. Vui lòng tải lại trang để xem dữ liệu mới nhất.');
+                }
+            }
+            // KẾT THÚC PHẦN KIỂM TRA OPTIMISTIC LOCKING KHI XÓA
 
             if ($song->file_amthanh && Storage::disk('public')->exists($song->file_amthanh)) {
                 Storage::disk('public')->delete($song->file_amthanh);
@@ -149,11 +211,10 @@ class AdminController extends Controller
             return redirect()->route('admin.songs.index')->with('success', 'Xóa bài hát thành công!');
 
         } catch (ModelNotFoundException $e) {
-            // Nếu bài hát không tìm thấy (có thể đã bị xóa ở tab khác)
             return redirect()->route('admin.songs.index')
                 ->with('info', 'Bài hát này đã được xóa hoặc không còn tồn tại trên hệ thống.');
         } catch (\Exception $e) {
-            // Xử lý các lỗi chung khác
+            \Log::error("Lỗi xóa bài hát: " . $e->getMessage() . " - File: " . $e->getFile() . " - Line: " . $e->getLine());
             return redirect()->back()->with('error', 'Đã xảy ra lỗi không mong muốn khi xóa bài hát. Vui lòng thử lại.');
         }
     }
@@ -161,7 +222,7 @@ class AdminController extends Controller
     // User Management
     public function indexuser()
     {
-        $this->data['users'] = User::all(); // Sử dụng User Model chính xác
+        $this->data['users'] = User::all();
         return view('admin.users.index', $this->data);
     }
 
@@ -187,7 +248,6 @@ class AdminController extends Controller
         return view('admin.revenue.index', $this->data);
     }
 
-    // Các phương thức khác của bạn từ frontend (tạm thời giữ nguyên hoặc di chuyển sang HomeController nếu chúng chỉ dùng cho frontend)
     public function index()
     {
         $songs = Song::with(['artist', 'category'])->get();
