@@ -3,6 +3,40 @@
 
 <head>
     @include('admin.partials.head')
+    <style>
+        main {
+            overflow-y: auto;
+            /* Cho phép cuộn nếu nội dung dài */
+            height: 100vh;
+            /* Chiều cao đầy đủ để cuộn */
+        }
+        /* Style cơ bản cho thông báo */
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+        .alert-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+    </style>
+    @livewireStyles {{-- Đảm bảo có dòng này nếu bạn dùng Livewire --}}
 </head>
 
 <body>
@@ -11,70 +45,44 @@
     @include('admin.partials.sidebar')
 
     <main>
-        <!--include file header-->
         @include('admin.partials.header')
 
-        <!--content-->
         <div>
-            <h2 class="title">Quản lý bài hát</h2>
+            <h2 class="newTitle">Quản lý bài hát</h2>
         </div>
+
+        {{-- ĐẶT PHẦN HIỂN THỊ THÔNG BÁO Ở ĐÂY --}}
+        @if (session()->has('success'))
+            <div class="alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if (session()->has('error'))
+            <div class="alert-error">
+                {{ session('error') }}
+            </div>
+        @endif
+
+        @if (session()->has('info'))
+            <div class="alert-info">
+                {{ session('info') }}
+            </div>
+        @endif
+
         <section class="song-list">
-            <h2 class="title" style="margin-top: -50px">Danh sách bài hát</h2>
+            <h2 class="newTitle" style="margin-top: -100px">Danh sách bài hát</h2>
             <div class="add-btn">
                 <a href="{{ route('admin.songs.create') }}">Thêm mới</a>
             </div>
 
-            <table class="song-table">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Tên bài hát</th>
-                    <th>Nghệ sĩ</th>
-                    <th>Thể loại</th>
-                    <th>Avatar</th>
-                    <th>File âm thanh</th>
-                    <th>Action</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach($songs as $song)
-                    <tr>
-                        <td>{{ $song->id }}</td>
-                        <td>{{ $song->tenbaihat }}</td>
-                        <td>{{ $song->nghesi }}</td>
-                        <td>{{ $song->theloai }}</td>
-                        <td>
-                            @if($song->anh_daidien)
-                                <img src="{{ asset('storage/' . $song->anh_daidien) }}" width="50" alt="avatar">
-                            @else
-                                Không có ảnh
-                            @endif
-                        </td>
-                        <td>
-                            {{ basename($song->file_amthanh) }}
-                        </td>
-                        <td>
-                            <!-- Sửa -->
-                            <a href="{{ route('admin.songs.edit', $song->id) }}" class="btn edit">Sửa</a>
-
-                            <!-- Xóa -->
-                            <form action="{{ route('admin.songs.destroy', $song->id) }}" method="POST" style="display:inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn delete" onclick="return confirm('Bạn có chắc chắn muốn xóa bài hát này?')">Xóa</button>
-                            </form>
-
-                            <span class="status active">Hoạt động</span>
-                        </td>
-                    </tr>
-                @endforeach
-                </tbody>
-            </table>
+            @livewire('search-songs') {{-- Livewire component của bạn --}}
         </section>
     </main>
 </div>
 
-<script src="{{ asset('js/script.js') }}"></script>
+@livewireScripts {{-- Đảm bảo có dòng này nếu bạn dùng Livewire --}}
+<script type='text/javascript' src="{{ asset('assets/frontend/js/adminSong.js') }}"></script>
 </body>
 
 </html>

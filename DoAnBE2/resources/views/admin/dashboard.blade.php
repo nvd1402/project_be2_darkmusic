@@ -31,33 +31,37 @@
                 </div>
                 <div class="admincount">
                     <i class="bi bi-music-note-list icon"></i>
-                    <h4>Tổng số lượng bài hát: <span>#</span></h4>
+                    <h4>Tổng số lượng bài hát: <span>{{ $soLuongBaiHat }}</span></h4>
                 </div>
             </a>
             <!-- box 3-->
-            <a href="#" class="boxPageAdmin">
+            <a href="{{ route('admin.album.index') }}" class="boxPageAdmin">
                 <div class="admininfo">
                     <i class="bi bi-journal-album icon"></i>
                     <h2>Album</h2>
                 </div>
                 <div class="admincount">
                     <i class="bi bi-music-note-list icon"></i>
-                    <h4>Tổng số lượng Album: <span>#</span></h4>
+                                        <h4>Tổng số lượng tin tức: <span>{{ $soLuongAlbum ?? '#'}}</h4>
+
                 </div>
             </a>
             <!-- box 4-->
-            <a href="#" class="boxPageAdmin">
+            <a href="{{ route('admin.categories.index') }}#" class="boxPageAdmin">
                 <div class="admininfo">
-                    <i class="bi bi-bookmark-star icon"></i>
+                    <i class="bi bi-tags icon"></i>
+
                     <h2>Thể loại</h2>
                 </div>
                 <div class="admincount">
-                    <i class="bi bi-bookmarks icon"></i>
-                    <h4>Tổng số lượng thế loại: <span>#</span></h4>
+               <i class="bi bi-list-ul icon"></i>
+
+                   
+                    <h4>Tổng số lượng thể loại: <span>{{ $soLuongTheLoai ?? '#' }}</span></h4>
                 </div>
             </a>
             <!-- box 5-->
-            <a href="#" class="boxPageAdmin">
+            <a href="{{ route('admin.artist.index') }}" class="boxPageAdmin">
                 <div class="admininfo">
                     <i class="bi bi-person-bounding-box icon"></i>
                     <h2>Nghệ sĩ</h2>
@@ -79,16 +83,31 @@
                 </div>
             </a>
             <!-- box 7-->
-            <a href="#" class="boxPageAdmin">
+            <a href="{{ route('admin.news.index') }}" class="boxPageAdmin">
                 <div class="admininfo">
                     <i class="bi bi-newspaper icon"></i>
                     <h2>Tin tức</h2>
                 </div>
                 <div class="admincount">
                     <i class="bi bi-view-list icon"></i>
-                    <h4>Tổng số lượng tin tức: <span>#</span></h4>
+                  <h4>Tổng số lượng tin tức: <span>{{ $soLuongTinTuc ?? '#' }}</span></h4>
+
                 </div>
             </a>
+                     <a href="{{ route('admin.comments.index') }}" class="boxPageAdmin">
+    <div class="admininfo">
+        <!-- icon bình luận (bi-chat-left-text) -->
+        <i class="bi bi-chat-left-text icon"></i>
+        <h2>Bình Luận</h2>
+    </div>
+    <div class="admincount">
+        <!-- icon thống kê danh sách (bi-list-check) -->
+        <i class="bi bi-list-check icon"></i>
+        <h4>Tổng số lượng bình luận: <span>{{ $soLuongComment ?? '#' }}</span></h4>
+    </div>
+</a>
+
+            
         </div>
     </main>
         </div>

@@ -11,6 +11,7 @@
     <main>
         <!-- Include file header -->
         @include('admin.partials.header')
+        @include('admin.users.search')
 
         <!-- Content -->
         <div>
