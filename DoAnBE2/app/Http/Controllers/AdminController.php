@@ -69,7 +69,7 @@ class AdminController extends Controller
             ],
             'nghesi' => 'required|exists:artists,id',
             'theloai' => 'required|exists:categories,id',
-            'file_amthanh' => 'required|file|mimes:mp3,wav,ogg',
+            'file_amthanh' => 'required|file|mimes:mp3,wav,ogg|max:10240',
             'anh_daidien' => 'required|image|mimes:jpg,jpeg,png,gif|max:2048',
         ]);
 

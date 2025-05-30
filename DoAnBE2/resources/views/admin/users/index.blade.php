@@ -3,6 +3,38 @@
 
 <head>
     @include('admin.partials.head')
+    <style>
+        .alert {
+            padding: 15px 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 1rem;
+            box-shadow: 0 2px 6px rgb(0 0 0 / 0.1);
+            max-width: 600px;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .alert li {
+            margin-bottom: 5px;
+        }
+
+    </style>
 </head>
 
 <body>
@@ -23,7 +55,21 @@
         <section class="song-list">
             <h2 class="title" style="margin-top: -50px">Danh sách người dùng</h2>
 
+            @if(session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
 
+            @if($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             <div class="add-btn">
                 <a href="{{ route('admin.users.create') }}">Thêm mới</a>
             </div>

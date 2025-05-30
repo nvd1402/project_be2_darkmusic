@@ -19,7 +19,7 @@
         <section class="add-user">
             <p class="notee">Lưu ý: Những trường hợp (*) là trường hợp bắt buộc.</p>
 
-           
+
 
             <form action="{{ route('admin.users.update', $user->user_id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
