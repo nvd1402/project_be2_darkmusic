@@ -14,8 +14,5 @@
             <input type="text" name="query" placeholder="Tìm kiếm người dùng." value="{{ request()->query('query') }}">
         </form>
 
-
-
-
     </div>
 </header>

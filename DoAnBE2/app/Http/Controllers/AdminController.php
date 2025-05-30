@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Ad;
+use App\Models\Album;
+use App\Models\Comment;
+use App\Models\News;
 use App\Models\User;
 use App\Models\Song;
 use App\Models\Artist;
@@ -19,8 +23,22 @@ class AdminController extends Controller
     // Dashboard
     public function adminindex()
     {
+        $soluongnghesi = Artist::count();
+        $soluongalbum = Album::count();
+        $soluongcomment = Comment::count();
+        $soluongtintuc = News::count();
+        $soluongtheloai = Category::count();
+        $soluongnguoidung = User::count();
+        $soluongquangcao = Ad::count();
         $soLuongBaiHat = Song::count();
         $this->data['soLuongBaiHat'] = $soLuongBaiHat;
+        $this->data['soluongnguoidung'] = $soluongnguoidung;
+        $this->data['soluongquangcao'] = $soluongquangcao;
+        $this->data['soluongtheloai'] = $soluongtheloai;
+        $this->data['soluongtintuc'] = $soluongtintuc;
+        $this->data['soluongcomment'] = $soluongcomment;
+        $this->data['soluongalbum'] = $soluongalbum;
+        $this->data['soluongnghesi'] = $soluongnghesi;
         return view('admin.dashboard', $this->data);
     }
 
@@ -51,7 +69,7 @@ class AdminController extends Controller
             ],
             'nghesi' => 'required|exists:artists,id',
             'theloai' => 'required|exists:categories,id',
-            'file_amthanh' => 'required|file|mimes:mp3,wav,ogg',
+            'file_amthanh' => 'required|file|mimes:mp3,wav,ogg|max:10240',
             'anh_daidien' => 'required|image|mimes:jpg,jpeg,png,gif|max:2048',
         ]);
 

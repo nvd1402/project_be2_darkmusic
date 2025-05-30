@@ -50,6 +50,7 @@
 
                 <div class="d-grid mx-auto">
                     <button type="submit" class="btn--crud--artist">Thêm</button>
+                    <button type="reset" class="btn--crud--artist"><a href="{{ route('admin.artist.index') }}">Hủy</a></button>
                 </div>
             </form>
         </section>
