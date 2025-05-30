@@ -149,6 +149,7 @@
             font-size: 16px;
             color: #ddd;
         }
+
     </style>
 </head>
 
@@ -157,12 +158,17 @@
     @include('frontend.partials.sidebar')
     <main>
         <div class="banner">
-            @if ($bannerAd)
-                <a href="{{ $bannerAd->link_url }}" target="_blank">
-                    <img src="{{ asset('storage/' . $bannerAd->media_type) }}" alt="{{ $bannerAd->name }}">
-                    <p>{{ $bannerAd->description }}</p>
-                </a>
-            @endif
+    {{-- Banner quảng cáo --}}
+    @if ($bannerAd)
+    <div class="banner my-4 p-3 rounded shadow bg-light text-center">
+        <a href="{{ $bannerAd->link_url }}" target="_blank" style="text-decoration: none; color: inherit;">
+            <img src="{{ asset('storage/' . $bannerAd->media_type) }}"
+                 alt="{{ $bannerAd->name }}"
+                 style="max-width: 100%; max-height: 200px; object-fit: cover; border-radius: 8px;">
+            <p class="mt-2">{{ $bannerAd->description }}</p>
+        </a>
+    </div>
+    @endif
         </div>
 
         <div class="content-wrapper">

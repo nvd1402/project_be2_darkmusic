@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use App\Models\Userss;  // Đảm bảo rằng bạn đang sử dụng model Userss
 use Illuminate\Support\Facades\Hash;
@@ -26,9 +26,30 @@ class UserController extends Controller
     {
         // Validate dữ liệu
         $validated = $request->validate([
-            'username' => 'required|max:255|unique:users,username',
-            'password' => 'required|confirmed|min:8',
-            'email' => 'required|email|unique:users,email',
+            'username' => [
+                'required',
+                'min:3',
+                'max:50',
+                'regex:/^(?!\s)[\p{L}0-9]+(?: [\p{L}0-9]+)*(?!\s)$/u'
+            ],
+            'password' => [
+                'required',
+                'min:6',
+                'max:20',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+])[A-Za-z\d!@#$%^&*()\-_=+]+$/', // Bắt buộc có chữ hoa, chữ thường, số và ký tự đặc biệt
+            ],
+
+            'email' => [
+                'required',
+                'min:12',
+                'max:50',
+                'regex:/^(?!.*\.\.)(?!^\.)(?!\.$)[A-Za-z0-9._-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/',
+                'unique:users,email',
+            ],
+            'password_confirmation' => [
+                'required',                       // Bắt buộc
+                'same:password',                   // Phải giống với trường 'password'
+            ],
             'status' => 'required',
             'role' => 'required',
             'avatar' => 'nullable|image|mimes:jpg,png|max:2048',
@@ -75,15 +96,31 @@ class UserController extends Controller
     {
         // Validate dữ liệu
         $validated = $request->validate([
-            'username' => 'required|max:255',
-            'email' => 'required|email|unique:users,email,' . $user_id . ',user_id', // Kiểm tra email trùng với chính nó
-            'password' => 'nullable|confirmed|min:8',
-            'status' => 'required',
-            'role' => 'required',
+            'username' => [
+                'required',
+                'min:3',
+                'max:50',
+                'regex:/^(?!\s)[\p{L}0-9]+(?: [\p{L}0-9]+)*(?!\s)$/u',
+            ],
+            'email' => [
+                'required',
+                'min:12',
+                'max:50',
+                'regex:/^(?!.*\.\.)(?!^\.)(?!\.$)[A-Za-z0-9._-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/',
+                Rule::unique('users', 'email')->ignore($user_id, 'user_id'),
+            ],
+            'password' => [
+                'required',
+                'min:6',
+                'max:20',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+])[A-Za-z\d!@#$%^&*()\-_=+]+$/', // Bắt buộc có chữ hoa, chữ thường, số và ký tự đặc biệt
+                'confirmed', // phải có trường password_confirmation giống password
+            ],
+            'status' => 'required|in:active,inactive', // hoặc theo enum bạn định nghĩa
+            'role' => 'required|in:User,Admin,Vip',
             'avatar' => 'nullable|image|mimes:jpg,png|max:2048',
         ]);
-
-        $user = Userss::find($user_id);  // Tìm người dùng theo id
+        $user = Userss::find($user_id); // Tìm người dùng theo id
         $user->username = $request->username;
         $user->email = $request->email;
 
@@ -106,6 +143,7 @@ class UserController extends Controller
 
         return redirect()->route('admin.users.index')->with('success', 'Cập nhật tài khoản thành công!');
     }
+    //Hàm tìm kiếm user
     public function search(Request $request)
     {
         $query = $request->input('query');
@@ -117,6 +155,5 @@ class UserController extends Controller
 
         return view('admin.users.index', compact('users'));
     }
-    
 }
 

@@ -8,23 +8,31 @@ use Livewire\WithPagination;
 
 class SearchArtists extends Component
 {
+    use WithPagination;
+
     public $query = '';
+
+    protected $updatesQueryString = ['query'];
+
+    public function updatingQuery()
+    {
+        $this->resetPage(); // reset về page 1 khi query thay đổi
+    }
 
     public function render()
     {
-        $artists = [];
-
         $trimmedQuery = trim($this->query);
 
-        if (strlen($trimmedQuery) > 0) {
-            $artists = Artist::where('name_artist', 'like', '%' . $trimmedQuery . '%')
-                ->orWhereHas('category', function ($q) {
-                    $q->where('tentheloai', 'like', '%' . $this->query . '%');
-                })
-                ->get();
-        } else {
-            $artists =  Artist::paginate(10);
-        }
+        $artists = Artist::with('category')
+            ->when($trimmedQuery, function ($query) use ($trimmedQuery) {
+                $query->where('name_artist', 'like', "%{$trimmedQuery}%")
+                    ->orWhereHas('category', function ($q) use ($trimmedQuery) {
+                        $q->where('tentheloai', 'like', "%{$trimmedQuery}%");
+                    });
+            })
+            ->orderByDesc('created_at')
+            ->paginate(10);
+
         return view('livewire.search-artists', compact('artists'));
     }
 }

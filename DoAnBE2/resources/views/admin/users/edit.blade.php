@@ -19,16 +19,7 @@
         <section class="add-user">
             <p class="notee">Lưu ý: Những trường hợp (*) là trường hợp bắt buộc.</p>
 
-            <!-- Hiển thị thông báo lỗi nếu có -->
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
+
 
             <form action="{{ route('admin.users.update', $user->user_id) }}" method="POST" enctype="multipart/form-data">
                 @csrf

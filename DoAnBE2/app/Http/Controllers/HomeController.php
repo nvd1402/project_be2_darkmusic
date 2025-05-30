@@ -142,7 +142,7 @@ class HomeController extends Controller
 
         } catch (ModelNotFoundException $e) {
             return redirect()->route('frontend.favorite')
-                ->with('info', 'Bài hát này đã được xóa hoặc không còn tồn tại.');
+                ->with('info', 'Bài hát này đã được xóa trước đó hoặc không còn tồn tại.');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Đã xảy ra lỗi không mong muốn khi xóa bài hát. Vui lòng thử lại.');
         }
