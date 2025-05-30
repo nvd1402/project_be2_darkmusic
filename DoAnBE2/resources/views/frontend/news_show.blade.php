@@ -149,10 +149,7 @@
             font-size: 16px;
             color: #ddd;
         }
-        .banner{
-            height: 100px;
-            width: 100px;
-        }
+
     </style>
 </head>
 
