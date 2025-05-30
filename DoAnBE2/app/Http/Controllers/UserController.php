@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\News;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use App\Models\Userss;  // Đảm bảo rằng bạn đang sử dụng model Userss
@@ -17,10 +18,12 @@ class UserController extends Controller
     }
 
     // Hiển thị danh sách người dùng
+
     public function index()
     {
-        $users = Userss::all(); // Lấy tất cả người dùng từ bảng Userss
-        return view('admin.users.index', compact('users')); // Truyền biến $users vào view
+        $users = Userss::orderBy('updated_at', 'desc')->paginate(10);
+
+        return view('admin.users.index', compact('users'));
     }
 
     // Xử lý việc tạo người dùng
