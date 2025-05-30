@@ -1,6 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>@include('admin.partials.head')</head>
+<head>@include('admin.partials.head')
+<style>
+    .alert {
+        padding: 15px 20px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        font-size: 1rem;
+        box-shadow: 0 2px 6px rgb(0 0 0 / 0.1);
+        max-width: 600px;
+    }
+
+    .alert-success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+
+    .alert-danger {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+
+    .alert ul {
+        margin: 0;
+        padding-left: 20px;
+    }
+
+    .alert li {
+        margin-bottom: 5px;
+    }
+</style>
+</head>
 <body>
 <div class="container">
     <!--include file sidebar-->
