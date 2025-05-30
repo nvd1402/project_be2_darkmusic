@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Validator; // Don't forget to import Validator
 
 class AdminController extends Controller
 {
@@ -59,7 +60,7 @@ class AdminController extends Controller
             'tenbaihat' => $cleanedTenBaiHat
         ]);
 
-        $validated = $request->validate([
+        $validator = Validator::make($request->all(), [
             'tenbaihat' => [
                 'required',
                 'string',
@@ -72,6 +73,16 @@ class AdminController extends Controller
             'file_amthanh' => 'required|file|mimes:mp3,wav,ogg|max:10240',
             'anh_daidien' => 'required|image|mimes:jpg,jpeg,png,gif|max:2048',
         ]);
+
+        // Custom validation rule for spamming characters
+        $validator->after(function ($validator) use ($cleanedTenBaiHat) {
+            // Regex to check for 3 or more consecutive identical characters (case-insensitive)
+            if (preg_match('/(.)\1{2,}/i', $cleanedTenBaiHat)) {
+                $validator->errors()->add('tenbaihat', 'Tên bài hát không được spam một ký tự.');
+            }
+        });
+
+        $validated = $validator->validate(); // This will throw ValidationException if validation fails
 
         $song = new Song();
         $song->tenbaihat = $validated['tenbaihat'];
@@ -147,12 +158,13 @@ class AdminController extends Controller
                 'tenbaihat' => $cleanedTenBaiHat
             ]);
 
-            $validated = $request->validate([
+            $validator = Validator::make($request->all(), [
                 'tenbaihat' => [
                     'required',
                     'string',
                     'max:255',
                     'regex:/^[\p{L}\p{M}\d\s\-\'\.]+$/u',
+                    // Unique rule needs to ignore the current song's ID during update
                     'unique:songs,tenbaihat,' . $song->id,
                 ],
                 'nghesi' => 'required|exists:artists,id',
@@ -160,6 +172,16 @@ class AdminController extends Controller
                 'file_amthanh' => 'nullable|file|mimes:mp3,wav,ogg',
                 'anh_daidien' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
             ]);
+
+            // Custom validation rule for spamming characters
+            $validator->after(function ($validator) use ($cleanedTenBaiHat) {
+                // Regex to check for 3 or more consecutive identical characters (case-insensitive)
+                if (preg_match('/(.)\1{2,}/i', $cleanedTenBaiHat)) {
+                    $validator->errors()->add('tenbaihat', 'Tên bài hát không được spam một ký tự.');
+                }
+            });
+
+            $validated = $validator->validate();
 
             $song->tenbaihat = $validated['tenbaihat'];
             $song->nghesi = $validated['nghesi'];
