@@ -47,7 +47,7 @@ class CategoryController extends Controller
 
         $categories = Category::where('tentheloai', 'like', "%{$query}%")
             ->orWhere('nhom', 'like', "%{$query}%")
-            ->get();
+            ->paginate(10);
 
         return view('admin.categories.index', compact('categories'));
     }

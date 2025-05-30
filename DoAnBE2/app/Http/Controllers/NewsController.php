@@ -42,7 +42,7 @@ class NewsController extends Controller
         // Tìm kiếm theo tiêu đề hoặc đơn vị đăng
         $news = News::where('tieude', 'like', "%{$query}%")
                     ->orWhere('donvidang', 'like', "%{$query}%")
-                    ->get();
+                    ->paginate(10);
 
         return view('admin.news.index', compact('news'));
     }
