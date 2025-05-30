@@ -4,6 +4,27 @@
 <head>
     @include('admin.partials.head')
     <style>
+        nav[role="navigation"] ul {
+            display: inline-flex !important;
+            flex-direction: row !important;
+            padding-left: 0;
+            margin-bottom: 0;
+            list-style: none;
+        }
+        nav[role="navigation"] ul {
+            gap: 0.5rem; /* khoảng cách giữa các số */
+            /* hoặc dùng padding margin cho li */
+        }
+
+        nav[role="navigation"] ul > li {
+            margin-left: 0.5rem; /* cách trái 0.5rem */
+        }
+
+        /* Nếu muốn bỏ khoảng cách âm mặc định của -space-x-px */
+        nav[role="navigation"] ul {
+            margin-left: 500px;
+            margin-top: 38px;
+        }
         .alert {
             padding: 15px 20px;
             border-radius: 5px;
@@ -113,7 +134,9 @@
                 @endforeach
                 </tbody>
             </table>
-
+            <div class="mt-4 flex justify-center">
+                {{ $users->links('pagination::tailwind') }}
+            </div>
         </section>
     </main>
 </div>
