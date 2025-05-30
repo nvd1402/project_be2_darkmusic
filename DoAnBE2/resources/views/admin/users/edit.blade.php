@@ -10,7 +10,11 @@
         <!--include file header-->
         @include('admin.partials.header')
         @include('admin.users.search')
-
+        @if ($errors->has('error'))
+            <div class="alert alert-danger">
+                {{ $errors->first('error') }}
+            </div>
+        @endif
         <!--content-->
         <div>
             <h2 class="title">Sửa thông tin người dùng</h2>
@@ -19,11 +23,12 @@
         <section class="add-user">
             <p class="notee">Lưu ý: Những trường hợp (*) là trường hợp bắt buộc.</p>
 
-           
+
 
             <form action="{{ route('admin.users.update', $user->user_id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT') <!-- Đảm bảo sử dụng phương thức PUT để cập nhật -->
+                <input type="hidden" name="original_updated_at" value="{{ $user->updated_at }}">
 
                 <div class="form-row">
                     <div class="form-group half">
