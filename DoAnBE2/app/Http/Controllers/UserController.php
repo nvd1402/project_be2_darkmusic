@@ -94,7 +94,9 @@ class UserController extends Controller
 
     public function update(Request $request, $user_id)
     {
-        // Validate dữ liệu
+        $user = Userss::findOrFail($user_id);
+
+        // Validate dữ liệu, thêm rule cho original_updated_at
         $validated = $request->validate([
             'username' => [
                 'required',
@@ -110,26 +112,33 @@ class UserController extends Controller
                 Rule::unique('users', 'email')->ignore($user_id, 'user_id'),
             ],
             'password' => [
-                'required',
+                'nullable', // Cho phép không thay đổi mật khẩu
                 'min:6',
                 'max:20',
-                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+])[A-Za-z\d!@#$%^&*()\-_=+]+$/', // Bắt buộc có chữ hoa, chữ thường, số và ký tự đặc biệt
-                'confirmed', // phải có trường password_confirmation giống password
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+])[A-Za-z\d!@#$%^&*()\-_=+]+$/',
+                'confirmed',
             ],
-            'status' => 'required|in:active,inactive', // hoặc theo enum bạn định nghĩa
+            'status' => 'required|in:active,inactive',
             'role' => 'required|in:User,Admin,Vip',
             'avatar' => 'nullable|image|mimes:jpg,png|max:2048',
+            'original_updated_at' => 'required|date',
         ]);
-        $user = Userss::find($user_id); // Tìm người dùng theo id
+
+        // So sánh original_updated_at với updated_at hiện tại trong DB
+        if ($request->input('original_updated_at') != $user->updated_at->toDateTimeString()) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['error' => 'Dữ liệu đã bị thay đổi bởi người dùng khác. Vui lòng tải lại và thử lại.']);
+        }
+
+        // Cập nhật thông tin
         $user->username = $request->username;
         $user->email = $request->email;
 
-        // Cập nhật mật khẩu nếu người dùng thay đổi
         if ($request->filled('password')) {
             $user->password = bcrypt($request->password);
         }
 
-        // Cập nhật ảnh đại diện nếu có
         if ($request->hasFile('avatar')) {
             $avatarPath = $request->file('avatar')->store('avatars', 'public');
             $user->avatar = $avatarPath;
@@ -138,8 +147,7 @@ class UserController extends Controller
         $user->status = $request->status;
         $user->role = $request->role;
 
-
-        $user->save();  // Lưu thông tin cập nhật vào cơ sở dữ liệu
+        $user->save();
 
         return redirect()->route('admin.users.index')->with('success', 'Cập nhật tài khoản thành công!');
     }
